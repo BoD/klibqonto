@@ -1,0 +1,9 @@
+// Repositories used across modules
+RepositoryHandler.metaClass.addRepos = {
+    delegate.with {
+        mavenLocal()
+        google()
+        jcenter()
+        mavenCentral()
+    }
+}

@@ -1,0 +1,69 @@
+description = 'klibqonto'
+
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'maven-publish'
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = versions.build.kotlinJvmTarget
+        // Ensure the kotlin module name is unique
+        freeCompilerArgs += ['-module-name', "$project.group.$project.name"]
+    }
+}
+
+javadoc.failOnError = false
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifactId project.description
+
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
+}
+
+dependencies {
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
+
+    // Rx
+    api "io.reactivex.rxjava2:rxjava:$versions.rxJava"
+    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+
+    // OkHttp
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okHttp"
+
+    // Gson
+    implementation "com.google.code.gson:gson:$versions.gson"
+
+    // Slf4j
+    implementation "org.slf4j:slf4j-api:$versions.slf4j"
+
+    // JUnit
+    testImplementation "junit:junit:$versions.testing.junit"
+
+    // Wiremock
+    testImplementation "com.github.tomakehurst:wiremock-standalone:$versions.testing.wireMock"
+}
+
+// Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository
