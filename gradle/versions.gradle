@@ -19,7 +19,7 @@ versions.buildLibs = buildLibs
 def build = [:]
 build.with {
     gradle = '5.5.1'
-    kotlinJvmTarget = '1.6'
+    kotlinJvmTarget = '1.8'
 }
 versions.build = build
 

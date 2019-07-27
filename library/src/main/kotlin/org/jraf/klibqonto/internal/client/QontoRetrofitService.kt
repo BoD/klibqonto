@@ -22,20 +22,17 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.client
 
 import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
-import org.jraf.klibqonto.model.organizations.Organization
+import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
+import retrofit2.http.GET
 
-interface QontoClient {
+internal interface QontoRetrofitService {
     companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
+        const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
     }
 
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
-
-    val organizations: Organizations
+    @GET("organizations/0")
+    fun getOrganization(): Single<ApiOrganizationEnvelope>
 }

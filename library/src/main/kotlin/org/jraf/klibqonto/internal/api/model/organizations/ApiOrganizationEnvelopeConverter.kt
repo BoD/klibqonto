@@ -22,20 +22,15 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.api.model.organizations
 
-import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.internal.model.organizations.OrganizationImpl
 import org.jraf.klibqonto.model.organizations.Organization
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
-
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
-
-    val organizations: Organizations
+internal object ApiOrganizationEnvelopeConverter : ApiConverter<ApiOrganizationEnvelope, Organization>() {
+    override fun convert(apiModel: ApiOrganizationEnvelope) = OrganizationImpl(
+        apiModel.organization.slug,
+        ApiBankAccountConverter.convert(apiModel.organization.bank_accounts)
+    )
 }

@@ -24,9 +24,39 @@
 
 package org.jraf.klibqonto.sample
 
+import io.reactivex.rxkotlin.subscribeBy
+import org.jraf.klibqonto.client.Authentication
+import org.jraf.klibqonto.client.ClientConfiguration
+import org.jraf.klibqonto.client.HttpConfiguration
+import org.jraf.klibqonto.client.HttpLoggingLevel
+import org.jraf.klibqonto.client.HttpProxy
+import org.jraf.klibqonto.client.QontoClient
+
+const val LOGIN = "xxx"
+const val SECRET_KEY = "yyy"
+
 fun main() {
     // Logging
     System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
-    println("Hello, World!")
+    // Create the client
+    val client = QontoClient.newInstance(
+        ClientConfiguration(
+            Authentication(
+                LOGIN,
+                SECRET_KEY
+            ),
+            HttpConfiguration(
+                loggingLevel = HttpLoggingLevel.BODY,
+                // This is only needed to debug with, e.g., Charles Proxy
+                httpProxy = HttpProxy("localhost", 8888)
+            )
+        )
+    )
+
+    // Get organization
+    client.organizations.getOrganization()
+        .subscribeBy {
+            println(it)
+        }
 }

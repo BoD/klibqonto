@@ -24,18 +24,10 @@
 
 package org.jraf.klibqonto.client
 
-import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
-import org.jraf.klibqonto.model.organizations.Organization
+import org.jraf.klibqonto.internal.client.VERSION
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
-
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
-
-    val organizations: Organizations
-}
+data class ClientConfiguration(
+    val authentication: Authentication,
+    val httpConfiguration: HttpConfiguration = HttpConfiguration(),
+    val userAgent: String = "klibqonto/$VERSION"
+)

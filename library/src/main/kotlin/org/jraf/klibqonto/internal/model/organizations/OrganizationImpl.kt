@@ -22,20 +22,12 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.model.organizations
 
-import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
+import org.jraf.klibqonto.model.organizations.BankAccount
 import org.jraf.klibqonto.model.organizations.Organization
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
-
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
-
-    val organizations: Organizations
-}
+internal data class OrganizationImpl(
+    override val slug: String,
+    override val bankAccounts: List<BankAccount>
+) : Organization

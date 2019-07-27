@@ -22,20 +22,11 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.api.model
 
-import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
-import org.jraf.klibqonto.model.organizations.Organization
+internal abstract class ApiConverter<in API_MODEL, out MODEL> {
+    abstract fun convert(apiModel: API_MODEL): MODEL
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
-
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
-
-    val organizations: Organizations
+    @Suppress("NOTHING_TO_INLINE")
+    inline fun convert(apiModelList: List<API_MODEL>): List<MODEL> = apiModelList.map { convert(it) }
 }

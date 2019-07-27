@@ -24,18 +24,8 @@
 
 package org.jraf.klibqonto.client
 
-import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
-import org.jraf.klibqonto.model.organizations.Organization
-
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
-
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
-
-    val organizations: Organizations
-}
+data class BaseUri(
+    val scheme: String,
+    val host: String,
+    val port: Int
+)

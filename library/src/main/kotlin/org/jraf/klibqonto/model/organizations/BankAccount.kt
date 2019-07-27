@@ -22,20 +22,46 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.model.organizations
 
-import io.reactivex.Single
-import org.jraf.klibqonto.internal.client.QontoClientImpl
-import org.jraf.klibqonto.model.organizations.Organization
+interface BankAccount {
+    /**
+     * Slug of the bank account
+     */
+    val slug: String
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
+    /**
+     * IBAN of the bank account
+     */
+    val iban: String
 
-    interface Organizations {
-        fun getOrganization(): Single<Organization>
-    }
+    /**
+     * BIC of the bank account
+     */
+    val bic: String
 
-    val organizations: Organizations
+    /**
+     * Currency code of the account (Can only be EUR, for now)
+     */
+    val currency: String
+
+    /**
+     * Amount of money on the account, in euros
+     */
+    val balance: Float
+
+    /**
+     * Amount of money on the account, in euro cents
+     */
+    val balanceCents: Long
+
+    /**
+     * Amount of money available for payment from the account, in euros
+     */
+    val authorizedBalance: Float
+
+    /**
+     * Amount of money available for payment from the account, in euro cents
+     */
+    val authorizedBalanceCents: Long
 }

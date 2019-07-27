@@ -3,6 +3,7 @@ description = 'klibqonto'
 apply plugin: 'java-library'
 apply plugin: 'kotlin'
 apply plugin: 'maven-publish'
+apply plugin: "idea"
 
 compileKotlin {
     kotlinOptions {
@@ -33,6 +34,26 @@ publishing {
             artifact sourcesJar
             artifact javadocJar
         }
+    }
+}
+
+// Create a Version.kt file and add it to the source set
+task generateSources {
+    def outputDir = file("$buildDir/generated/source/kotlin")
+    outputs.dir outputDir
+    doFirst {
+        def outputWithPackageDir = new File(outputDir, "org/jraf/klibqonto/internal/client")
+        outputWithPackageDir.mkdirs()
+        new File(outputWithPackageDir, "Version.kt").write("package org.jraf.klibqonto.internal.client\ninternal const val VERSION = \"$project.version\"")
+    }
+}
+compileKotlin.dependsOn generateSources
+compileKotlin.source += generateSources.outputs.files
+
+idea {
+    module {
+        sourceDirs += generateSources.outputs.files
+        generatedSourceDirs += generateSources.outputs.files
     }
 }
 
