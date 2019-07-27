@@ -24,18 +24,19 @@
 
 package org.jraf.klibqonto.sample
 
-import io.reactivex.rxkotlin.subscribeBy
+import kotlinx.coroutines.flow.collect
 import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
+import kotlin.system.exitProcess
 
 const val LOGIN = "xxx"
 const val SECRET_KEY = "yyy"
 
-fun main() {
+suspend fun main() {
     // Logging
     System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
@@ -56,7 +57,10 @@ fun main() {
 
     // Get organization
     client.organizations.getOrganization()
-        .subscribeBy {
+        .collect {
             println(it)
         }
+
+    // Exit process
+    exitProcess(0)
 }

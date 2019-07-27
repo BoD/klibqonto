@@ -24,7 +24,7 @@
 
 package org.jraf.klibqonto.client
 
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
 import org.jraf.klibqonto.internal.client.QontoClientImpl
 import org.jraf.klibqonto.model.organizations.Organization
 
@@ -34,7 +34,7 @@ interface QontoClient {
     }
 
     interface Organizations {
-        fun getOrganization(): Single<Organization>
+        fun getOrganization(): Flow<Organization>
     }
 
     val organizations: Organizations

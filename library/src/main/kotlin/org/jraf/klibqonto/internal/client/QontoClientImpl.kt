@@ -24,7 +24,9 @@
 
 package org.jraf.klibqonto.internal.client
 
-import io.reactivex.Single
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
@@ -52,8 +54,10 @@ internal class QontoClientImpl(
     }
 
 
-    override fun getOrganization(): Single<Organization> {
-        return service.getOrganization()
+    override fun getOrganization(): Flow<Organization> {
+        return flow {
+            emit(service.getOrganization())
+        }
             .map { ApiOrganizationEnvelopeConverter.convert(it) }
     }
 }

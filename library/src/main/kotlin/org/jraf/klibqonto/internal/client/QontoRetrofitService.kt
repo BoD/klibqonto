@@ -24,7 +24,6 @@
 
 package org.jraf.klibqonto.internal.client
 
-import io.reactivex.Single
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import retrofit2.http.GET
 
@@ -34,5 +33,5 @@ internal interface QontoRetrofitService {
     }
 
     @GET("organizations/0")
-    fun getOrganization(): Single<ApiOrganizationEnvelope>
+    suspend fun getOrganization(): ApiOrganizationEnvelope
 }
