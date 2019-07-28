@@ -78,7 +78,9 @@ suspend fun main() {
             val slug = it.bankAccounts[0].slug
             // 2/ Get first page of transactions
             client.transactions.getTransactionList(slug, Pagination(itemsPerPage = 10))
-                .map { slug to it }
+                .map { firstPage ->
+                    slug to firstPage
+                }
         }
         .flatMapConcat {
             val (slug, firstPage) = it
@@ -91,7 +93,7 @@ suspend fun main() {
                 }
         }
         .collect {
-            println(it.map { transaction -> transaction.toFormattedString() }.joinToString("\n"))
+            println(it.joinToString("\n") { transaction -> transaction.toFormattedString() })
         }
 
     // Exit process
@@ -99,7 +101,7 @@ suspend fun main() {
 }
 
 fun Transaction.toFormattedString(): String =
-    "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}"
+    "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
 
 fun Date.toFormattedString(): String = DateFormat.getDateInstance(DateFormat.MEDIUM).format(this)
 
