@@ -39,7 +39,9 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import java.text.DateFormat
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.EnumSet
 import kotlin.system.exitProcess
 
 const val LOGIN = "xxx"
@@ -77,7 +79,13 @@ suspend fun main() {
         .flatMapConcat {
             val slug = it.bankAccounts[0].slug
             // 2/ Get first page of transactions
-            client.transactions.getTransactionList(slug, Pagination(itemsPerPage = 10))
+            client.transactions.getTransactionList(
+                slug = slug,
+                status = EnumSet.of(Transaction.Status.PENDING, Transaction.Status.DECLINED),
+                updatedDateRange = date("2018-01-01") to date("2018-12-31"),
+                sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
+                pagination = Pagination(itemsPerPage = 10)
+            )
                 .map { firstPage ->
                     slug to firstPage
                 }
@@ -86,7 +94,13 @@ suspend fun main() {
             val (slug, firstPage) = it
             // 3/ Get next page of transactions (if any)
             (firstPage.nextPagination?.let { nextPagination ->
-                client.transactions.getTransactionList(slug, nextPagination)
+                client.transactions.getTransactionList(
+                    slug = slug,
+                    status = EnumSet.of(Transaction.Status.PENDING, Transaction.Status.DECLINED),
+                    updatedDateRange = date("2018-01-01") to date("2018-12-31"),
+                    sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
+                    pagination = nextPagination
+                )
             } ?: emptyFlow())
                 .map { nextPage ->
                     firstPage.list + nextPage.list
@@ -107,3 +121,6 @@ fun Date.toFormattedString(): String = DateFormat.getDateInstance(DateFormat.MED
 
 fun Long.toFormattedAmount(): String = NumberFormat.getCurrencyInstance()
     .format(this / 100.0)
+
+@Suppress("NOTHING_TO_INLINE")
+inline fun date(s: String): Date = SimpleDateFormat("yyyy-MM-dd").parse(s)

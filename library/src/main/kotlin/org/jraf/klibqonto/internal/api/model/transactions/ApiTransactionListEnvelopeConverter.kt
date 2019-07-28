@@ -28,7 +28,7 @@ import org.jraf.klibqonto.internal.api.model.ApiConverter
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal object ApiTransactionListEnvelopeConverter : ApiConverter<ApiTransactionListEnvelope, List<Transaction>>() {
-    override fun convert(apiModel: ApiTransactionListEnvelope): List<Transaction> {
-        return ApiTransactionConverter.convert(apiModel.transactions)
+    override fun apiToModel(apiModel: ApiTransactionListEnvelope): List<Transaction> {
+        return ApiTransactionConverter.apiToModel(apiModel.transactions)
     }
 }

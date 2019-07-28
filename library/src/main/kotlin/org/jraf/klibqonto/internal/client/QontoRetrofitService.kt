@@ -40,7 +40,13 @@ internal interface QontoRetrofitService {
     @GET("transactions")
     suspend fun getTransactionList(
         @Query("slug") slug: String,
+        @Query("status[]") status: Set<String>,
+        @Query("updated_at_from") updatedAtFrom: String?,
+        @Query("updated_at_to") updatedAtTo: String?,
+        @Query("settled_at_from") settledAtFrom: String?,
+        @Query("settled_at_to") settledAtTo: String?,
         @Query("current_page") pageIndex: Int,
+        @Query("sort_by") sortBy: String,
         @Query("per_page") itemsPerPage: Int
     ): ApiTransactionListEnvelope
 }

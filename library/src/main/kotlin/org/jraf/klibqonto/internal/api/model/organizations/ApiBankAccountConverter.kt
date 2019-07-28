@@ -29,7 +29,7 @@ import org.jraf.klibqonto.internal.model.organizations.BankAccountImpl
 import org.jraf.klibqonto.model.organizations.BankAccount
 
 internal object ApiBankAccountConverter : ApiConverter<ApiBankAccount, BankAccount>() {
-    override fun convert(apiModel: ApiBankAccount) = BankAccountImpl(
+    override fun apiToModel(apiModel: ApiBankAccount) = BankAccountImpl(
         apiModel.slug,
         apiModel.iban,
         apiModel.bic,

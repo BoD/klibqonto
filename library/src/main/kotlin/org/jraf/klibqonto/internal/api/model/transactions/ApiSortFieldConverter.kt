@@ -24,16 +24,14 @@
 
 package org.jraf.klibqonto.internal.api.model.transactions
 
+import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiConverter
-import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.ParseException
 
-internal object ApiTransactionSideConverter : ApiConverter<String, Transaction.Side>() {
-    override fun apiToModel(apiModel: String): Transaction.Side {
-        return when (apiModel) {
-            "credit" -> Transaction.Side.CREDIT
-            "debit" -> Transaction.Side.DEBIT
-            else -> throw ParseException("Unknown transaction side '$apiModel'", 0)
+internal object ApiSortFieldConverter : ApiConverter<String, QontoClient.Transactions.SortField>() {
+    override fun modelToApi(model: QontoClient.Transactions.SortField): String {
+        return when (model) {
+            QontoClient.Transactions.SortField.UPDATED_DATE -> "updated_at"
+            QontoClient.Transactions.SortField.SETTLED_DATE -> "settled_at"
         }
     }
 }

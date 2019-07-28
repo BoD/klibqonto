@@ -30,20 +30,20 @@ import org.jraf.klibqonto.internal.model.transactions.TransactionImpl
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal object ApiTransactionConverter : ApiConverter<ApiTransaction, Transaction>() {
-    override fun convert(apiModel: ApiTransaction) = TransactionImpl(
+    override fun apiToModel(apiModel: ApiTransaction) = TransactionImpl(
         apiModel.transaction_id,
         apiModel.amount_cents,
         apiModel.attachment_ids,
         apiModel.local_amount_cents,
-        ApiTransactionSideConverter.convert(apiModel.side),
-        ApiTransactionOperationTypeConverter.convert(apiModel.operation_type),
+        ApiTransactionSideConverter.apiToModel(apiModel.side),
+        ApiTransactionOperationTypeConverter.apiToModel(apiModel.operation_type),
         apiModel.currency,
         apiModel.local_currency,
         apiModel.label,
-        ApiDateConverter.convert(apiModel.settled_at),
-        ApiDateConverter.convert(apiModel.emitted_at)!!,
-        ApiDateConverter.convert(apiModel.updated_at)!!,
-        ApiTransactionStatusConverter.convert(apiModel.status),
+        ApiDateConverter.apiToModel(apiModel.settled_at),
+        ApiDateConverter.apiToModel(apiModel.emitted_at)!!,
+        ApiDateConverter.apiToModel(apiModel.updated_at)!!,
+        ApiTransactionStatusConverter.apiToModel(apiModel.status),
         apiModel.note,
         apiModel.reference,
         apiModel.vat_amount_cents,

@@ -24,9 +24,12 @@
 
 package org.jraf.klibqonto.internal.api.model
 
-internal abstract class ApiConverter<in API_MODEL, out MODEL> {
-    abstract fun convert(apiModel: API_MODEL): MODEL
+internal abstract class ApiConverter<API_MODEL, MODEL> {
+    open fun apiToModel(apiModel: API_MODEL): MODEL = throw NotImplementedError()
 
-    @Suppress("NOTHING_TO_INLINE")
-    inline fun convert(apiModelList: List<API_MODEL>): List<MODEL> = apiModelList.map { convert(it) }
+    open fun apiToModel(apiModelList: List<API_MODEL>): List<MODEL> = apiModelList.map { apiToModel(it) }
+
+    open fun modelToApi(model: MODEL): API_MODEL = throw NotImplementedError()
+
+    open fun modelToApi(modelList: List<MODEL>): List<API_MODEL> = modelList.map { modelToApi(it) }
 }

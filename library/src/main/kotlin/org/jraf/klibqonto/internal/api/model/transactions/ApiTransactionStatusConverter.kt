@@ -29,13 +29,22 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import java.text.ParseException
 
 internal object ApiTransactionStatusConverter : ApiConverter<String, Transaction.Status>() {
-    override fun convert(apiModel: String): Transaction.Status {
+    override fun apiToModel(apiModel: String): Transaction.Status {
         return when (apiModel) {
             "pending" -> Transaction.Status.PENDING
             "reversed" -> Transaction.Status.REVERSED
             "declined" -> Transaction.Status.DECLINED
             "completed" -> Transaction.Status.COMPLETED
             else -> throw ParseException("Unknown transaction status '$apiModel'", 0)
+        }
+    }
+
+    override fun modelToApi(model: Transaction.Status): String {
+        return when (model) {
+            Transaction.Status.PENDING -> "pending"
+            Transaction.Status.REVERSED -> "reversed"
+            Transaction.Status.DECLINED -> "declined"
+            Transaction.Status.COMPLETED -> "completed"
         }
     }
 }

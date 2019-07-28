@@ -29,7 +29,7 @@ import java.util.Date
 interface Transaction {
     enum class Side {
         CREDIT,
-        DEBIT
+        DEBIT,
     }
 
     enum class OperationType {
@@ -38,14 +38,14 @@ interface Transaction {
         DIRECT_DEBIT,
         INCOME,
         QONTO_FEE,
-        CHECK
+        CHECK,
     }
 
     enum class Status {
         PENDING,
         REVERSED,
         DECLINED,
-        COMPLETED
+        COMPLETED,
     }
 
     /**

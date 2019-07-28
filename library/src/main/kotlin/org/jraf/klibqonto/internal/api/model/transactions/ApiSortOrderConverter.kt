@@ -24,16 +24,14 @@
 
 package org.jraf.klibqonto.internal.api.model.transactions
 
+import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiConverter
-import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.ParseException
 
-internal object ApiTransactionSideConverter : ApiConverter<String, Transaction.Side>() {
-    override fun apiToModel(apiModel: String): Transaction.Side {
-        return when (apiModel) {
-            "credit" -> Transaction.Side.CREDIT
-            "debit" -> Transaction.Side.DEBIT
-            else -> throw ParseException("Unknown transaction side '$apiModel'", 0)
+internal object ApiSortOrderConverter : ApiConverter<String, QontoClient.Transactions.SortOrder>() {
+    override fun modelToApi(model: QontoClient.Transactions.SortOrder): String {
+        return when (model) {
+            QontoClient.Transactions.SortOrder.DESCENDING -> "desc"
+            QontoClient.Transactions.SortOrder.ASCENDING -> "asc"
         }
     }
 }

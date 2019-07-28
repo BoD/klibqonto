@@ -29,7 +29,7 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import java.text.ParseException
 
 internal object ApiTransactionOperationTypeConverter : ApiConverter<String, Transaction.OperationType>() {
-    override fun convert(apiModel: String): Transaction.OperationType {
+    override fun apiToModel(apiModel: String): Transaction.OperationType {
         return when (apiModel) {
             "transfer" -> Transaction.OperationType.TRANSFER
             "card" -> Transaction.OperationType.CARD

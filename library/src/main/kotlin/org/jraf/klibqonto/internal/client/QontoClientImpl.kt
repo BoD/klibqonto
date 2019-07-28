@@ -30,9 +30,13 @@ import kotlinx.coroutines.flow.map
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
+import org.jraf.klibqonto.internal.api.model.ApiDateConverter
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMetaConverter
+import org.jraf.klibqonto.internal.api.model.transactions.ApiSortFieldConverter
+import org.jraf.klibqonto.internal.api.model.transactions.ApiSortOrderConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
+import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.internal.client.QontoRetrofitService.Companion.BASE_URL
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
@@ -41,6 +45,8 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Date
+import java.util.EnumSet
 
 internal class QontoClientImpl(
     private val clientConfiguration: ClientConfiguration
@@ -66,13 +72,39 @@ internal class QontoClientImpl(
         return flow {
             emit(service.getOrganization())
         }
-            .map { ApiOrganizationEnvelopeConverter.convert(it) }
+            .map { ApiOrganizationEnvelopeConverter.apiToModel(it) }
     }
 
-    override fun getTransactionList(slug: String, pagination: Pagination): Flow<Page<Transaction>> {
+    override fun getTransactionList(
+        slug: String,
+        status: EnumSet<Transaction.Status>,
+        updatedDateRange: Pair<Date?, Date?>,
+        settledDateRange: Pair<Date?, Date?>,
+        sortField: QontoClient.Transactions.SortField,
+        sortOrder: QontoClient.Transactions.SortOrder,
+        pagination: Pagination
+    ): Flow<Page<Transaction>> {
+        val statusStrSet = status.map { ApiTransactionStatusConverter.modelToApi(it) }.toSet()
+        val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange.first)
+        val updatedAtTo = ApiDateConverter.modelToApi(updatedDateRange.second)
+        val settledAtFrom = ApiDateConverter.modelToApi(settledDateRange.first)
+        val settledAtTo = ApiDateConverter.modelToApi(settledDateRange.second)
+        val sortBy = ApiSortFieldConverter.modelToApi(sortField) + ":" + ApiSortOrderConverter.modelToApi(sortOrder)
         return flow {
-            emit(service.getTransactionList(slug, pagination.pageIndex, pagination.itemsPerPage))
+            emit(
+                service.getTransactionList(
+                    slug,
+                    statusStrSet,
+                    updatedAtFrom,
+                    updatedAtTo,
+                    settledAtFrom,
+                    settledAtTo,
+                    pagination.pageIndex,
+                    sortBy,
+                    pagination.itemsPerPage
+                )
+            )
         }
-            .map { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.convert(it)) }
+            .map { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.apiToModel(it)) }
     }
 }

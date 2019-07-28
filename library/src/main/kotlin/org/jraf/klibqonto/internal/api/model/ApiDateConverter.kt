@@ -30,8 +30,13 @@ import java.util.Date
 internal object ApiDateConverter : ApiConverter<String?, Date?>() {
     private const val DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"
 
-    override fun convert(apiModel: String?): Date? {
+    override fun apiToModel(apiModel: String?): Date? {
         if (apiModel == null) return null
         return SimpleDateFormat(DATE_FORMAT).parse(apiModel)
+    }
+
+    override fun modelToApi(model: Date?): String? {
+        if (model == null) return null
+        return SimpleDateFormat(DATE_FORMAT).format(model)
     }
 }

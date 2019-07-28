@@ -30,6 +30,8 @@ import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
+import java.util.Date
+import java.util.EnumSet
 
 interface QontoClient {
     companion object {
@@ -41,8 +43,23 @@ interface QontoClient {
     }
 
     interface Transactions {
+        enum class SortField {
+            UPDATED_DATE,
+            SETTLED_DATE
+        }
+
+        enum class SortOrder {
+            DESCENDING,
+            ASCENDING
+        }
+
         fun getTransactionList(
             slug: String,
+            status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
+            updatedDateRange: Pair<Date?, Date?> = null to null,
+            settledDateRange: Pair<Date?, Date?> = null to null,
+            sortField: SortField = SortField.SETTLED_DATE,
+            sortOrder: SortOrder = SortOrder.DESCENDING,
             pagination: Pagination = Pagination()
         ): Flow<Page<Transaction>>
     }
