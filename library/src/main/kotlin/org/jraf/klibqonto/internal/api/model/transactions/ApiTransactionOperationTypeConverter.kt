@@ -22,31 +22,22 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.api.model.transactions
 
-import kotlinx.coroutines.flow.Flow
-import org.jraf.klibqonto.internal.client.QontoClientImpl
-import org.jraf.klibqonto.model.organizations.Organization
-import org.jraf.klibqonto.model.pagination.Page
-import org.jraf.klibqonto.model.pagination.Pagination
+import org.jraf.klibqonto.internal.api.model.ApiConverter
 import org.jraf.klibqonto.model.transactions.Transaction
+import java.text.ParseException
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
+internal object ApiTransactionOperationTypeConverter : ApiConverter<String, Transaction.OperationType>() {
+    override fun convert(apiModel: String): Transaction.OperationType {
+        return when (apiModel) {
+            "transfer" -> Transaction.OperationType.TRANSFER
+            "card" -> Transaction.OperationType.CARD
+            "direct_debit" -> Transaction.OperationType.DIRECT_DEBIT
+            "income" -> Transaction.OperationType.INCOME
+            "qonto_fee" -> Transaction.OperationType.QONTO_FEE
+            "cheque" -> Transaction.OperationType.CHECK
+            else -> throw ParseException("Unknown transaction operation_type '$apiModel'", 0)
+        }
     }
-
-    interface Organizations {
-        fun getOrganization(): Flow<Organization>
-    }
-
-    interface Transactions {
-        fun getTransactionList(
-            slug: String,
-            pagination: Pagination = Pagination()
-        ): Flow<Page<Transaction>>
-    }
-
-    val organizations: Organizations
-    val transactions: Transactions
 }

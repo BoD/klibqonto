@@ -22,25 +22,13 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.client
+package org.jraf.klibqonto.internal.model.pagination
 
-import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
-import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
-import retrofit2.http.GET
-import retrofit2.http.Query
+import org.jraf.klibqonto.model.pagination.Page
+import org.jraf.klibqonto.model.pagination.Pagination
 
-internal interface QontoRetrofitService {
-    companion object {
-        const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
-    }
-
-    @GET("organizations/0")
-    suspend fun getOrganization(): ApiOrganizationEnvelope
-
-    @GET("transactions")
-    suspend fun getTransactionList(
-        @Query("slug") slug: String,
-        @Query("current_page") pageIndex: Int,
-        @Query("per_page") itemsPerPage: Int
-    ): ApiTransactionListEnvelope
-}
+internal data class PageImpl<out T>(
+    override val list: List<T>,
+    override val nextPagination: Pagination?,
+    override val previousPagination: Pagination?
+) : Page<T>

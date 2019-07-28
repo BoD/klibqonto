@@ -22,25 +22,31 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.client
+package org.jraf.klibqonto.internal.api.model.transactions
 
-import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
-import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
-import retrofit2.http.GET
-import retrofit2.http.Query
-
-internal interface QontoRetrofitService {
-    companion object {
-        const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
-    }
-
-    @GET("organizations/0")
-    suspend fun getOrganization(): ApiOrganizationEnvelope
-
-    @GET("transactions")
-    suspend fun getTransactionList(
-        @Query("slug") slug: String,
-        @Query("current_page") pageIndex: Int,
-        @Query("per_page") itemsPerPage: Int
-    ): ApiTransactionListEnvelope
-}
+internal data class ApiTransaction(
+    val transaction_id: String,
+    val amount: Float,
+    val amount_cents: Long,
+    val attachment_ids: List<String>,
+    val local_amount: Float,
+    val local_amount_cents: Long,
+    val side: String,
+    val operation_type: String,
+    val currency: String,
+    val local_currency: String,
+    val label: String,
+    val settled_at: String?,
+    val emitted_at: String,
+    val updated_at: String,
+    val status: String,
+    val note: String?,
+    val reference: String?,
+    val vat_amount: Float?,
+    val vat_amount_cents: Long?,
+    val vat_rate: Float?,
+    val initiator_id: String?,
+    val label_ids: List<String>,
+    val attachment_lost: Boolean,
+    val attachment_required: Boolean
+)

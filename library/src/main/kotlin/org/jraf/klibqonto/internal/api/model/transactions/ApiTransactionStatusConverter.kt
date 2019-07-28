@@ -22,25 +22,20 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.client
+package org.jraf.klibqonto.internal.api.model.transactions
 
-import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
-import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
-import retrofit2.http.GET
-import retrofit2.http.Query
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.model.transactions.Transaction
+import java.text.ParseException
 
-internal interface QontoRetrofitService {
-    companion object {
-        const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
+internal object ApiTransactionStatusConverter : ApiConverter<String, Transaction.Status>() {
+    override fun convert(apiModel: String): Transaction.Status {
+        return when (apiModel) {
+            "pending" -> Transaction.Status.PENDING
+            "reversed" -> Transaction.Status.REVERSED
+            "declined" -> Transaction.Status.DECLINED
+            "completed" -> Transaction.Status.COMPLETED
+            else -> throw ParseException("Unknown transaction status '$apiModel'", 0)
+        }
     }
-
-    @GET("organizations/0")
-    suspend fun getOrganization(): ApiOrganizationEnvelope
-
-    @GET("transactions")
-    suspend fun getTransactionList(
-        @Query("slug") slug: String,
-        @Query("current_page") pageIndex: Int,
-        @Query("per_page") itemsPerPage: Int
-    ): ApiTransactionListEnvelope
 }

@@ -31,8 +31,13 @@ import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelopeConverter
+import org.jraf.klibqonto.internal.api.model.pagination.HasApiMetaConverter
+import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
 import org.jraf.klibqonto.internal.client.QontoRetrofitService.Companion.BASE_URL
 import org.jraf.klibqonto.model.organizations.Organization
+import org.jraf.klibqonto.model.pagination.Page
+import org.jraf.klibqonto.model.pagination.Pagination
+import org.jraf.klibqonto.model.transactions.Transaction
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -40,8 +45,11 @@ import retrofit2.converter.gson.GsonConverterFactory
 internal class QontoClientImpl(
     private val clientConfiguration: ClientConfiguration
 ) : QontoClient,
-    QontoClient.Organizations {
+    QontoClient.Organizations,
+    QontoClient.Transactions {
+
     override val organizations = this
+    override val transactions = this
 
     private val service: QontoRetrofitService by lazy {
         Retrofit.Builder()
@@ -59,5 +67,12 @@ internal class QontoClientImpl(
             emit(service.getOrganization())
         }
             .map { ApiOrganizationEnvelopeConverter.convert(it) }
+    }
+
+    override fun getTransactionList(slug: String, pagination: Pagination): Flow<Page<Transaction>> {
+        return flow {
+            emit(service.getTransactionList(slug, pagination.pageIndex, pagination.itemsPerPage))
+        }
+            .map { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.convert(it)) }
     }
 }
