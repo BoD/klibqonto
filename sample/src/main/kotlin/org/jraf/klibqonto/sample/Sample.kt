@@ -22,6 +22,8 @@
  * limitations under the License.
  */
 
+@file:UseExperimental(FlowPreview::class)
+
 package org.jraf.klibqonto.sample
 
 import kotlinx.coroutines.FlowPreview
@@ -47,13 +49,9 @@ import kotlin.system.exitProcess
 const val LOGIN = "xxx"
 const val SECRET_KEY = "yyy"
 
-@UseExperimental(FlowPreview::class)
-suspend fun main() {
-    // Logging
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
-
+private val client: QontoClient by lazy {
     // Create the client
-    val client = QontoClient.newInstance(
+    QontoClient.newInstance(
         ClientConfiguration(
             Authentication(
                 LOGIN,
@@ -66,14 +64,40 @@ suspend fun main() {
             )
         )
     )
+}
+
+suspend fun main() {
+    // Logging
+    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
     // Get organization
+    getOrganization()
+
+    // Get first page of memberships
+    getMembershipList()
+
+    // Get first 2 pages of transactions
+    getTransactionList()
+
+    // Exit process
+    exitProcess(0)
+}
+
+private suspend fun getOrganization() {
     client.organizations.getOrganization()
         .collect {
             println(it)
         }
+}
 
-    // Get first 2 pages of transactions
+private suspend fun getMembershipList() {
+    client.memberships.getMembershipList()
+        .collect {
+            println(it.list.joinToString("\n"))
+        }
+}
+
+private suspend fun getTransactionList() {
     // 1/ Get organization
     client.organizations.getOrganization()
         .flatMapConcat {
@@ -109,9 +133,6 @@ suspend fun main() {
         .collect {
             println(it.joinToString("\n") { transaction -> transaction.toFormattedString() })
         }
-
-    // Exit process
-    exitProcess(0)
 }
 
 fun Transaction.toFormattedString(): String =

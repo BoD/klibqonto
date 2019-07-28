@@ -26,6 +26,7 @@ package org.jraf.klibqonto.client
 
 import kotlinx.coroutines.flow.Flow
 import org.jraf.klibqonto.internal.client.QontoClientImpl
+import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -106,6 +107,25 @@ interface QontoClient {
     }
 
     /**
+     * Membership related APIs.
+     */
+    interface Memberships {
+        /**
+         * Retrieve all memberships within the organization.
+         *
+         * The response contains the list of memberships that are linked to the authenticated company.
+         * A membership is a user who's been granted access to the Qonto account of a company.
+         * There is no limit currently to the number of memberships a company can have.
+         *
+         * The [id][org.jraf.klibqonto.model.memberships.Membership.id] field uniquely identifies the membership
+         * and is used to identify the [initiator of a transaction][org.jraf.klibqonto.model.transactions.Transaction.initiatorId].
+         */
+        fun getMembershipList(
+            pagination: Pagination = Pagination()
+        ): Flow<Page<Membership>>
+    }
+
+    /**
      * Organization related APIs.
      */
     val organizations: Organizations
@@ -114,4 +134,9 @@ interface QontoClient {
      * Transaction related APIs.
      */
     val transactions: Transactions
+
+    /**
+     * Membership related APIs.
+     */
+    val memberships: Memberships
 }

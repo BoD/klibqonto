@@ -31,8 +31,6 @@ internal data class BankAccountImpl(
     override val iban: String,
     override val bic: String,
     override val currency: String,
-    override val balance: Float,
     override val balanceCents: Long,
-    override val authorizedBalance: Float,
     override val authorizedBalanceCents: Long
 ) : BankAccount

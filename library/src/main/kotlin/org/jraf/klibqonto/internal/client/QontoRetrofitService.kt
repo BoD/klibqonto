@@ -24,6 +24,7 @@
 
 package org.jraf.klibqonto.internal.client
 
+import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
 import retrofit2.http.GET
@@ -45,8 +46,14 @@ internal interface QontoRetrofitService {
         @Query("updated_at_to") updatedAtTo: String?,
         @Query("settled_at_from") settledAtFrom: String?,
         @Query("settled_at_to") settledAtTo: String?,
-        @Query("current_page") pageIndex: Int,
         @Query("sort_by") sortBy: String,
+        @Query("current_page") pageIndex: Int,
         @Query("per_page") itemsPerPage: Int
     ): ApiTransactionListEnvelope
+
+    @GET("memberships")
+    suspend fun getMembershipList(
+        @Query("current_page") pageIndex: Int,
+        @Query("per_page") itemsPerPage: Int
+    ): ApiMembershipListEnvelope
 }

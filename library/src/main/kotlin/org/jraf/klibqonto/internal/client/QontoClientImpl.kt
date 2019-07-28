@@ -31,6 +31,7 @@ import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
+import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMetaConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiSortFieldConverter
@@ -38,6 +39,7 @@ import org.jraf.klibqonto.internal.api.model.transactions.ApiSortOrderConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.internal.client.QontoRetrofitService.Companion.BASE_URL
+import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -52,10 +54,12 @@ internal class QontoClientImpl(
     private val clientConfiguration: ClientConfiguration
 ) : QontoClient,
     QontoClient.Organizations,
-    QontoClient.Transactions {
+    QontoClient.Transactions,
+    QontoClient.Memberships {
 
     override val organizations = this
     override val transactions = this
+    override val memberships = this
 
     private val service: QontoRetrofitService by lazy {
         Retrofit.Builder()
@@ -99,12 +103,25 @@ internal class QontoClientImpl(
                     updatedAtTo,
                     settledAtFrom,
                     settledAtTo,
-                    pagination.pageIndex,
                     sortBy,
+                    pagination.pageIndex,
                     pagination.itemsPerPage
                 )
             )
         }
             .map { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.apiToModel(it)) }
     }
+
+    override fun getMembershipList(pagination: Pagination): Flow<Page<Membership>> {
+        return flow {
+            emit(
+                service.getMembershipList(
+                    pagination.pageIndex,
+                    pagination.itemsPerPage
+                )
+            )
+        }
+            .map { HasApiMetaConverter.convert(it, ApiMembershipListEnvelopeConverter.apiToModel(it)) }
+    }
+
 }

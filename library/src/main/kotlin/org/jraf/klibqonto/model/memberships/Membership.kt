@@ -22,19 +22,21 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.api.model.organizations
+package org.jraf.klibqonto.model.memberships
 
-import org.jraf.klibqonto.internal.api.model.ApiConverter
-import org.jraf.klibqonto.internal.model.organizations.BankAccountImpl
-import org.jraf.klibqonto.model.organizations.BankAccount
+interface Membership {
+    /**
+     * ID of the membership
+     */
+    val id: String
 
-internal object ApiBankAccountConverter : ApiConverter<ApiBankAccount, BankAccount>() {
-    override fun apiToModel(apiModel: ApiBankAccount) = BankAccountImpl(
-        apiModel.slug,
-        apiModel.iban,
-        apiModel.bic,
-        apiModel.currency,
-        apiModel.balance_cents,
-        apiModel.authorized_balance_cents
-    )
+    /**
+     * First name of the membership
+     */
+    val firstName: String
+
+    /**
+     * Last name of the membership
+     */
+    val lastName: String
 }
