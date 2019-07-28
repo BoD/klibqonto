@@ -38,10 +38,35 @@ interface QontoClient {
         fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
     }
 
+    /**
+     * Organization related APIs.
+     */
     interface Organizations {
+        /**
+         * Retrieve the list and details of a company's bank accounts.
+         *
+         * The response contains the list of bank accounts of the authenticated company.
+         * There can currently only be one bank account per company.
+         *
+         * The [balance][org.jraf.klibqonto.model.organizations.BankAccount.balanceCents] represents
+         * the actual amount of money on the account, in Euros.
+         *
+         * The [authorized balance][org.jraf.klibqonto.model.organizations.BankAccount.authorizedBalanceCents]
+         * represents the amount available for payments, taking into account transactions that are being processed.
+         * More information [here](https://support.qonto.eu/hc/en-us/articles/115000493249-How-is-the-balance-of-my-account-calculated-).
+         *
+         * The bank account's [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug]
+         * and [iban][org.jraf.klibqonto.model.organizations.BankAccount.iban] will be required for you to retrieve the
+         * list of transactions inside that bank account, using [Transactions.getTransactionList].
+         *
+         * @see <a href="https://api-doc.qonto.eu/2.0/organizations/show-organization-1">API documentation</a>
+         */
         fun getOrganization(): Flow<Organization>
     }
 
+    /**
+     * Transaction related APIs.
+     */
     interface Transactions {
         enum class SortField {
             UPDATED_DATE,
@@ -53,6 +78,22 @@ interface QontoClient {
             ASCENDING
         }
 
+        /**
+         * Retrieve all transactions within a particular bank account.
+         *
+         * The response contains the list of transactions that contributed to the bank account's balances
+         * (e.g., incomes, transfers, cards). All transactions visible in Qonto's UI can be fetched, as of API V2.
+         *
+         * @param slug the [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug] of the bank account from which to get the transactions
+         * @param status filter to get only transactions matching these status (default: no filter)
+         * @param updatedDateRange filter to get only transactions matching this update date range (default: no filter)
+         * @param settledDateRange filter to get only transactions matching this settled date range (default: no filter)
+         * @param sortField sort by this field (default: settled date)
+         * @param sortOrder sort order (default: descending)
+         * @param pagination pagination settings
+         *
+         * @see <a href="https://api-doc.qonto.eu/2.0/transactions/list-transactions">API documentation</a>
+         */
         fun getTransactionList(
             slug: String,
             status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
@@ -64,6 +105,13 @@ interface QontoClient {
         ): Flow<Page<Transaction>>
     }
 
+    /**
+     * Organization related APIs.
+     */
     val organizations: Organizations
+
+    /**
+     * Transaction related APIs.
+     */
     val transactions: Transactions
 }

@@ -46,19 +46,9 @@ interface BankAccount {
     val currency: String
 
     /**
-     * Amount of money on the account, in euros
-     */
-    val balance: Float
-
-    /**
      * Amount of money on the account, in euro cents
      */
     val balanceCents: Long
-
-    /**
-     * Amount of money available for payment from the account, in euros
-     */
-    val authorizedBalance: Float
 
     /**
      * Amount of money available for payment from the account, in euro cents
