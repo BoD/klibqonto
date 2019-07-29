@@ -31,6 +31,7 @@ import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
+import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMetaConverter
@@ -39,6 +40,7 @@ import org.jraf.klibqonto.internal.api.model.transactions.ApiSortOrderConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.internal.client.QontoRetrofitService.Companion.BASE_URL
+import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
@@ -55,11 +57,13 @@ internal class QontoClientImpl(
 ) : QontoClient,
     QontoClient.Organizations,
     QontoClient.Transactions,
-    QontoClient.Memberships {
+    QontoClient.Memberships,
+    QontoClient.Labels {
 
     override val organizations = this
     override val transactions = this
     override val memberships = this
+    override val labels = this
 
     private val service: QontoRetrofitService by lazy {
         Retrofit.Builder()
@@ -124,4 +128,15 @@ internal class QontoClientImpl(
             .map { HasApiMetaConverter.convert(it, ApiMembershipListEnvelopeConverter.apiToModel(it)) }
     }
 
+    override fun getLabelList(pagination: Pagination): Flow<Page<Label>> {
+        return flow {
+            emit(
+                service.getLabelList(
+                    pagination.pageIndex,
+                    pagination.itemsPerPage
+                )
+            )
+        }
+            .map { HasApiMetaConverter.convert(it, ApiLabelListEnvelopeConverter.apiToModel(it)) }
+    }
 }

@@ -24,6 +24,7 @@
 
 package org.jraf.klibqonto.internal.client
 
+import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
@@ -56,4 +57,10 @@ internal interface QontoRetrofitService {
         @Query("current_page") pageIndex: Int,
         @Query("per_page") itemsPerPage: Int
     ): ApiMembershipListEnvelope
+
+    @GET("labels")
+    suspend fun getLabelList(
+        @Query("current_page") pageIndex: Int,
+        @Query("per_page") itemsPerPage: Int
+    ): ApiLabelListEnvelope
 }

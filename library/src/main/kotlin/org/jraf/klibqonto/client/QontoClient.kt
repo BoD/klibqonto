@@ -26,6 +26,7 @@ package org.jraf.klibqonto.client
 
 import kotlinx.coroutines.flow.Flow
 import org.jraf.klibqonto.internal.client.QontoClientImpl
+import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
@@ -126,6 +127,27 @@ interface QontoClient {
     }
 
     /**
+     * Labels related APIs.
+     */
+    interface Labels {
+        /**
+         * Retrieve all labels within the organization.
+         *
+         * The response contains the list of labels that are linked to the authenticated company.
+         * The [id][org.jraf.klibqonto.model.labels.Label.id] field uniquely identifies the label and is
+         * used to identify the [label ids of a transaction][org.jraf.klibqonto.model.transactions.Transaction.labelIds].
+         *
+         * ### Parent
+         * A label can be linked to another in order to create lists.
+         * The parent label can be identified thanks to the [parentId][org.jraf.klibqonto.model.labels.Label.parentId]
+         * field.
+         */
+        fun getLabelList(
+            pagination: Pagination = Pagination()
+        ): Flow<Page<Label>>
+    }
+
+    /**
      * Organization related APIs.
      */
     val organizations: Organizations
@@ -139,4 +161,9 @@ interface QontoClient {
      * Membership related APIs.
      */
     val memberships: Memberships
+
+    /**
+     * Labels related APIs.
+     */
+    val labels: Labels
 }

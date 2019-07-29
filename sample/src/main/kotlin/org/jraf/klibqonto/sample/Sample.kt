@@ -46,6 +46,9 @@ import java.util.Date
 import java.util.EnumSet
 import kotlin.system.exitProcess
 
+// !!!!! DO THIS FIRST !!!!!
+// Replace these constants with your login / secret key
+// that you will find in the Qonto web application under Settings, in the API tab.
 const val LOGIN = "xxx"
 const val SECRET_KEY = "yyy"
 
@@ -58,7 +61,9 @@ private val client: QontoClient by lazy {
                 SECRET_KEY
             ),
             HttpConfiguration(
-                loggingLevel = HttpLoggingLevel.BODY,
+                // Uncomment to see more logs
+                // loggingLevel = HttpLoggingLevel.BODY,
+                loggingLevel = HttpLoggingLevel.NONE,
                 // This is only needed to debug with, e.g., Charles Proxy
                 httpProxy = HttpProxy("localhost", 8888)
             )
@@ -67,16 +72,23 @@ private val client: QontoClient by lazy {
 }
 
 suspend fun main() {
-    // Logging
+    // Enable more logging
     System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
     // Get organization
+    println("Organization:")
     getOrganization()
 
     // Get first page of memberships
+    println("\n\nMemberships:")
     getMembershipList()
 
+    // Get first page of labels
+    println("\n\nLabels:")
+    getLabelList()
+
     // Get first 2 pages of transactions
+    println("\n\nTransactions:")
     getTransactionList()
 
     // Exit process
@@ -96,6 +108,14 @@ private suspend fun getMembershipList() {
             println(it.list.joinToString("\n"))
         }
 }
+
+private suspend fun getLabelList() {
+    client.labels.getLabelList()
+        .collect {
+            println(it.list.joinToString("\n"))
+        }
+}
+
 
 private suspend fun getTransactionList() {
     // 1/ Get organization
