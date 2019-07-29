@@ -162,15 +162,13 @@ private fun getTransactionList(): Flow<List<Transaction>> {
 
 suspend fun getAttachment(transactionListFlow: Flow<List<Transaction>>) {
     transactionListFlow
+        // Get the first attachment id of the first transaction that has at least one
         .map { transactionList ->
             transactionList.firstOrNull { it.attachmentIds.isNotEmpty() }?.attachmentIds?.first()
         }
+        // Call getAttachment from the id
         .flatMapConcat { firstAttachmentId ->
-            if (firstAttachmentId == null) {
-                emptyFlow()
-            } else {
-                client.attachments.getAttachment(firstAttachmentId)
-            }
+            firstAttachmentId?.let { client.attachments.getAttachment(it) } ?: emptyFlow()
         }
         .collect { attachment ->
             println("\n\nAttachment:")
