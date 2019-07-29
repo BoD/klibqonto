@@ -26,6 +26,7 @@ package org.jraf.klibqonto.client
 
 import kotlinx.coroutines.flow.Flow
 import org.jraf.klibqonto.internal.client.QontoClientImpl
+import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
@@ -120,6 +121,8 @@ interface QontoClient {
          *
          * The [id][org.jraf.klibqonto.model.memberships.Membership.id] field uniquely identifies the membership
          * and is used to identify the [initiator of a transaction][org.jraf.klibqonto.model.transactions.Transaction.initiatorId].
+         *
+         * @see <a href="https://api-doc.qonto.eu/2.0/memberships/list-memberships">API documentation</a>
          */
         fun getMembershipList(
             pagination: Pagination = Pagination()
@@ -141,10 +144,37 @@ interface QontoClient {
          * A label can be linked to another in order to create lists.
          * The parent label can be identified thanks to the [parentId][org.jraf.klibqonto.model.labels.Label.parentId]
          * field.
+         *
+         * @see <a href="https://api-doc.qonto.eu/2.0/labels/list-labels">API documentation</a>
          */
         fun getLabelList(
             pagination: Pagination = Pagination()
         ): Flow<Page<Label>>
+    }
+
+    /**
+     * Attachments related APIs.
+     */
+    interface Attachments {
+        /**
+         * Obtain the details (e.g: download URL) for a specific attachment.
+         *
+         * Inside Qonto, attachments are files uploaded onto transactions by users.
+         * Attachments typically correspond to the invoice or receipt, and are used to justify the transactions
+         * from a bookkeeping standpoint.
+         *
+         * You can retrieve the IDs of those attachments inside each Transaction object, by calling
+         * [Transactions.getTransactionList].
+         *
+         * **Important:** for security reasons, the [url][Attachment.url] you retrieve for each [Attachment]
+         * is only valid for 30 minutes. If you need to download the file after more than 30 minutes,
+         * you will need to perform another authenticated call in order to generate a new download URL.
+         *
+         * @param id the id of the [Attachment] to retrieve
+         *
+         * @see <a href="https://api-doc.qonto.eu/2.0/attachments/show-attachment">API documentation</a>
+         */
+        fun getAttachment(id: String): Flow<Attachment>
     }
 
     /**
@@ -166,4 +196,9 @@ interface QontoClient {
      * Labels related APIs.
      */
     val labels: Labels
+
+    /**
+     * Attachments related APIs.
+     */
+    val attachments: Attachments
 }

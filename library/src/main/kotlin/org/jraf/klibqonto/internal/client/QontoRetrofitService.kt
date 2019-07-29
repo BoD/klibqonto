@@ -24,11 +24,13 @@
 
 package org.jraf.klibqonto.internal.client
 
+import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 internal interface QontoRetrofitService {
@@ -63,4 +65,10 @@ internal interface QontoRetrofitService {
         @Query("current_page") pageIndex: Int,
         @Query("per_page") itemsPerPage: Int
     ): ApiLabelListEnvelope
+
+    @GET("attachments/{id}")
+    suspend fun getAttachment(
+        @Path("id") id: String
+    ): ApiAttachmentEnvelope
+
 }

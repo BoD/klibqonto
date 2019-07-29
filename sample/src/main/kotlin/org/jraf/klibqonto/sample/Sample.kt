@@ -27,10 +27,12 @@
 package org.jraf.klibqonto.sample
 
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
@@ -88,8 +90,10 @@ suspend fun main() {
     getLabelList()
 
     // Get first 2 pages of transactions
-    println("\n\nTransactions:")
-    getTransactionList()
+    val transactionList = getTransactionList()
+
+    // Get the first attachment from the transaction list
+    getAttachment(transactionList)
 
     // Exit process
     exitProcess(0)
@@ -117,16 +121,16 @@ private suspend fun getLabelList() {
 }
 
 
-private suspend fun getTransactionList() {
+private fun getTransactionList(): Flow<List<Transaction>> {
     // 1/ Get organization
-    client.organizations.getOrganization()
+    return client.organizations.getOrganization()
         .flatMapConcat {
             val slug = it.bankAccounts[0].slug
             // 2/ Get first page of transactions
             client.transactions.getTransactionList(
                 slug = slug,
-                status = EnumSet.of(Transaction.Status.PENDING, Transaction.Status.DECLINED),
-                updatedDateRange = date("2018-01-01") to date("2018-12-31"),
+                status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+                updatedDateRange = date("2018-01-01") to date("2019-12-31"),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                 pagination = Pagination(itemsPerPage = 10)
             )
@@ -140,8 +144,8 @@ private suspend fun getTransactionList() {
             (firstPage.nextPagination?.let { nextPagination ->
                 client.transactions.getTransactionList(
                     slug = slug,
-                    status = EnumSet.of(Transaction.Status.PENDING, Transaction.Status.DECLINED),
-                    updatedDateRange = date("2018-01-01") to date("2018-12-31"),
+                    status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+                    updatedDateRange = date("2018-01-01") to date("2019-12-31"),
                     sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                     pagination = nextPagination
                 )
@@ -150,10 +154,30 @@ private suspend fun getTransactionList() {
                     firstPage.list + nextPage.list
                 }
         }
-        .collect {
-            println(it.joinToString("\n") { transaction -> transaction.toFormattedString() })
+        .onEach { transactionList ->
+            println("\n\nTransactions:")
+            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
         }
 }
+
+suspend fun getAttachment(transactionListFlow: Flow<List<Transaction>>) {
+    transactionListFlow
+        .map { transactionList ->
+            transactionList.firstOrNull { it.attachmentIds.isNotEmpty() }?.attachmentIds?.first()
+        }
+        .flatMapConcat { firstAttachmentId ->
+            if (firstAttachmentId == null) {
+                emptyFlow()
+            } else {
+                client.attachments.getAttachment(firstAttachmentId)
+            }
+        }
+        .collect { attachment ->
+            println("\n\nAttachment:")
+            println(attachment)
+        }
+}
+
 
 fun Transaction.toFormattedString(): String =
     "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"

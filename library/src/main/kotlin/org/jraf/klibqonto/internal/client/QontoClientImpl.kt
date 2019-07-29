@@ -31,6 +31,7 @@ import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
+import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelopeConverter
@@ -40,6 +41,7 @@ import org.jraf.klibqonto.internal.api.model.transactions.ApiSortOrderConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.internal.client.QontoRetrofitService.Companion.BASE_URL
+import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
@@ -58,12 +60,14 @@ internal class QontoClientImpl(
     QontoClient.Organizations,
     QontoClient.Transactions,
     QontoClient.Memberships,
-    QontoClient.Labels {
+    QontoClient.Labels,
+    QontoClient.Attachments {
 
     override val organizations = this
     override val transactions = this
     override val memberships = this
     override val labels = this
+    override val attachments = this
 
     private val service: QontoRetrofitService by lazy {
         Retrofit.Builder()
@@ -138,5 +142,12 @@ internal class QontoClientImpl(
             )
         }
             .map { HasApiMetaConverter.convert(it, ApiLabelListEnvelopeConverter.apiToModel(it)) }
+    }
+
+    override fun getAttachment(id: String): Flow<Attachment> {
+        return flow {
+            emit(service.getAttachment(id))
+        }
+            .map { ApiAttachmentEnvelopeConverter.apiToModel(it) }
     }
 }
