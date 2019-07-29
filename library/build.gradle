@@ -62,10 +62,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
 
-    // Rx
-    api "io.reactivex.rxjava2:rxjava:$versions.rxJava"
-    implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
-
     // Retrofit
     implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
     implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
