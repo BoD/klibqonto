@@ -1,7 +1,9 @@
 # klibqonto
 
-This is a client for the Qonto API, for Kotlin on the JVM.
+Work in progress!
 
-The API leverages RxJava.
+This is a client for the Qonto API, for Kotlin (and Java) on the JVM.
+
+The API leverages coroutines.
 
 The easiest way to see how to use it is to look at the [sample](sample/src/main/kotlin/org/jraf/klibqonto/sample/Sample.kt)
