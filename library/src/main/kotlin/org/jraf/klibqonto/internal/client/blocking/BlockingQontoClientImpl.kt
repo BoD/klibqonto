@@ -28,13 +28,13 @@ import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.blocking.BlockingQontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.util.Date
 import java.util.EnumSet
 
 internal class BlockingQontoClientImpl(
@@ -59,8 +59,8 @@ internal class BlockingQontoClientImpl(
     override fun getTransactionList(
         slug: String,
         status: EnumSet<Transaction.Status>,
-        updatedDateRange: Pair<Date?, Date?>?,
-        settledDateRange: Pair<Date?, Date?>?,
+        updatedDateRange: DateRange?,
+        settledDateRange: DateRange?,
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
         pagination: Pagination

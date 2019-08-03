@@ -28,13 +28,13 @@ import kotlinx.coroutines.flow.Flow
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.flow.FlowQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.util.Date
 import java.util.EnumSet
 
 interface FlowQontoClient {
@@ -87,8 +87,8 @@ interface FlowQontoClient {
         fun getTransactionList(
             slug: String,
             status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
-            updatedDateRange: Pair<Date?, Date?>? = null to null,
-            settledDateRange: Pair<Date?, Date?>? = null to null,
+            updatedDateRange: DateRange? = null,
+            settledDateRange: DateRange? = null,
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
             pagination: Pagination = Pagination()

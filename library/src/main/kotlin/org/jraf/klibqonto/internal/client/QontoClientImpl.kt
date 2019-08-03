@@ -39,6 +39,7 @@ import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnve
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.internal.client.QontoRetrofitService.Companion.BASE_URL
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
@@ -48,7 +49,6 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.Date
 import java.util.EnumSet
 
 internal class QontoClientImpl(
@@ -85,17 +85,17 @@ internal class QontoClientImpl(
     override suspend fun getTransactionList(
         slug: String,
         status: EnumSet<Transaction.Status>,
-        updatedDateRange: Pair<Date?, Date?>?,
-        settledDateRange: Pair<Date?, Date?>?,
+        updatedDateRange: DateRange?,
+        settledDateRange: DateRange?,
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
         pagination: Pagination
     ): Page<Transaction> {
         val statusStrSet = status.map { ApiTransactionStatusConverter.modelToApi(it) }.toSet()
-        val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange?.first)
-        val updatedAtTo = ApiDateConverter.modelToApi(updatedDateRange?.second)
-        val settledAtFrom = ApiDateConverter.modelToApi(settledDateRange?.first)
-        val settledAtTo = ApiDateConverter.modelToApi(settledDateRange?.second)
+        val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange?.from)
+        val updatedAtTo = ApiDateConverter.modelToApi(updatedDateRange?.to)
+        val settledAtFrom = ApiDateConverter.modelToApi(settledDateRange?.from)
+        val settledAtTo = ApiDateConverter.modelToApi(settledDateRange?.to)
         val sortBy = ApiSortFieldConverter.modelToApi(sortField) + ":" + ApiSortOrderConverter.modelToApi(sortOrder)
         return service.getTransactionList(
             slug,

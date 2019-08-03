@@ -24,12 +24,11 @@
 
 package org.jraf.klibqonto.sample;
 
-import kotlin.Pair;
-import kotlin.collections.CollectionsKt;
 import org.jraf.klibqonto.client.*;
 import org.jraf.klibqonto.client.blocking.BlockingQontoClient;
 import org.jraf.klibqonto.client.blocking.BlockingQontoClientUtils;
 import org.jraf.klibqonto.model.attachments.Attachment;
+import org.jraf.klibqonto.model.dates.DateRange;
 import org.jraf.klibqonto.model.labels.Label;
 import org.jraf.klibqonto.model.memberships.Membership;
 import org.jraf.klibqonto.model.organizations.Organization;
@@ -37,10 +36,7 @@ import org.jraf.klibqonto.model.pagination.Page;
 import org.jraf.klibqonto.model.pagination.Pagination;
 import org.jraf.klibqonto.model.transactions.Transaction;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.jraf.klibqonto.sample.SampleKt.date;
@@ -117,7 +113,7 @@ class BlockingSample {
         Page<Transaction> firstPage = client.getTransactions().getTransactionList(
                 slug,
                 EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                new Pair<>(date("2018-01-01"), date("2019-12-31")),
+                new DateRange(date("2018-01-01"), date("2019-12-31")),
                 null,
                 QontoClient.Transactions.SortField.UPDATED_DATE,
                 QontoClient.Transactions.SortOrder.DESCENDING,
@@ -131,7 +127,7 @@ class BlockingSample {
             Page<Transaction> secondPage = client.getTransactions().getTransactionList(
                     slug,
                     EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                    new Pair<>(date("2018-01-01"), date("2019-12-31")),
+                    new DateRange(date("2018-01-01"), date("2019-12-31")),
                     null,
                     QontoClient.Transactions.SortField.UPDATED_DATE,
                     QontoClient.Transactions.SortOrder.DESCENDING,
@@ -144,9 +140,11 @@ class BlockingSample {
 
     private Attachment getAttachment(List<Transaction> transactionList) {
         // Get the first attachment id of the first transaction that has at least one
-        Transaction firstTransactionWithAttachment = CollectionsKt.firstOrNull(transactionList, transaction -> !transaction.getAttachmentIds().isEmpty());
-        if (firstTransactionWithAttachment == null) return null;
-        String firstAttachmentId = firstTransactionWithAttachment.getAttachmentIds().get(0);
+        Optional<Transaction> firstTransactionWithAttachment = transactionList.stream()
+                .filter(transaction -> !transaction.getAttachmentIds().isEmpty())
+                .findFirst();
+        if (!firstTransactionWithAttachment.isPresent()) return null;
+        String firstAttachmentId = firstTransactionWithAttachment.get().getAttachmentIds().get(0);
         // Call getAttachment from the id
         return client.getAttachments().getAttachment(firstAttachmentId);
     }

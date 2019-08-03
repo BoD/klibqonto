@@ -29,13 +29,13 @@ package org.jraf.klibqonto.client.blocking
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.blocking.BlockingQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.util.Date
 import java.util.EnumSet
 
 interface BlockingQontoClient {
@@ -89,8 +89,8 @@ interface BlockingQontoClient {
         fun getTransactionList(
             slug: String,
             status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
-            updatedDateRange: Pair<Date?, Date?>? = null,
-            settledDateRange: Pair<Date?, Date?>? = null,
+            updatedDateRange: DateRange? = null,
+            settledDateRange: DateRange? = null,
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
             pagination: Pagination = Pagination()

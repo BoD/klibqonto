@@ -42,6 +42,7 @@ import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.flow.FlowQontoClient
 import org.jraf.klibqonto.client.flow.asFlowQontoClient
+import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import java.util.EnumSet
@@ -134,7 +135,7 @@ object FlowSample {
                 client.transactions.getTransactionList(
                     slug = slug,
                     status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                    updatedDateRange = date("2018-01-01") to date("2019-12-31"),
+                    updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
                     sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                     pagination = Pagination(itemsPerPage = 10)
                 )
@@ -149,7 +150,7 @@ object FlowSample {
                     client.transactions.getTransactionList(
                         slug = slug,
                         status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                        updatedDateRange = date("2018-01-01") to date("2019-12-31"),
+                        updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
                         sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                         pagination = nextPagination
                     )
