@@ -38,53 +38,32 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import java.util.EnumSet
 
+/**
+ * A 'blocking' version of a Qonto client.
+ *
+ * All the methods here are blocking, meaning the calling thread will wait for the
+ * result to be available.
+ *
+ * This is useful from Java, which doesn't have a notion of `suspend` functions.
+ */
 interface BlockingQontoClient {
 
     /**
-     * Organization related APIs.
+     * See [QontoClient.Organizations].
      */
     interface Organizations {
         /**
-         * Retrieve the list and details of a company's bank accounts.
-         *
-         * The response contains the list of bank accounts of the authenticated company.
-         * There can currently only be one bank account per company.
-         *
-         * The [balance][org.jraf.klibqonto.model.organizations.BankAccount.balanceCents] represents
-         * the actual amount of money on the account, in Euros.
-         *
-         * The [authorized balance][org.jraf.klibqonto.model.organizations.BankAccount.authorizedBalanceCents]
-         * represents the amount available for payments, taking into account transactions that are being processed.
-         * More information [here](https://support.qonto.eu/hc/en-us/articles/115000493249-How-is-the-balance-of-my-account-calculated-).
-         *
-         * The bank account's [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug]
-         * and [iban][org.jraf.klibqonto.model.organizations.BankAccount.iban] will be required for you to retrieve the
-         * list of transactions inside that bank account, using [Transactions.getTransactionList].
-         *
-         * @see <a href="https://api-doc.qonto.eu/2.0/organizations/show-organization-1">API documentation</a>
+         * See [QontoClient.Organizations.getOrganization].
          */
         fun getOrganization(): Organization
     }
 
     /**
-     * Transaction related APIs.
+     * See [QontoClient.Transactions].
      */
     interface Transactions {
         /**
-         * Retrieve all transactions within a particular bank account.
-         *
-         * The response contains the list of transactions that contributed to the bank account's balances
-         * (e.g., incomes, transfers, cards). All transactions visible in Qonto's UI can be fetched, as of API V2.
-         *
-         * @param slug the [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug] of the bank account from which to get the transactions
-         * @param status filter to get only transactions matching these status (default: no filter)
-         * @param updatedDateRange filter to get only transactions matching this update date range (default: no filter)
-         * @param settledDateRange filter to get only transactions matching this settled date range (default: no filter)
-         * @param sortField sort by this field (default: settled date)
-         * @param sortOrder sort order (default: descending)
-         * @param pagination pagination settings
-         *
-         * @see <a href="https://api-doc.qonto.eu/2.0/transactions/list-transactions">API documentation</a>
+         * See [QontoClient.Transactions.getTransactionList].
          */
         fun getTransactionList(
             slug: String,
@@ -98,20 +77,11 @@ interface BlockingQontoClient {
     }
 
     /**
-     * Membership related APIs.
+     * See [QontoClient.Memberships].
      */
     interface Memberships {
         /**
-         * Retrieve all memberships within the organization.
-         *
-         * The response contains the list of memberships that are linked to the authenticated company.
-         * A membership is a user who's been granted access to the Qonto account of a company.
-         * There is no limit currently to the number of memberships a company can have.
-         *
-         * The [id][org.jraf.klibqonto.model.memberships.Membership.id] field uniquely identifies the membership
-         * and is used to identify the [initiator of a transaction][org.jraf.klibqonto.model.transactions.Transaction.initiatorId].
-         *
-         * @see <a href="https://api-doc.qonto.eu/2.0/memberships/list-memberships">API documentation</a>
+         * See [QontoClient.Memberships.getMembershipList].
          */
         fun getMembershipList(
             pagination: Pagination = Pagination()
@@ -119,22 +89,11 @@ interface BlockingQontoClient {
     }
 
     /**
-     * Labels related APIs.
+     * See [QontoClient.Labels].
      */
     interface Labels {
         /**
-         * Retrieve all labels within the organization.
-         *
-         * The response contains the list of labels that are linked to the authenticated company.
-         * The [id][org.jraf.klibqonto.model.labels.Label.id] field uniquely identifies the label and is
-         * used to identify the [label ids of a transaction][org.jraf.klibqonto.model.transactions.Transaction.labelIds].
-         *
-         * ### Parent
-         * A label can be linked to another in order to create lists.
-         * The parent label can be identified thanks to the [parentId][org.jraf.klibqonto.model.labels.Label.parentId]
-         * field.
-         *
-         * @see <a href="https://api-doc.qonto.eu/2.0/labels/list-labels">API documentation</a>
+         * See [QontoClient.Labels.getLabelList].
          */
         fun getLabelList(
             pagination: Pagination = Pagination()
@@ -142,56 +101,46 @@ interface BlockingQontoClient {
     }
 
     /**
-     * Attachments related APIs.
+     * See [QontoClient.Attachments].
      */
     interface Attachments {
         /**
-         * Obtain the details (e.g: download URL) for a specific attachment.
-         *
-         * Inside Qonto, attachments are files uploaded onto transactions by users.
-         * Attachments typically correspond to the invoice or receipt, and are used to justify the transactions
-         * from a bookkeeping standpoint.
-         *
-         * You can retrieve the IDs of those attachments inside each Transaction object, by calling
-         * [Transactions.getTransactionList].
-         *
-         * **Important:** for security reasons, the [url][Attachment.url] you retrieve for each [Attachment]
-         * is only valid for 30 minutes. If you need to download the file after more than 30 minutes,
-         * you will need to perform another authenticated call in order to generate a new download URL.
-         *
-         * @param id the id of the [Attachment] to retrieve
-         *
-         * @see <a href="https://api-doc.qonto.eu/2.0/attachments/show-attachment">API documentation</a>
+         * See [QontoClient.Attachments.getAttachment].
          */
         fun getAttachment(id: String): Attachment
     }
 
     /**
-     * Organization related APIs.
+     * See [QontoClient.organizations].
      */
     val organizations: Organizations
 
     /**
-     * Transaction related APIs.
+     * See [QontoClient.transactions].
      */
     val transactions: Transactions
 
     /**
-     * Membership related APIs.
+     * See [QontoClient.memberships].
      */
     val memberships: Memberships
 
     /**
-     * Labels related APIs.
+     * See [QontoClient.labels].
      */
     val labels: Labels
 
     /**
-     * Attachments related APIs.
+     * See [QontoClient.attachments].
      */
     val attachments: Attachments
 }
 
+/**
+ * Get a blocking client from a [QontoClient].
+ *
+ * This is useful from Java, which doesn't have a notion of `suspend` functions.
+ */
 fun QontoClient.asBlockingQontoClient(): BlockingQontoClient {
     return BlockingQontoClientImpl(this)
 }
