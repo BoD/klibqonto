@@ -26,7 +26,7 @@ package org.jraf.klibqonto.client
 
 import org.jraf.klibqonto.internal.client.VERSION
 
-data class ClientConfiguration(
+data class ClientConfiguration @JvmOverloads constructor(
     val authentication: Authentication,
     val httpConfiguration: HttpConfiguration = HttpConfiguration(),
     val userAgent: String = "klibqonto/$VERSION"

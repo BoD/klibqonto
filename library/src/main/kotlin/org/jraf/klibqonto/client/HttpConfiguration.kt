@@ -24,7 +24,7 @@
 
 package org.jraf.klibqonto.client
 
-data class HttpConfiguration(
+data class HttpConfiguration @JvmOverloads constructor(
     val loggingLevel: HttpLoggingLevel = HttpLoggingLevel.NONE,
     val mockServerBaserUri: BaseUri? = null,
     val httpProxy: HttpProxy? = null

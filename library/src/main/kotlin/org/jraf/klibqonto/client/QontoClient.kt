@@ -37,6 +37,7 @@ import java.util.EnumSet
 
 interface QontoClient {
     companion object {
+        @JvmStatic
         fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
     }
 
@@ -99,8 +100,8 @@ interface QontoClient {
         suspend fun getTransactionList(
             slug: String,
             status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
-            updatedDateRange: Pair<Date?, Date?> = null to null,
-            settledDateRange: Pair<Date?, Date?> = null to null,
+            updatedDateRange: Pair<Date?, Date?>? = null to null,
+            settledDateRange: Pair<Date?, Date?>? = null to null,
             sortField: SortField = SortField.SETTLED_DATE,
             sortOrder: SortOrder = SortOrder.DESCENDING,
             pagination: Pagination = Pagination()

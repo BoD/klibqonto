@@ -85,17 +85,17 @@ internal class QontoClientImpl(
     override suspend fun getTransactionList(
         slug: String,
         status: EnumSet<Transaction.Status>,
-        updatedDateRange: Pair<Date?, Date?>,
-        settledDateRange: Pair<Date?, Date?>,
+        updatedDateRange: Pair<Date?, Date?>?,
+        settledDateRange: Pair<Date?, Date?>?,
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
         pagination: Pagination
     ): Page<Transaction> {
         val statusStrSet = status.map { ApiTransactionStatusConverter.modelToApi(it) }.toSet()
-        val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange.first)
-        val updatedAtTo = ApiDateConverter.modelToApi(updatedDateRange.second)
-        val settledAtFrom = ApiDateConverter.modelToApi(settledDateRange.first)
-        val settledAtTo = ApiDateConverter.modelToApi(settledDateRange.second)
+        val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange?.first)
+        val updatedAtTo = ApiDateConverter.modelToApi(updatedDateRange?.second)
+        val settledAtFrom = ApiDateConverter.modelToApi(settledDateRange?.first)
+        val settledAtTo = ApiDateConverter.modelToApi(settledDateRange?.second)
         val sortBy = ApiSortFieldConverter.modelToApi(sortField) + ":" + ApiSortOrderConverter.modelToApi(sortOrder)
         return service.getTransactionList(
             slug,
@@ -105,7 +105,7 @@ internal class QontoClientImpl(
             settledAtFrom,
             settledAtTo,
             sortBy,
-            pagination.pageIndex,
+            pagination.pageIndex.coerceAtLeast(Pagination.FIRST_PAGE_INDEX),
             pagination.itemsPerPage
         )
             .let { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.apiToModel(it)) }
@@ -113,7 +113,7 @@ internal class QontoClientImpl(
 
     override suspend fun getMembershipList(pagination: Pagination): Page<Membership> {
         return service.getMembershipList(
-            pagination.pageIndex,
+            pagination.pageIndex.coerceAtLeast(Pagination.FIRST_PAGE_INDEX),
             pagination.itemsPerPage
         )
             .let { HasApiMetaConverter.convert(it, ApiMembershipListEnvelopeConverter.apiToModel(it)) }
@@ -121,7 +121,7 @@ internal class QontoClientImpl(
 
     override suspend fun getLabelList(pagination: Pagination): Page<Label> {
         return service.getLabelList(
-            pagination.pageIndex,
+            pagination.pageIndex.coerceAtLeast(Pagination.FIRST_PAGE_INDEX),
             pagination.itemsPerPage
         )
             .let { HasApiMetaConverter.convert(it, ApiLabelListEnvelopeConverter.apiToModel(it)) }

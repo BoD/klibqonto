@@ -22,13 +22,11 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.client.flow
+package org.jraf.klibqonto.internal.client.blocking
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.client.QontoClient
-import org.jraf.klibqonto.client.flow.FlowQontoClient
+import org.jraf.klibqonto.client.blocking.BlockingQontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -39,14 +37,14 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import java.util.Date
 import java.util.EnumSet
 
-internal class FlowQontoClientImpl(
+internal class BlockingQontoClientImpl(
     private val qontoClient: QontoClient
-) : FlowQontoClient,
-    FlowQontoClient.Organizations,
-    FlowQontoClient.Transactions,
-    FlowQontoClient.Memberships,
-    FlowQontoClient.Labels,
-    FlowQontoClient.Attachments {
+) : BlockingQontoClient,
+    BlockingQontoClient.Organizations,
+    BlockingQontoClient.Transactions,
+    BlockingQontoClient.Memberships,
+    BlockingQontoClient.Labels,
+    BlockingQontoClient.Attachments {
 
     override val organizations = this
     override val transactions = this
@@ -54,7 +52,9 @@ internal class FlowQontoClientImpl(
     override val labels = this
     override val attachments = this
 
-    override fun getOrganization(): Flow<Organization> = qontoClient.organizations::getOrganization.asFlow()
+    override fun getOrganization(): Organization = runBlocking {
+        qontoClient.organizations.getOrganization()
+    }
 
     override fun getTransactionList(
         slug: String,
@@ -64,29 +64,27 @@ internal class FlowQontoClientImpl(
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
         pagination: Pagination
-    ): Flow<Page<Transaction>> = flow {
-        emit(
-            qontoClient.transactions.getTransactionList(
-                slug,
-                status,
-                updatedDateRange,
-                settledDateRange,
-                sortField,
-                sortOrder,
-                pagination
-            )
+    ): Page<Transaction> = runBlocking {
+        qontoClient.transactions.getTransactionList(
+            slug,
+            status,
+            updatedDateRange,
+            settledDateRange,
+            sortField,
+            sortOrder,
+            pagination
         )
     }
 
-    override fun getMembershipList(pagination: Pagination): Flow<Page<Membership>> = flow {
-        emit(qontoClient.memberships.getMembershipList(pagination))
+    override fun getMembershipList(pagination: Pagination): Page<Membership> = runBlocking {
+        qontoClient.memberships.getMembershipList(pagination)
     }
 
-    override fun getLabelList(pagination: Pagination): Flow<Page<Label>> = flow {
-        emit(qontoClient.labels.getLabelList(pagination))
+    override fun getLabelList(pagination: Pagination): Page<Label> = runBlocking {
+        qontoClient.labels.getLabelList(pagination)
     }
 
-    override fun getAttachment(id: String): Flow<Attachment> = flow {
-        emit(qontoClient.attachments.getAttachment(id))
+    override fun getAttachment(id: String): Attachment = runBlocking {
+        qontoClient.attachments.getAttachment(id)
     }
 }

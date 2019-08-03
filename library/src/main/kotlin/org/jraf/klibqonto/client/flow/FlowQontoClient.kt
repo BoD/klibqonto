@@ -87,8 +87,8 @@ interface FlowQontoClient {
         fun getTransactionList(
             slug: String,
             status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
-            updatedDateRange: Pair<Date?, Date?> = null to null,
-            settledDateRange: Pair<Date?, Date?> = null to null,
+            updatedDateRange: Pair<Date?, Date?>? = null to null,
+            settledDateRange: Pair<Date?, Date?>? = null to null,
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
             pagination: Pagination = Pagination()
