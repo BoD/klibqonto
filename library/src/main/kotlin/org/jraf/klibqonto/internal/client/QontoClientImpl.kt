@@ -24,9 +24,6 @@
 
 package org.jraf.klibqonto.internal.client
 
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.OkHttpHelper
@@ -80,14 +77,12 @@ internal class QontoClientImpl(
     }
 
 
-    override fun getOrganization(): Flow<Organization> {
-        return flow {
-            emit(service.getOrganization())
-        }
-            .map { ApiOrganizationEnvelopeConverter.apiToModel(it) }
+    override suspend fun getOrganization(): Organization {
+        return service.getOrganization()
+            .let { ApiOrganizationEnvelopeConverter.apiToModel(it) }
     }
 
-    override fun getTransactionList(
+    override suspend fun getTransactionList(
         slug: String,
         status: EnumSet<Transaction.Status>,
         updatedDateRange: Pair<Date?, Date?>,
@@ -95,59 +90,45 @@ internal class QontoClientImpl(
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
         pagination: Pagination
-    ): Flow<Page<Transaction>> {
+    ): Page<Transaction> {
         val statusStrSet = status.map { ApiTransactionStatusConverter.modelToApi(it) }.toSet()
         val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange.first)
         val updatedAtTo = ApiDateConverter.modelToApi(updatedDateRange.second)
         val settledAtFrom = ApiDateConverter.modelToApi(settledDateRange.first)
         val settledAtTo = ApiDateConverter.modelToApi(settledDateRange.second)
         val sortBy = ApiSortFieldConverter.modelToApi(sortField) + ":" + ApiSortOrderConverter.modelToApi(sortOrder)
-        return flow {
-            emit(
-                service.getTransactionList(
-                    slug,
-                    statusStrSet,
-                    updatedAtFrom,
-                    updatedAtTo,
-                    settledAtFrom,
-                    settledAtTo,
-                    sortBy,
-                    pagination.pageIndex,
-                    pagination.itemsPerPage
-                )
-            )
-        }
-            .map { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.apiToModel(it)) }
+        return service.getTransactionList(
+            slug,
+            statusStrSet,
+            updatedAtFrom,
+            updatedAtTo,
+            settledAtFrom,
+            settledAtTo,
+            sortBy,
+            pagination.pageIndex,
+            pagination.itemsPerPage
+        )
+            .let { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.apiToModel(it)) }
     }
 
-    override fun getMembershipList(pagination: Pagination): Flow<Page<Membership>> {
-        return flow {
-            emit(
-                service.getMembershipList(
-                    pagination.pageIndex,
-                    pagination.itemsPerPage
-                )
-            )
-        }
-            .map { HasApiMetaConverter.convert(it, ApiMembershipListEnvelopeConverter.apiToModel(it)) }
+    override suspend fun getMembershipList(pagination: Pagination): Page<Membership> {
+        return service.getMembershipList(
+            pagination.pageIndex,
+            pagination.itemsPerPage
+        )
+            .let { HasApiMetaConverter.convert(it, ApiMembershipListEnvelopeConverter.apiToModel(it)) }
     }
 
-    override fun getLabelList(pagination: Pagination): Flow<Page<Label>> {
-        return flow {
-            emit(
-                service.getLabelList(
-                    pagination.pageIndex,
-                    pagination.itemsPerPage
-                )
-            )
-        }
-            .map { HasApiMetaConverter.convert(it, ApiLabelListEnvelopeConverter.apiToModel(it)) }
+    override suspend fun getLabelList(pagination: Pagination): Page<Label> {
+        return service.getLabelList(
+            pagination.pageIndex,
+            pagination.itemsPerPage
+        )
+            .let { HasApiMetaConverter.convert(it, ApiLabelListEnvelopeConverter.apiToModel(it)) }
     }
 
-    override fun getAttachment(id: String): Flow<Attachment> {
-        return flow {
-            emit(service.getAttachment(id))
-        }
-            .map { ApiAttachmentEnvelopeConverter.apiToModel(it) }
+    override suspend fun getAttachment(id: String): Attachment {
+        return service.getAttachment(id)
+            .let { ApiAttachmentEnvelopeConverter.apiToModel(it) }
     }
 }

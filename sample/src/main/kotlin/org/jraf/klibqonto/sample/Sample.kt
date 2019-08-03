@@ -22,23 +22,17 @@
  * limitations under the License.
  */
 
-@file:UseExperimental(FlowPreview::class)
-
 package org.jraf.klibqonto.sample
 
-import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.flow.flatMapConcat
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
+import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import java.text.DateFormat
@@ -48,134 +42,101 @@ import java.util.Date
 import java.util.EnumSet
 import kotlin.system.exitProcess
 
-// !!!!! DO THIS FIRST !!!!!
-// Replace these constants with your login / secret key
-// that you will find in the Qonto web application under Settings, in the API tab.
-const val LOGIN = "xxx"
-const val SECRET_KEY = "yyy"
+object Sample {
 
-private val client: QontoClient by lazy {
-    // Create the client
-    QontoClient.newInstance(
-        ClientConfiguration(
-            Authentication(
-                LOGIN,
-                SECRET_KEY
-            ),
-            HttpConfiguration(
-                // Uncomment to see more logs
-                // loggingLevel = HttpLoggingLevel.BODY,
-                loggingLevel = HttpLoggingLevel.NONE,
-                // This is only needed to debug with, e.g., Charles Proxy
-                httpProxy = HttpProxy("localhost", 8888)
+    // !!!!! DO THIS FIRST !!!!!
+    // Replace these constants with your login / secret key
+    // that you will find in the Qonto web application under Settings, in the API tab.
+    private const val LOGIN = "xxx"
+    private const val SECRET_KEY = "yyy"
+
+    private val client: QontoClient by lazy {
+        // Create the client
+        QontoClient.newInstance(
+            ClientConfiguration(
+                Authentication(
+                    LOGIN,
+                    SECRET_KEY
+                ),
+                HttpConfiguration(
+                    // Uncomment to see more logs
+                    // loggingLevel = HttpLoggingLevel.BODY,
+                    loggingLevel = HttpLoggingLevel.NONE,
+                    // This is only needed to debug with, e.g., Charles Proxy
+                    httpProxy = HttpProxy("localhost", 8888)
+                )
             )
         )
-    )
-}
+    }
 
-suspend fun main() {
-    // Enable more logging
-    System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
+    fun main() {
+        // Enable more logging
+        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
 
-    // Get organization
-    println("Organization:")
-    getOrganization()
+        runBlocking {
+            // Get organization
+            println("Organization:")
+            val organization = client.organizations.getOrganization()
+            println(organization)
 
-    // Get first page of memberships
-    println("\n\nMemberships:")
-    getMembershipList()
+            // Get first page of memberships
+            println("\n\nMemberships:")
+            val membershipList = client.memberships.getMembershipList()
+            println(membershipList.list.joinToString("\n"))
 
-    // Get first page of labels
-    println("\n\nLabels:")
-    getLabelList()
+            // Get first page of labels
+            println("\n\nLabels:")
+            val labels = client.labels.getLabelList()
+            println(labels.list.joinToString("\n"))
 
-    // Get first 2 pages of transactions
-    val transactionList = getTransactionList()
+            // Get first 2 pages of transactions
+            println("\n\nTransactions:")
+            val transactionList = getTransactionList(organization)
+            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
 
-    // Get the first attachment from the transaction list
-    getAttachment(transactionList)
-
-    // Exit process
-    exitProcess(0)
-}
-
-private suspend fun getOrganization() {
-    client.organizations.getOrganization()
-        .collect {
-            println(it)
+            // Get the first attachment from the transaction list
+            println("\n\nAttachment:")
+            val attachment = getAttachment(transactionList)
+            println(attachment)
         }
-}
 
-private suspend fun getMembershipList() {
-    client.memberships.getMembershipList()
-        .collect {
-            println(it.list.joinToString("\n"))
-        }
-}
+        // Exit process
+        exitProcess(0)
+    }
 
-private suspend fun getLabelList() {
-    client.labels.getLabelList()
-        .collect {
-            println(it.list.joinToString("\n"))
-        }
-}
+    private suspend fun getTransactionList(organization: Organization): List<Transaction> {
+        // 1/ Get first page of transactions
+        val slug = organization.bankAccounts[0].slug
+        val firstPage = client.transactions.getTransactionList(
+            slug = slug,
+            status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+            updatedDateRange = date("2018-01-01") to date("2019-12-31"),
+            sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
+            pagination = Pagination(itemsPerPage = 10)
+        )
+        val list = firstPage.list.toMutableList()
 
-
-private fun getTransactionList(): Flow<List<Transaction>> {
-    // 1/ Get organization
-    return client.organizations.getOrganization()
-        .flatMapConcat {
-            val slug = it.bankAccounts[0].slug
-            // 2/ Get first page of transactions
-            client.transactions.getTransactionList(
+        // 2/ Get next page of transactions (if any)
+        firstPage.nextPagination?.let { nextPagination ->
+            val secondPage = client.transactions.getTransactionList(
                 slug = slug,
                 status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
                 updatedDateRange = date("2018-01-01") to date("2019-12-31"),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
-                pagination = Pagination(itemsPerPage = 10)
+                pagination = nextPagination
             )
-                .map { firstPage ->
-                    slug to firstPage
-                }
+            list += secondPage.list
         }
-        .flatMapConcat {
-            val (slug, firstPage) = it
-            // 3/ Get next page of transactions (if any)
-            (firstPage.nextPagination?.let { nextPagination ->
-                client.transactions.getTransactionList(
-                    slug = slug,
-                    status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                    updatedDateRange = date("2018-01-01") to date("2019-12-31"),
-                    sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
-                    pagination = nextPagination
-                )
-            } ?: emptyFlow())
-                .map { nextPage ->
-                    firstPage.list + nextPage.list
-                }
-        }
-        .onEach { transactionList ->
-            println("\n\nTransactions:")
-            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
-        }
-}
+        return list
+    }
 
-suspend fun getAttachment(transactionListFlow: Flow<List<Transaction>>) {
-    transactionListFlow
+    private suspend fun getAttachment(transactionList: List<Transaction>): Attachment? {
         // Get the first attachment id of the first transaction that has at least one
-        .map { transactionList ->
-            transactionList.firstOrNull { it.attachmentIds.isNotEmpty() }?.attachmentIds?.first()
-        }
+        val firstAttachmentId = transactionList.firstOrNull { it.attachmentIds.isNotEmpty() }?.attachmentIds?.first()
         // Call getAttachment from the id
-        .flatMapConcat { firstAttachmentId ->
-            firstAttachmentId?.let { client.attachments.getAttachment(it) } ?: emptyFlow()
-        }
-        .collect { attachment ->
-            println("\n\nAttachment:")
-            println(attachment)
-        }
+        return firstAttachmentId?.let { client.attachments.getAttachment(it) }
+    }
 }
-
 
 fun Transaction.toFormattedString(): String =
     "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
@@ -187,3 +148,6 @@ fun Long.toFormattedAmount(): String = NumberFormat.getCurrencyInstance()
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun date(s: String): Date = SimpleDateFormat("yyyy-MM-dd").parse(s)
+
+
+fun main() = Sample.main()

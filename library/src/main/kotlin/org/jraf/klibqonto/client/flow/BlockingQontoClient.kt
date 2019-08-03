@@ -22,9 +22,9 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.client.flow
 
-import org.jraf.klibqonto.internal.client.QontoClientImpl
+import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -35,10 +35,7 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import java.util.Date
 import java.util.EnumSet
 
-interface QontoClient {
-    companion object {
-        fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
-    }
+interface BlockingQontoClient {
 
     /**
      * Organization related APIs.
@@ -63,23 +60,13 @@ interface QontoClient {
          *
          * @see <a href="https://api-doc.qonto.eu/2.0/organizations/show-organization-1">API documentation</a>
          */
-        suspend fun getOrganization(): Organization
+        fun getOrganization(): Organization
     }
 
     /**
      * Transaction related APIs.
      */
     interface Transactions {
-        enum class SortField {
-            UPDATED_DATE,
-            SETTLED_DATE
-        }
-
-        enum class SortOrder {
-            DESCENDING,
-            ASCENDING
-        }
-
         /**
          * Retrieve all transactions within a particular bank account.
          *
@@ -96,13 +83,13 @@ interface QontoClient {
          *
          * @see <a href="https://api-doc.qonto.eu/2.0/transactions/list-transactions">API documentation</a>
          */
-        suspend fun getTransactionList(
+        fun getTransactionList(
             slug: String,
             status: EnumSet<Transaction.Status> = EnumSet.noneOf(Transaction.Status::class.java),
             updatedDateRange: Pair<Date?, Date?> = null to null,
             settledDateRange: Pair<Date?, Date?> = null to null,
-            sortField: SortField = SortField.SETTLED_DATE,
-            sortOrder: SortOrder = SortOrder.DESCENDING,
+            sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
+            sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
             pagination: Pagination = Pagination()
         ): Page<Transaction>
     }
@@ -123,7 +110,7 @@ interface QontoClient {
          *
          * @see <a href="https://api-doc.qonto.eu/2.0/memberships/list-memberships">API documentation</a>
          */
-        suspend fun getMembershipList(
+        fun getMembershipList(
             pagination: Pagination = Pagination()
         ): Page<Membership>
     }
@@ -146,7 +133,7 @@ interface QontoClient {
          *
          * @see <a href="https://api-doc.qonto.eu/2.0/labels/list-labels">API documentation</a>
          */
-        suspend fun getLabelList(
+        fun getLabelList(
             pagination: Pagination = Pagination()
         ): Page<Label>
     }
@@ -173,7 +160,7 @@ interface QontoClient {
          *
          * @see <a href="https://api-doc.qonto.eu/2.0/attachments/show-attachment">API documentation</a>
          */
-        suspend fun getAttachment(id: String): Attachment
+        fun getAttachment(id: String): Attachment
     }
 
     /**
