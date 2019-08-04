@@ -62,7 +62,7 @@ interface QontoClient {
          * and [iban][org.jraf.klibqonto.model.organizations.BankAccount.iban] will be required for you to retrieve the
          * list of transactions inside that bank account, using [Transactions.getTransactionList].
          *
-         * @see <a href="https://api-doc.qonto.eu/2.0/organizations/show-organization-1">API documentation</a>
+         * See also [the API documentation](https://api-doc.qonto.eu/2.0/organizations/show-organization-1)
          */
         suspend fun getOrganization(): Organization
     }
@@ -95,7 +95,7 @@ interface QontoClient {
          * @param sortOrder sort order (default: descending)
          * @param pagination pagination settings
          *
-         * @see <a href="https://api-doc.qonto.eu/2.0/transactions/list-transactions">API documentation</a>
+         * See also [the API documentation](https://api-doc.qonto.eu/2.0/transactions/list-transactions)
          */
         suspend fun getTransactionList(
             slug: String,
@@ -122,7 +122,7 @@ interface QontoClient {
          * The [id][org.jraf.klibqonto.model.memberships.Membership.id] field uniquely identifies the membership
          * and is used to identify the [initiator of a transaction][org.jraf.klibqonto.model.transactions.Transaction.initiatorId].
          *
-         * @see <a href="https://api-doc.qonto.eu/2.0/memberships/list-memberships">API documentation</a>
+         * See also [the API documentation](https://api-doc.qonto.eu/2.0/memberships/list-memberships)
          */
         suspend fun getMembershipList(
             pagination: Pagination = Pagination()
@@ -145,7 +145,7 @@ interface QontoClient {
          * The parent label can be identified thanks to the [parentId][org.jraf.klibqonto.model.labels.Label.parentId]
          * field.
          *
-         * @see <a href="https://api-doc.qonto.eu/2.0/labels/list-labels">API documentation</a>
+         * See also [the API documentation](https://api-doc.qonto.eu/2.0/labels/list-labels)
          */
         suspend fun getLabelList(
             pagination: Pagination = Pagination()
@@ -172,7 +172,7 @@ interface QontoClient {
          *
          * @param id the id of the [Attachment] to retrieve
          *
-         * @see <a href="https://api-doc.qonto.eu/2.0/attachments/show-attachment">API documentation</a>
+         * See also [the API documentation](https://api-doc.qonto.eu/2.0/attachments/show-attachment)
          */
         suspend fun getAttachment(id: String): Attachment
     }

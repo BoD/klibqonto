@@ -5,6 +5,7 @@ def versions = [:]
 def plugins = [:]
 plugins.with {
     gradleVersions = '0.21.0'
+    dokka = '0.9.18'
 }
 versions.plugins = plugins
 
