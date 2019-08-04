@@ -1,6 +1,6 @@
 # klibqonto
 
-A client for the [Qonto API](https://api-doc.qonto.eu), for Kotlin and Java.
+A client library for the [Qonto API](https://api-doc.qonto.eu), for Kotlin and Java.
 
 Several flavors of the client are available to match your needs:
 - [Coroutines (`suspend`) based](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/client/QontoClient.kt): the default client for Kotlin projects
