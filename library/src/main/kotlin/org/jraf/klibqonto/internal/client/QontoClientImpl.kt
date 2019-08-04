@@ -47,7 +47,6 @@ import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.EnumSet
 
@@ -69,7 +68,6 @@ internal class QontoClientImpl(
     private val service: QontoRetrofitService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .client(OkHttpHelper.provideOkHttpClient(clientConfiguration, clientConfiguration.authentication))
             .build()
