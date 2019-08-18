@@ -114,14 +114,14 @@ object FlowSample {
     private suspend fun getMembershipList() {
         client.memberships.getMembershipList()
             .collect {
-                println(it.list.joinToString("\n"))
+                println(it.items.joinToString("\n"))
             }
     }
 
     private suspend fun getLabelList() {
         client.labels.getLabelList()
             .collect {
-                println(it.list.joinToString("\n"))
+                println(it.items.joinToString("\n"))
             }
     }
 
@@ -156,7 +156,7 @@ object FlowSample {
                     )
                 } ?: emptyFlow())
                     .map { nextPage ->
-                        firstPage.list + nextPage.list
+                        firstPage.items + nextPage.items
                     }
             }
             .onEach { transactionList ->

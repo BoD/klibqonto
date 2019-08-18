@@ -83,12 +83,12 @@ object Sample {
             // Get first page of memberships
             println("\n\nMemberships:")
             val membershipList = client.memberships.getMembershipList()
-            println(membershipList.list.joinToString("\n"))
+            println(membershipList.items.joinToString("\n"))
 
             // Get first page of labels
             println("\n\nLabels:")
             val labels = client.labels.getLabelList()
-            println(labels.list.joinToString("\n"))
+            println(labels.items.joinToString("\n"))
 
             // Get first 2 pages of transactions
             println("\n\nTransactions:")
@@ -115,7 +115,7 @@ object Sample {
             sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
             pagination = Pagination(itemsPerPage = 10)
         )
-        val list = firstPage.list.toMutableList()
+        val list = firstPage.items.toMutableList()
 
         // 2/ Get next page of transactions (if any)
         firstPage.nextPagination?.let { nextPagination ->
@@ -126,7 +126,7 @@ object Sample {
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                 pagination = nextPagination
             )
-            list += secondPage.list
+            list += secondPage.items
         }
         return list
     }
