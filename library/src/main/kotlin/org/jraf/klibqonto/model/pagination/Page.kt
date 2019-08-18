@@ -24,8 +24,32 @@
 
 package org.jraf.klibqonto.model.pagination
 
+/**
+ * A page of results.
+ */
 interface Page<out T> {
-    val list: List<T>
+    /**
+     * The actual items of the results.
+     */
+    val items: List<T>
+
+    /**
+     * Next [Pagination] (if any), that can be used to retrieve the next page.
+     */
     val nextPagination: Pagination?
+
+    /**
+     * Previous [Pagination] (if any), that can be used to retrieve the previous page.
+     */
     val previousPagination: Pagination?
+
+    /**
+     * Total number of pages (depends on the number of items per page).
+     */
+    val totalPages: Int
+
+    /**
+     * Total number of items.
+     */
+    val totalItems: Int
 }

@@ -86,12 +86,12 @@ class BlockingSample {
         // Get first page of memberships
         System.out.println("\n\nMemberships:");
         Page<Membership> membershipList = client.getMemberships().getMembershipList(new Pagination());
-        System.out.println(asLines(membershipList.getList()));
+        System.out.println(asLines(membershipList.getItems()));
 
         // Get first page of labels
         System.out.println("\n\nLabels:");
         Page<Label> labels = client.getLabels().getLabelList(new Pagination());
-        System.out.println(asLines(labels.getList()));
+        System.out.println(asLines(labels.getItems()));
 
         // Get first 2 pages of transactions
         System.out.println("\n\nTransactions:");
@@ -119,7 +119,7 @@ class BlockingSample {
                 QontoClient.Transactions.SortOrder.DESCENDING,
                 new Pagination(0, 10)
         );
-        ArrayList<Transaction> list = new ArrayList<>(firstPage.getList());
+        ArrayList<Transaction> list = new ArrayList<>(firstPage.getItems());
 
         // 2/ Get next page of transactions (if any)
         Pagination nextPagination = firstPage.getNextPagination();
@@ -133,7 +133,7 @@ class BlockingSample {
                     QontoClient.Transactions.SortOrder.DESCENDING,
                     nextPagination
             );
-            list.addAll(secondPage.getList());
+            list.addAll(secondPage.getItems());
         }
         return list;
     }
