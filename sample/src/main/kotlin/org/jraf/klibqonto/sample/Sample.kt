@@ -33,7 +33,9 @@ import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
+import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
+import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import java.text.DateFormat
@@ -81,9 +83,14 @@ object Sample {
             println(organization)
 
             // Get first page of memberships
-            println("\n\nMemberships:")
+            println("\n\nMemberships (first page):")
             val membershipList = client.memberships.getMembershipList()
             println(membershipList.items.joinToString("\n"))
+
+            // Get all memberships (iterate over all pages)
+            println("\n\nMemberships (all):")
+            val allMembershipList = client.memberships.getAllMembershipList()
+            println(allMembershipList.joinToString("\n"))
 
             // Get first page of labels
             println("\n\nLabels:")
@@ -137,6 +144,18 @@ object Sample {
         // Call getAttachment from the id
         return firstAttachmentId?.let { client.attachments.getAttachment(it) }
     }
+}
+
+private suspend fun QontoClient.Memberships.getAllMembershipList(): List<Membership> {
+    val allMembershipList = mutableListOf<Membership>()
+    var pagination: Pagination? = Pagination()
+    var page: Page<Membership>
+    while (pagination != null) {
+        page = getMembershipList(pagination)
+        allMembershipList.addAll(page.items)
+        pagination = page.nextPagination
+    }
+    return allMembershipList
 }
 
 fun Transaction.toFormattedString(): String =

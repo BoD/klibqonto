@@ -25,7 +25,16 @@
 package org.jraf.klibqonto.model.pagination
 
 data class Pagination(
+    /**
+     * Index of the page to request.
+     *
+     * Note: page indices are 1 based (the first page is 1).
+     */
     val pageIndex: Int = FIRST_PAGE_INDEX,
+
+    /**
+     * Number if items in the page to request.
+     */
     val itemsPerPage: Int = DEFAULT_ITEMS_PER_PAGE
 ) {
     companion object {

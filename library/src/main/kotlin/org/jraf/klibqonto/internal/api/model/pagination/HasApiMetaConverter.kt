@@ -32,6 +32,7 @@ internal object HasApiMetaConverter {
     fun <MODEL> convert(hasApiMeta: HasApiMeta, list: List<MODEL>): Page<MODEL> {
         return PageImpl(
             items = list,
+            pageIndex = hasApiMeta.meta.current_page,
             nextPagination = hasApiMeta.meta.next_page?.let { Pagination(it, hasApiMeta.meta.per_page) },
             previousPagination = hasApiMeta.meta.prev_page?.let { Pagination(it, hasApiMeta.meta.per_page) },
             totalPages = hasApiMeta.meta.total_pages,
