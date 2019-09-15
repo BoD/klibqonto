@@ -1,5 +1,8 @@
 # Changelog
 
+## v1.2.0 (2019-09-14)
+Add `pageIndex` to the `Page` object.
+
 ## v1.1.1 (2019-09-07)
 Updated dependencies (including Kotlin) to their latest versions.
 

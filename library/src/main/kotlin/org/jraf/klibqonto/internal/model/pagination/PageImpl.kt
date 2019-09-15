@@ -29,6 +29,7 @@ import org.jraf.klibqonto.model.pagination.Pagination
 
 internal data class PageImpl<out T>(
     override val items: List<T>,
+    override val pageIndex: Int,
     override val nextPagination: Pagination?,
     override val previousPagination: Pagination?,
     override val totalPages: Int,

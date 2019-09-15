@@ -34,6 +34,13 @@ interface Page<out T> {
     val items: List<T>
 
     /**
+     * Index of this page.
+     *
+     * Note: page indices are 1 based (the first page is 1).
+     */
+    val pageIndex: Int
+
+    /**
      * Next [Pagination] (if any), that can be used to retrieve the next page.
      */
     val nextPagination: Pagination?
