@@ -24,6 +24,8 @@
 
 package org.jraf.klibqonto.internal.client
 
+import io.ktor.client.HttpClient
+import io.ktor.client.features.json.JsonFeature
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
@@ -61,7 +63,9 @@ internal class QontoClientImpl(
     override val attachments = this
 
     private val service: QontoService by lazy {
-        QontoService()
+        QontoService(HttpClient {
+            install(JsonFeature)
+        })
     }
 
 
@@ -119,4 +123,7 @@ internal class QontoClientImpl(
         return service.getAttachment(id)
             .let { ApiAttachmentEnvelopeConverter.apiToModel(it) }
     }
+
+    override fun close() = throw NotImplementedError() // TODO
+
 }

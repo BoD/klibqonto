@@ -22,11 +22,16 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.api.model.organizations
+package org.jraf.klibqonto.internal.api.model
 
-import kotlinx.serialization.Serializable
+import org.jraf.klibqonto.model.dates.Date
 
-@Serializable
-internal data class ApiOrganizationEnvelope(
-    val organization: ApiOrganization
-)
+actual class SimpleDateFormat actual constructor(format: String) {
+    actual fun parse(formattedDate: String): Date {
+        return Date(formattedDate)
+    }
+
+    actual fun format(dateToFormat: Date): String {
+        return dateToFormat.toISOString()
+    }
+}

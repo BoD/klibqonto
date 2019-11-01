@@ -24,18 +24,25 @@
 
 package org.jraf.klibqonto.internal.client
 
+import io.ktor.client.HttpClient
+import io.ktor.client.request.get
+import io.ktor.client.request.header
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
 
-internal class QontoService {
+internal class QontoService(private val httpClient: HttpClient) {
     companion object {
-        const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
+        private const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
     }
 
-    suspend fun getOrganization(): ApiOrganizationEnvelope = throw NotImplementedError()
+    suspend fun getOrganization(): ApiOrganizationEnvelope {
+        return httpClient.get(BASE_URL + "organizations/0") {
+            header("Authorization", "XXX")
+        }
+    }
 
     suspend fun getTransactionList(
         slug: String,

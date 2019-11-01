@@ -22,11 +22,8 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.api.model.organizations
+package org.jraf.klibqonto.model.dates
 
-import kotlinx.serialization.Serializable
+import kotlin.js.Date
 
-@Serializable
-internal data class ApiOrganizationEnvelope(
-    val organization: ApiOrganization
-)
+actual typealias Date = Date
