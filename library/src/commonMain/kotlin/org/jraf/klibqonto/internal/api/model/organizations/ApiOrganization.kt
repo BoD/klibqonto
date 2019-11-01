@@ -24,6 +24,9 @@
 
 package org.jraf.klibqonto.internal.api.model.organizations
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class ApiOrganization(
     val slug: String,
     val bank_accounts: List<ApiBankAccount>

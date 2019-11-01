@@ -82,30 +82,30 @@ object Sample {
             val organization = client.organizations.getOrganization()
             println(organization)
 
-            // Get first page of memberships
-            println("\n\nMemberships (first page):")
-            val membershipList = client.memberships.getMembershipList()
-            println(membershipList.items.joinToString("\n"))
-
-            // Get all memberships (iterate over all pages)
-            println("\n\nMemberships (all):")
-            val allMembershipList = client.memberships.getAllMembershipList()
-            println(allMembershipList.joinToString("\n"))
-
-            // Get first page of labels
-            println("\n\nLabels:")
-            val labels = client.labels.getLabelList()
-            println(labels.items.joinToString("\n"))
-
-            // Get first 2 pages of transactions
-            println("\n\nTransactions:")
-            val transactionList = getTransactionList(organization)
-            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
-
-            // Get the first attachment from the transaction list
-            println("\n\nAttachment:")
-            val attachment = getAttachment(transactionList)
-            println(attachment)
+//            // Get first page of memberships
+//            println("\n\nMemberships (first page):")
+//            val membershipList = client.memberships.getMembershipList()
+//            println(membershipList.items.joinToString("\n"))
+//
+//            // Get all memberships (iterate over all pages)
+//            println("\n\nMemberships (all):")
+//            val allMembershipList = client.memberships.getAllMembershipList()
+//            println(allMembershipList.joinToString("\n"))
+//
+//            // Get first page of labels
+//            println("\n\nLabels:")
+//            val labels = client.labels.getLabelList()
+//            println(labels.items.joinToString("\n"))
+//
+//            // Get first 2 pages of transactions
+//            println("\n\nTransactions:")
+//            val transactionList = getTransactionList(organization)
+//            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
+//
+//            // Get the first attachment from the transaction list
+//            println("\n\nAttachment:")
+//            val attachment = getAttachment(transactionList)
+//            println(attachment)
         }
 
         // Exit process

@@ -24,6 +24,7 @@
 
 package org.jraf.klibqonto.client
 
+import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.internal.client.QontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
@@ -35,7 +36,7 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import kotlin.jvm.JvmStatic
 
-interface QontoClient {
+interface QontoClient : Closeable {
     companion object {
         @JvmStatic
         fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
@@ -177,6 +178,7 @@ interface QontoClient {
         suspend fun getAttachment(id: String): Attachment
     }
 
+
     /**
      * Organization related APIs.
      */
@@ -201,4 +203,12 @@ interface QontoClient {
      * Attachments related APIs.
      */
     val attachments: Attachments
+
+    /**
+     * Dispose of this client instance.
+     * This will release some resources so it is recommended to call it after use.
+     *
+     * **Note: this client will no longer be usable after this is called.**
+     */
+    override fun close()
 }
