@@ -24,139 +24,134 @@
 
 package org.jraf.klibqonto.sample;
 
-import org.jraf.klibqonto.client.*;
-import org.jraf.klibqonto.client.future.FutureQontoClient;
-import org.jraf.klibqonto.client.future.FutureQontoClientUtils;
-import org.jraf.klibqonto.model.attachments.Attachment;
-import org.jraf.klibqonto.model.dates.DateRange;
-import org.jraf.klibqonto.model.labels.Label;
-import org.jraf.klibqonto.model.memberships.Membership;
-import org.jraf.klibqonto.model.organizations.Organization;
-import org.jraf.klibqonto.model.pagination.Page;
-import org.jraf.klibqonto.model.pagination.Pagination;
-import org.jraf.klibqonto.model.transactions.Transaction;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.jraf.klibqonto.sample.SampleKt.date;
+//import org.jraf.klibqonto.client.*;
+//import org.jraf.klibqonto.client.future.FutureQontoClient;
+//import org.jraf.klibqonto.client.future.FutureQontoClientUtils;
+//import org.jraf.klibqonto.model.attachments.Attachment;
+//import org.jraf.klibqonto.model.dates.DateRange;
+//import org.jraf.klibqonto.model.labels.Label;
+//import org.jraf.klibqonto.model.memberships.Membership;
+//import org.jraf.klibqonto.model.organizations.Organization;
+//import org.jraf.klibqonto.model.pagination.Page;
+//import org.jraf.klibqonto.model.pagination.Pagination;
+//import org.jraf.klibqonto.model.transactions.Transaction;
 
 class FutureSample {
 
-    // !!!!! DO THIS FIRST !!!!!
-    // Replace these constants with your login / secret key
-    // that you will find in the Qonto web application under Settings, in the API tab.
-    private static final String LOGIN = "xxx";
-    private static final String SECRET_KEY = "yyy";
-
-    private FutureQontoClient client;
-
-    private void initClient() {
-        QontoClient qontoClient = QontoClient.newInstance(
-                new ClientConfiguration(
-                        new Authentication(
-                                LOGIN,
-                                SECRET_KEY
-                        ),
-                        new HttpConfiguration(
-                                // Uncomment to see more logs
-                                // HttpLoggingLevel.BODY,
-                                HttpLoggingLevel.NONE,
-                                null,
-                                // This is only needed to debug with, e.g., Charles Proxy
-                                new HttpProxy("localhost", 8888)
-                        )
-                )
-        );
-        client = FutureQontoClientUtils.asFutureQontoClient(qontoClient);
-    }
-
-    private void main() throws Exception {
-        // Enable more logging
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-
-        // Init client
-        initClient();
-
-        // Get organization
-        System.out.println("Organization:");
-        Organization organization = client.getOrganizations().getOrganization().get();
-        System.out.println(organization);
-
-        // Get first page of memberships
-        System.out.println("\n\nMemberships:");
-        Page<Membership> membershipList = client.getMemberships().getMembershipList(new Pagination()).get();
-        System.out.println(asLines(membershipList.getItems()));
-
-        // Get first page of labels
-        System.out.println("\n\nLabels:");
-        Page<Label> labels = client.getLabels().getLabelList(new Pagination()).get();
-        System.out.println(asLines(labels.getItems()));
-
-        // Get first 2 pages of transactions
-        System.out.println("\n\nTransactions:");
-        List<Transaction> transactionList = getTransactionList(organization);
-        System.out.println(asLines(transactionList.stream().map(SampleKt::toFormattedString).collect(Collectors.toList())));
-
-        // Get the first attachment from the transaction list
-        System.out.println("\n\nAttachment:");
-        Attachment attachment = getAttachment(transactionList);
-        System.out.println(attachment);
-
-        // Exit process
-        System.exit(0);
-    }
-
-    private List<Transaction> getTransactionList(Organization organization) throws Exception {
-        // 1/ Get first page of transactions
-        String slug = organization.getBankAccounts().get(0).getSlug();
-        Page<Transaction> firstPage = client.getTransactions().getTransactionList(
-                slug,
-                EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                new DateRange(date("2018-01-01"), date("2019-12-31")),
-                null,
-                QontoClient.Transactions.SortField.UPDATED_DATE,
-                QontoClient.Transactions.SortOrder.DESCENDING,
-                new Pagination(0, 10)
-        ).get();
-        ArrayList<Transaction> list = new ArrayList<>(firstPage.getItems());
-
-        // 2/ Get next page of transactions (if any)
-        Pagination nextPagination = firstPage.getNextPagination();
-        if (nextPagination != null) {
-            Page<Transaction> secondPage = client.getTransactions().getTransactionList(
-                    slug,
-                    EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                    new DateRange(date("2018-01-01"), date("2019-12-31")),
-                    null,
-                    QontoClient.Transactions.SortField.UPDATED_DATE,
-                    QontoClient.Transactions.SortOrder.DESCENDING,
-                    nextPagination
-            ).get();
-            list.addAll(secondPage.getItems());
-        }
-        return list;
-    }
-
-    private Attachment getAttachment(List<Transaction> transactionList) throws Exception {
-        // Get the first attachment id of the first transaction that has at least one
-        Optional<Transaction> firstTransactionWithAttachment = transactionList.stream()
-                .filter(transaction -> !transaction.getAttachmentIds().isEmpty())
-                .findFirst();
-        if (!firstTransactionWithAttachment.isPresent()) return null;
-        String firstAttachmentId = firstTransactionWithAttachment.get().getAttachmentIds().get(0);
-        // Call getAttachment from the id
-        return client.getAttachments().getAttachment(firstAttachmentId).get();
-    }
-
-
-    private static <T> String asLines(Collection<T> c) {
-        return c.stream()
-                .map(Object::toString)
-                .collect(Collectors.joining("\n"));
-    }
-
-    public static void main(String[] av) throws Exception {
-        new FutureSample().main();
-    }
+//    // !!!!! DO THIS FIRST !!!!!
+//    // Replace these constants with your login / secret key
+//    // that you will find in the Qonto web application under Settings, in the API tab.
+//    private static final String LOGIN = "xxx";
+//    private static final String SECRET_KEY = "yyy";
+//
+//    private FutureQontoClient client;
+//
+//    private void initClient() {
+//        QontoClient qontoClient = QontoClient.newInstance(
+//                new ClientConfiguration(
+//                        new Authentication(
+//                                LOGIN,
+//                                SECRET_KEY
+//                        ),
+//                        new HttpConfiguration(
+//                                // Uncomment to see more logs
+//                                // HttpLoggingLevel.BODY,
+//                                HttpLoggingLevel.NONE,
+//                                null,
+//                                // This is only needed to debug with, e.g., Charles Proxy
+//                                new HttpProxy("localhost", 8888)
+//                        )
+//                )
+//        );
+//        client = FutureQontoClientUtils.asFutureQontoClient(qontoClient);
+//    }
+//
+//    private void main() throws Exception {
+//        // Enable more logging
+//        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
+//
+//        // Init client
+//        initClient();
+//
+//        // Get organization
+//        System.out.println("Organization:");
+//        Organization organization = client.getOrganizations().getOrganization().get();
+//        System.out.println(organization);
+//
+//        // Get first page of memberships
+//        System.out.println("\n\nMemberships:");
+//        Page<Membership> membershipList = client.getMemberships().getMembershipList(new Pagination()).get();
+//        System.out.println(asLines(membershipList.getItems()));
+//
+//        // Get first page of labels
+//        System.out.println("\n\nLabels:");
+//        Page<Label> labels = client.getLabels().getLabelList(new Pagination()).get();
+//        System.out.println(asLines(labels.getItems()));
+//
+//        // Get first 2 pages of transactions
+//        System.out.println("\n\nTransactions:");
+//        List<Transaction> transactionList = getTransactionList(organization);
+//        System.out.println(asLines(transactionList.stream().map(SampleKt::toFormattedString).collect(Collectors.toList())));
+//
+//        // Get the first attachment from the transaction list
+//        System.out.println("\n\nAttachment:");
+//        Attachment attachment = getAttachment(transactionList);
+//        System.out.println(attachment);
+//
+//        // Exit process
+//        System.exit(0);
+//    }
+//
+//    private List<Transaction> getTransactionList(Organization organization) throws Exception {
+//        // 1/ Get first page of transactions
+//        String slug = organization.getBankAccounts().get(0).getSlug();
+//        Page<Transaction> firstPage = client.getTransactions().getTransactionList(
+//                slug,
+//                EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+//                new DateRange(date("2018-01-01"), date("2019-12-31")),
+//                null,
+//                QontoClient.Transactions.SortField.UPDATED_DATE,
+//                QontoClient.Transactions.SortOrder.DESCENDING,
+//                new Pagination(0, 10)
+//        ).get();
+//        ArrayList<Transaction> list = new ArrayList<>(firstPage.getItems());
+//
+//        // 2/ Get next page of transactions (if any)
+//        Pagination nextPagination = firstPage.getNextPagination();
+//        if (nextPagination != null) {
+//            Page<Transaction> secondPage = client.getTransactions().getTransactionList(
+//                    slug,
+//                    EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+//                    new DateRange(date("2018-01-01"), date("2019-12-31")),
+//                    null,
+//                    QontoClient.Transactions.SortField.UPDATED_DATE,
+//                    QontoClient.Transactions.SortOrder.DESCENDING,
+//                    nextPagination
+//            ).get();
+//            list.addAll(secondPage.getItems());
+//        }
+//        return list;
+//    }
+//
+//    private Attachment getAttachment(List<Transaction> transactionList) throws Exception {
+//        // Get the first attachment id of the first transaction that has at least one
+//        Optional<Transaction> firstTransactionWithAttachment = transactionList.stream()
+//                .filter(transaction -> !transaction.getAttachmentIds().isEmpty())
+//                .findFirst();
+//        if (!firstTransactionWithAttachment.isPresent()) return null;
+//        String firstAttachmentId = firstTransactionWithAttachment.get().getAttachmentIds().get(0);
+//        // Call getAttachment from the id
+//        return client.getAttachments().getAttachment(firstAttachmentId).get();
+//    }
+//
+//
+//    private static <T> String asLines(Collection<T> c) {
+//        return c.stream()
+//                .map(Object::toString)
+//                .collect(Collectors.joining("\n"));
+//    }
+//
+//    public static void main(String[] av) throws Exception {
+//        new FutureSample().main();
+//    }
 }

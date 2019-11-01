@@ -7,7 +7,6 @@ buildscript {
     repositories.addRepos()
 
     dependencies {
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
         classpath "com.github.ben-manes:gradle-versions-plugin:$versions.plugins.gradleVersions"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.plugins.dokka"
     }
@@ -25,10 +24,6 @@ allprojects {
             events "passed", "skipped", "failed", "standardOut", "standardError"
         }
     }
-}
-
-task clean(type: Delete) {
-    delete rootProject.buildDir
 }
 
 wrapper {

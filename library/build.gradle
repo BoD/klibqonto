@@ -1,93 +1,82 @@
-description = 'klibqonto'
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.50'
+}
 
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
 apply plugin: 'maven-publish'
-apply plugin: "idea"
-apply plugin: 'org.jetbrains.dokka'
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = versions.build.kotlinJvmTarget
-        // Ensure the kotlin module name is unique
-        freeCompilerArgs += ['-module-name', "$project.group.$project.name"]
+kotlin {
+    jvm {
+        compilations.main.kotlinOptions {
+            // Setup the Kotlin compiler options for the 'main' compilation:
+            jvmTarget = '1.8'
+        }
     }
-}
-
-javadoc.failOnError = false
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
-
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = 'html'
-    outputDirectory = javadoc.destinationDir
-    inputs.dir 'src/main/kotlin'
-}
-
-task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId project.description
-
-            artifact sourcesJar
-            artifact javadocJar
+//    js {
+//        browser {
+//        }
+//        nodejs {
+//        }
+//    }
+    // For ARM, should be changed to iosArm32 or iosArm64
+    // For Linux, should be changed to e.g. linuxX64
+    // For MacOS, should be changed to e.g. macosX64
+    // For Windows, should be changed to e.g. mingwX64
+//    macosX64("macos") {
+//        binaries {
+//            framework {
+//            }
+//        }
+//    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+        jvmMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+            }
+        }
+        macosMain {
+        }
+        macosTest {
         }
     }
 }
 
-// Create a Version.kt file and add it to the source set
-task generateSources {
-    def outputDir = file("$buildDir/generated/source/kotlin")
-    outputs.dir outputDir
-    doFirst {
-        def outputWithPackageDir = new File(outputDir, "org/jraf/klibqonto/internal/client")
-        outputWithPackageDir.mkdirs()
-        new File(outputWithPackageDir, "Version.kt").write("package org.jraf.klibqonto.internal.client\ninternal const val VERSION = \"$project.version\"")
-    }
-}
-compileKotlin.dependsOn generateSources
-compileKotlin.source += generateSources.outputs.files
+//// Create a Version.kt file and add it to the source set
+//task generateSources {
+//    def outputDir = file("$buildDir/generated/source/kotlin")
+//    outputs.dir outputDir
+//    doFirst {
+//        def outputWithPackageDir = new File(outputDir, "org/jraf/klibqonto/internal/client")
+//        outputWithPackageDir.mkdirs()
+//        new File(outputWithPackageDir, "Version.kt").write("package org.jraf.klibqonto.internal.client\ninternal const val VERSION = \"$project.version\"")
+//    }
+//}
+//compileKotlin.dependsOn generateSources
+//compileKotlin.source += generateSources.outputs.files
 
-idea {
-    module {
-        sourceDirs += generateSources.outputs.files
-        generatedSourceDirs += generateSources.outputs.files
-    }
-}
-
-dependencies {
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
-
-    // OkHttp
-    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okHttp"
-
-    // Gson
-    implementation "com.google.code.gson:gson:$versions.gson"
-
-    // Slf4j
-    implementation "org.slf4j:slf4j-api:$versions.slf4j"
-
-    // JUnit
-    testImplementation "junit:junit:$versions.testing.junit"
-
-    // Wiremock
-    testImplementation "com.github.tomakehurst:wiremock-standalone:$versions.testing.wireMock"
-}
-
-// Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository
