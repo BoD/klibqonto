@@ -73,15 +73,15 @@ class Sample {
             val organization = client.organizations.getOrganization()
             println(organization)
 
-//            // Get first page of memberships
-//            println("\n\nMemberships (first page):")
-//            val membershipList = client.memberships.getMembershipList()
-//            println(membershipList.items.joinToString("\n"))
-//
-//            // Get all memberships (iterate over all pages)
-//            println("\n\nMemberships (all):")
-//            val allMembershipList = client.memberships.getAllMembershipList()
-//            println(allMembershipList.joinToString("\n"))
+            // Get first page of memberships
+            println("\n\nMemberships (first page):")
+            val membershipList = client.memberships.getMembershipList()
+            println(membershipList.items.joinToString("\n"))
+
+            // Get all memberships (iterate over all pages)
+            println("\n\nMemberships (all):")
+            val allMembershipList = client.memberships.getAllMembershipList()
+            println(allMembershipList.joinToString("\n"))
 //
 //            // Get first page of labels
 //            println("\n\nLabels:")
