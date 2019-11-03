@@ -24,6 +24,9 @@
 
 package org.jraf.klibqonto.internal.api.model.memberships
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class ApiMembership(
     val id: String,
     val first_name: String,

@@ -24,6 +24,9 @@
 
 package org.jraf.klibqonto.internal.api.model.pagination
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class ApiMeta(
     val current_page: Int,
     val next_page: Int?,

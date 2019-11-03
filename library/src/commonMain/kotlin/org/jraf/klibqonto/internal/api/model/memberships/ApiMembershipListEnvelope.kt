@@ -24,9 +24,11 @@
 
 package org.jraf.klibqonto.internal.api.model.memberships
 
+import kotlinx.serialization.Serializable
 import org.jraf.klibqonto.internal.api.model.pagination.ApiMeta
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMeta
 
+@Serializable
 internal data class ApiMembershipListEnvelope(
     val memberships: List<ApiMembership>,
     override val meta: ApiMeta

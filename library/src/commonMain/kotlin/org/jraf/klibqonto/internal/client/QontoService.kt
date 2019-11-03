@@ -26,6 +26,7 @@ package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
@@ -56,7 +57,12 @@ internal class QontoService(private val httpClient: HttpClient) {
     suspend fun getMembershipList(
         pageIndex: Int,
         itemsPerPage: Int
-    ): ApiMembershipListEnvelope = throw NotImplementedError()
+    ): ApiMembershipListEnvelope {
+        return httpClient.get(BASE_URL + "memberships") {
+            parameter("current_page", pageIndex)
+            parameter("per_page", itemsPerPage)
+        }
+    }
 
     suspend fun getLabelList(
         pageIndex: Int,
