@@ -12,22 +12,25 @@ kotlin {
             jvmTarget = '1.8'
         }
     }
+
     js {
         browser {
         }
         nodejs {
         }
     }
+
     // For ARM, should be changed to iosArm32 or iosArm64
     // For Linux, should be changed to e.g. linuxX64
     // For MacOS, should be changed to e.g. macosX64
     // For Windows, should be changed to e.g. mingwX64
-//    macosX64("macos") {
-//        binaries {
-//            framework {
-//            }
-//        }
-//    }
+    macosX64("macos") {
+        binaries {
+            framework {
+            }
+        }
+    }
+
     sourceSets {
         commonMain {
             dependencies {
@@ -43,6 +46,7 @@ kotlin {
                 implementation kotlin('test-annotations-common')
             }
         }
+
         jvmMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
@@ -56,11 +60,12 @@ kotlin {
                 implementation kotlin('test-junit')
             }
         }
+
         jsMain {
             dependencies {
                 implementation kotlin('stdlib-js')
-                implementation "io.ktor:ktor-client-serialization-js:$versions.ktor"
-                implementation "io.ktor:ktor-client-json-js:$versions.ktor"
+                api "io.ktor:ktor-client-serialization-js:$versions.ktor"
+                api "io.ktor:ktor-client-json-js:$versions.ktor"
             }
         }
         jsTest {
@@ -68,12 +73,32 @@ kotlin {
                 implementation kotlin('test-js')
             }
         }
+
         macosMain {
+            dependencies {
+                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
+                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
+                implementation "io.ktor:ktor-client-curl:$versions.ktor"
+            }
         }
         macosTest {
         }
     }
 }
+
+//publishing {
+//    publications {
+//        kotlinMultiplatform {
+//            artifactId = 'klibqonto'
+//        }
+//        jvm {
+//            artifactId = 'klibqonto-jvm'
+//        }
+//        js {
+//            artifactId = 'klibqonto-js'
+//        }
+//    }
+//}
 
 //// Create a Version.kt file and add it to the source set
 //task generateSources {

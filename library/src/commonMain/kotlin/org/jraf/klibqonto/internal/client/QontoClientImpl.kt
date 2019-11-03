@@ -25,7 +25,9 @@
 package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.request.header
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
@@ -62,12 +64,21 @@ internal class QontoClientImpl(
     override val labels = this
     override val attachments = this
 
-    private val service: QontoService by lazy {
-        QontoService(HttpClient {
+    private val httpClient by lazy {
+        HttpClient {
             install(JsonFeature)
-        })
+            defaultRequest {
+                header(
+                    "Authorization",
+                    "${clientConfiguration.authentication.login}:${clientConfiguration.authentication.secretKey}"
+                )
+            }
+        }
     }
 
+    private val service: QontoService by lazy {
+        QontoService(httpClient)
+    }
 
     override suspend fun getOrganization(): Organization {
         return service.getOrganization()

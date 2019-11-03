@@ -22,8 +22,6 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.sample
-
 import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
@@ -31,27 +29,23 @@ import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
+import org.jraf.klibqonto.internal.api.model.SimpleDateFormat
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.dates.Date
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.DateFormat
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.EnumSet
-import kotlin.system.exitProcess
 
-object Sample {
+// !!!!! DO THIS FIRST !!!!!
+// Replace these constants with your login / secret key
+// that you will find in the Qonto web application under Settings, in the API tab.
+private const val LOGIN = "xxx"
+private const val SECRET_KEY = "yyy"
 
-    // !!!!! DO THIS FIRST !!!!!
-    // Replace these constants with your login / secret key
-    // that you will find in the Qonto web application under Settings, in the API tab.
-    private const val LOGIN = "xxx"
-    private const val SECRET_KEY = "yyy"
+class Sample {
 
     private val client: QontoClient by lazy {
         // Create the client
@@ -73,9 +67,6 @@ object Sample {
     }
 
     fun main() {
-        // Enable more logging
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
-
         runBlocking {
             // Get organization
             println("Organization:")
@@ -107,9 +98,6 @@ object Sample {
 //            val attachment = getAttachment(transactionList)
 //            println(attachment)
         }
-
-        // Exit process
-        exitProcess(0)
     }
 
     private suspend fun getTransactionList(organization: Organization): List<Transaction> {
@@ -117,7 +105,7 @@ object Sample {
         val slug = organization.bankAccounts[0].slug
         val firstPage = client.transactions.getTransactionList(
             slug = slug,
-            status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+            status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
             updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
             sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
             pagination = Pagination(itemsPerPage = 10)
@@ -128,7 +116,7 @@ object Sample {
         firstPage.nextPagination?.let { nextPagination ->
             val secondPage = client.transactions.getTransactionList(
                 slug = slug,
-                status = EnumSet.of(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
+                status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
                 updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                 pagination = nextPagination
@@ -161,13 +149,12 @@ private suspend fun QontoClient.Memberships.getAllMembershipList(): List<Members
 fun Transaction.toFormattedString(): String =
     "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
 
-fun Date.toFormattedString(): String = DateFormat.getDateInstance(DateFormat.MEDIUM).format(this)
+fun Date.toFormattedString(): String = toString()
 
-fun Long.toFormattedAmount(): String = NumberFormat.getCurrencyInstance()
-    .format(this / 100.0)
+fun Long.toFormattedAmount(): String = (this / 100.0).toString()
 
 @Suppress("NOTHING_TO_INLINE")
 inline fun date(s: String): Date = SimpleDateFormat("yyyy-MM-dd").parse(s)
 
 
-fun main() = Sample.main()
+fun main() = Sample().main()

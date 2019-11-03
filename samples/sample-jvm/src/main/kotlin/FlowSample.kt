@@ -22,8 +22,6 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.sample
-
 
 //object FlowSample {
 //
