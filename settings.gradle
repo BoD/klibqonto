@@ -1,1 +1,9 @@
-include ':library', ':sample'
+enableFeaturePreview('GRADLE_METADATA')
+
+include ':library'
+project(':library').name = 'klibqonto'
+
+include ':sample-jvm'
+[':sample-jvm'].forEach {
+    project(it).projectDir = file("samples${it.replace(':', "/")}")
+}
