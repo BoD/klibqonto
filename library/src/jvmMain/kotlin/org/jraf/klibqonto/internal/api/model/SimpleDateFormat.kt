@@ -24,6 +24,16 @@
 
 package org.jraf.klibqonto.internal.api.model
 
-import java.text.SimpleDateFormat
+import org.jraf.klibqonto.model.dates.Date
 
-actual typealias SimpleDateFormat = SimpleDateFormat
+internal actual class SimpleDateFormat actual constructor(format: String) {
+    private val simpleDateFormat = java.text.SimpleDateFormat(format)
+
+    actual fun parse(formattedDate: String): Date {
+        return simpleDateFormat.parse(formattedDate)
+    }
+
+    actual fun format(dateToFormat: Date): String {
+        return simpleDateFormat.format(dateToFormat)
+    }
+}

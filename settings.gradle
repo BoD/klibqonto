@@ -3,7 +3,7 @@ enableFeaturePreview('GRADLE_METADATA')
 include ':library'
 project(':library').name = 'klibqonto'
 
-include ':sample-jvm'
-[':sample-jvm'].forEach {
+include ':sample-jvm', ':sample-native-osx'
+[':sample-jvm', ':sample-native-osx'].forEach {
     project(it).projectDir = file("samples${it.replace(':', "/")}")
 }

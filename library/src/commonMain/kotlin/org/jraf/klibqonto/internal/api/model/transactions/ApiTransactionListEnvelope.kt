@@ -24,9 +24,11 @@
 
 package org.jraf.klibqonto.internal.api.model.transactions
 
+import kotlinx.serialization.Serializable
 import org.jraf.klibqonto.internal.api.model.pagination.ApiMeta
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMeta
 
+@Serializable
 internal data class ApiTransactionListEnvelope(
     val transactions: List<ApiTransaction>,
     override val meta: ApiMeta

@@ -24,6 +24,9 @@
 
 package org.jraf.klibqonto.internal.api.model.attachments
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class ApiAttachment(
     val id: String,
     val created_at: String,

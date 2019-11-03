@@ -26,7 +26,7 @@ package org.jraf.klibqonto.internal.api.model
 
 import org.jraf.klibqonto.model.dates.Date
 
-actual class SimpleDateFormat actual constructor(format: String) {
+internal actual class SimpleDateFormat actual constructor(format: String) {
     actual fun parse(formattedDate: String): Date {
         return Date(formattedDate)
     }

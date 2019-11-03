@@ -24,9 +24,11 @@
 
 package org.jraf.klibqonto.internal.api.model.labels
 
+import kotlinx.serialization.Serializable
 import org.jraf.klibqonto.internal.api.model.pagination.ApiMeta
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMeta
 
+@Serializable
 internal data class ApiLabelListEnvelope(
     val labels: List<ApiLabel>,
     override val meta: ApiMeta

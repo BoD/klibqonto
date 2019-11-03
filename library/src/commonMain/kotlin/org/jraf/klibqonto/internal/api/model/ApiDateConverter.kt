@@ -40,7 +40,7 @@ internal object ApiDateConverter : ApiConverter<String?, Date?>() {
     }
 }
 
-expect class SimpleDateFormat(format: String) {
+internal expect class SimpleDateFormat(format: String) {
     fun parse(formattedDate: String): Date
     fun format(dateToFormat: Date): String
 }
