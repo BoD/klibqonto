@@ -36,7 +36,6 @@ import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.DateFormat
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -87,22 +86,25 @@ class Sample {
             println("\n\nMemberships (all):")
             val allMembershipList = client.memberships.getAllMembershipList()
             println(allMembershipList.joinToString("\n"))
-//
-//            // Get first page of labels
-//            println("\n\nLabels:")
-//            val labels = client.labels.getLabelList()
-//            println(labels.items.joinToString("\n"))
-//
-//            // Get first 2 pages of transactions
-//            println("\n\nTransactions:")
-//            val transactionList = getTransactionList(organization)
-//            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
-//
-//            // Get the first attachment from the transaction list
-//            println("\n\nAttachment:")
-//            val attachment = getAttachment(transactionList)
-//            println(attachment)
+
+            // Get first page of labels
+            println("\n\nLabels:")
+            val labels = client.labels.getLabelList()
+            println(labels.items.joinToString("\n"))
+
+            // Get first 2 pages of transactions
+            println("\n\nTransactions:")
+            val transactionList = getTransactionList(organization)
+            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
+
+            // Get the first attachment from the transaction list
+            println("\n\nAttachment:")
+            val attachment = getAttachment(transactionList)
+            println(attachment)
         }
+
+        // Close
+        client.close()
 
         // Exit process
         exitProcess(0)
@@ -157,7 +159,7 @@ private suspend fun QontoClient.Memberships.getAllMembershipList(): List<Members
 fun Transaction.toFormattedString(): String =
     "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
 
-fun Date.toFormattedString(): String = DateFormat.getDateInstance(DateFormat.MEDIUM).format(this)
+fun Date.toFormattedString(): String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(this)
 
 fun Long.toFormattedAmount(): String = NumberFormat.getCurrencyInstance()
     .format(this / 100.0)

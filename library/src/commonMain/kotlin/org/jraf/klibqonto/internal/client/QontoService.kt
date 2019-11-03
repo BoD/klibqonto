@@ -52,7 +52,19 @@ internal class QontoService(private val httpClient: HttpClient) {
         sortBy: String,
         pageIndex: Int,
         itemsPerPage: Int
-    ): ApiTransactionListEnvelope = throw NotImplementedError()
+    ): ApiTransactionListEnvelope {
+        return httpClient.get(BASE_URL + "transactions") {
+            parameter("slug", slug)
+            url.parameters.appendAll("status[]", status)
+            parameter("updated_at_from", updatedAtFrom)
+            parameter("updated_at_to", updatedAtTo)
+            parameter("settled_at_from", settledAtFrom)
+            parameter("settled_at_to", settledAtTo)
+            parameter("sort_by", sortBy)
+            parameter("current_page", pageIndex)
+            parameter("per_page", itemsPerPage)
+        }
+    }
 
     suspend fun getMembershipList(
         pageIndex: Int,
@@ -67,9 +79,16 @@ internal class QontoService(private val httpClient: HttpClient) {
     suspend fun getLabelList(
         pageIndex: Int,
         itemsPerPage: Int
-    ): ApiLabelListEnvelope = throw NotImplementedError()
+    ): ApiLabelListEnvelope {
+        return httpClient.get(BASE_URL + "labels") {
+            parameter("current_page", pageIndex)
+            parameter("per_page", itemsPerPage)
+        }
+    }
 
     suspend fun getAttachment(
         id: String
-    ): ApiAttachmentEnvelope = throw NotImplementedError()
+    ): ApiAttachmentEnvelope {
+        return httpClient.get(BASE_URL + "attachments/$id")
+    }
 }

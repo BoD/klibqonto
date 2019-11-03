@@ -2,24 +2,17 @@ plugins {
     id 'org.jetbrains.kotlin.jvm' version '1.3.50'
 }
 
-description = 'klibqonto-sample-jvm'
-
 apply plugin: 'java'
-apply plugin: 'application'
 
 compileKotlin {
     kotlinOptions {
         jvmTarget = versions.build.kotlinJvmTarget
-        // Ensure the kotlin module name is unique
-        freeCompilerArgs += ['-module-name', "$project.group.$project.name"]
     }
 }
 
-mainClassName = 'org.jraf.klibqonto.sample.SampleKt'
-
 dependencies {
     // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
 
     // Slf4j
@@ -28,5 +21,3 @@ dependencies {
     // Library
     implementation project(':klibqonto')
 }
-
-// Use "./gradlew run" to run the sample

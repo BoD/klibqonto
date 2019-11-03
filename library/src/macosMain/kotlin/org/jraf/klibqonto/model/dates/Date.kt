@@ -24,4 +24,6 @@
 
 package org.jraf.klibqonto.model.dates
 
-actual data class Date(private val timestampMs: Long)
+import platform.Foundation.NSDate
+
+actual typealias Date = NSDate

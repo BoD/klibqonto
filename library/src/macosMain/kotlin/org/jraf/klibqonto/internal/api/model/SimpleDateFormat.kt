@@ -25,10 +25,16 @@
 package org.jraf.klibqonto.internal.api.model
 
 import org.jraf.klibqonto.model.dates.Date
+import platform.Foundation.NSDateFormatter
 
-// TODO: probably use NSDateFormatter
-actual class SimpleDateFormat actual constructor(format: String) {
-    actual fun parse(formattedDate: String): Date = throw NotImplementedError() // TODO
+internal actual class SimpleDateFormat actual constructor(format: String) {
+    private val nsDateFormatter = NSDateFormatter().apply { dateFormat = format }
 
-    actual fun format(dateToFormat: Date): String = throw NotImplementedError() // TODO
+    actual fun parse(formattedDate: String): Date {
+        return nsDateFormatter.dateFromString(formattedDate)!!
+    }
+
+    actual fun format(dateToFormat: Date): String {
+        return nsDateFormatter.stringFromDate(dateToFormat)
+    }
 }

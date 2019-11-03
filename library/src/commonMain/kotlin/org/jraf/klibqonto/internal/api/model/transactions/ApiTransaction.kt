@@ -24,6 +24,9 @@
 
 package org.jraf.klibqonto.internal.api.model.transactions
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class ApiTransaction(
     val transaction_id: String,
     val amount: Float,

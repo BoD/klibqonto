@@ -29,7 +29,6 @@ import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
-import org.jraf.klibqonto.internal.api.model.SimpleDateFormat
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.Date
 import org.jraf.klibqonto.model.dates.DateRange
@@ -38,6 +37,7 @@ import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
+import platform.Foundation.NSDateFormatter
 
 // !!!!! DO THIS FIRST !!!!!
 // Replace these constants with your login / secret key
@@ -82,22 +82,25 @@ class Sample {
             println("\n\nMemberships (all):")
             val allMembershipList = client.memberships.getAllMembershipList()
             println(allMembershipList.joinToString("\n"))
-//
-//            // Get first page of labels
-//            println("\n\nLabels:")
-//            val labels = client.labels.getLabelList()
-//            println(labels.items.joinToString("\n"))
-//
-//            // Get first 2 pages of transactions
-//            println("\n\nTransactions:")
-//            val transactionList = getTransactionList(organization)
-//            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
-//
-//            // Get the first attachment from the transaction list
-//            println("\n\nAttachment:")
-//            val attachment = getAttachment(transactionList)
-//            println(attachment)
+
+            // Get first page of labels
+            println("\n\nLabels:")
+            val labels = client.labels.getLabelList()
+            println(labels.items.joinToString("\n"))
+
+            // Get first 2 pages of transactions
+            println("\n\nTransactions:")
+            val transactionList = getTransactionList(organization)
+            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
+
+            // Get the first attachment from the transaction list
+            println("\n\nAttachment:")
+            val attachment = getAttachment(transactionList)
+            println(attachment)
         }
+
+        // Close
+        client.close()
     }
 
     private suspend fun getTransactionList(organization: Organization): List<Transaction> {
@@ -149,12 +152,12 @@ private suspend fun QontoClient.Memberships.getAllMembershipList(): List<Members
 fun Transaction.toFormattedString(): String =
     "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
 
-fun Date.toFormattedString(): String = toString()
+fun Date.toFormattedString(): String = NSDateFormatter().apply { dateFormat = "yyyy-MM-dd HH:mm" }.stringFromDate(this)
 
-fun Long.toFormattedAmount(): String = (this / 100.0).toString()
+fun Long.toFormattedAmount(): String = "EUR ${this / 100.0}"
 
 @Suppress("NOTHING_TO_INLINE")
-inline fun date(s: String): Date = SimpleDateFormat("yyyy-MM-dd").parse(s)
+inline fun date(s: String): Date = NSDateFormatter().apply { dateFormat = "yyyy-MM-dd" }.dateFromString(s)!!
 
 
 fun main() = Sample().main()

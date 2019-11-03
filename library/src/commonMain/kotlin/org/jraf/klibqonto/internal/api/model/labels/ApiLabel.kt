@@ -24,6 +24,9 @@
 
 package org.jraf.klibqonto.internal.api.model.labels
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 internal data class ApiLabel(
     val id: String,
     val name: String,

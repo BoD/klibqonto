@@ -135,6 +135,5 @@ internal class QontoClientImpl(
             .let { ApiAttachmentEnvelopeConverter.apiToModel(it) }
     }
 
-    override fun close() = throw NotImplementedError() // TODO
-
+    override fun close() = httpClient.close()
 }
