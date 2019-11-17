@@ -4,6 +4,7 @@ plugins {
 }
 
 apply plugin: 'maven-publish'
+apply plugin: 'native-suspend-function'
 
 kotlin {
     jvm {
@@ -20,12 +21,14 @@ kotlin {
         }
     }
 
-    macosX64('macos') {
-        binaries {
-            framework {
-            }
-        }
-    }
+    // Unfortunately de.ffuf.kotlin.multiplatform.annotations is not compatible with macosX64,
+    // so commenting for now
+//    macosX64('macos') {
+//        binaries {
+//            framework {
+//            }
+//        }
+//    }
 
     iosX64('ios') {
         binaries {
@@ -41,6 +44,7 @@ kotlin {
                 implementation "io.ktor:ktor-client-core:$versions.ktor"
                 implementation "io.ktor:ktor-client-json:$versions.ktor"
                 implementation "io.ktor:ktor-client-serialization:$versions.ktor"
+                implementation "de.ffuf.kotlin.multiplatform.annotations:annotations:$versions.plugins.nativeSuspendFunctions"
             }
         }
         commonTest {
@@ -77,15 +81,15 @@ kotlin {
             }
         }
 
-        macosMain {
-            dependencies {
-                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
-                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
-                implementation "io.ktor:ktor-client-curl:$versions.ktor"
-            }
-        }
-        macosTest {
-        }
+//        macosMain {
+//            dependencies {
+//                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
+//                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
+//                implementation "io.ktor:ktor-client-curl:$versions.ktor"
+//            }
+//        }
+//        macosTest {
+//        }
 
         iosMain {
             dependencies {
@@ -97,6 +101,13 @@ kotlin {
         iosTest {
         }
     }
+}
+
+nativeSuspendExtension {
+    outputDirectory = 'src/commonMain/kotlin'
+    scopeName = 'GlobalScope'
+    imports = ['kotlinx.coroutines.GlobalScope']
+    packageName = 'org.jraf.klibqonto.client.extensions'
 }
 
 //// Create a Version.kt file and add it to the source set

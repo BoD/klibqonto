@@ -6,6 +6,7 @@ def plugins = [:]
 plugins.with {
     gradleVersions = '0.24.0'
     dokka = '0.9.18'
+    nativeSuspendFunctions = '1.0.18'
 }
 versions.plugins = plugins
 

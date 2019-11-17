@@ -24,6 +24,7 @@
 
 package org.jraf.klibqonto.client
 
+import de.ffuf.kotlin.multiplatform.annotations.NativeSuspendedFunction
 import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.internal.client.QontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
@@ -65,6 +66,7 @@ interface QontoClient : Closeable {
          *
          * See also [the API documentation](https://api-doc.qonto.eu/2.0/organizations/show-organization-1)
          */
+        @NativeSuspendedFunction
         suspend fun getOrganization(): Organization
     }
 

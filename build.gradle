@@ -9,6 +9,7 @@ buildscript {
     dependencies {
         classpath "com.github.ben-manes:gradle-versions-plugin:$versions.plugins.gradleVersions"
         classpath "org.jetbrains.dokka:dokka-gradle-plugin:$versions.plugins.dokka"
+        classpath "de.ffuf.kotlin.multiplatform.processor:nativesuspendfunction:$versions.plugins.nativeSuspendFunctions"
     }
 }
 
