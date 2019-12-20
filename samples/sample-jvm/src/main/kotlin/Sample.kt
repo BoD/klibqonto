@@ -112,9 +112,9 @@ class Sample {
 
     private suspend fun getTransactionList(organization: Organization): List<Transaction> {
         // 1/ Get first page of transactions
-        val slug = organization.bankAccounts[0].slug
+        val bankAccountSlug = organization.bankAccounts[0].slug
         val firstPage = client.transactions.getTransactionList(
-            slug = slug,
+            bankAccountSlug = bankAccountSlug,
             status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
             updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
             sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
@@ -125,7 +125,7 @@ class Sample {
         // 2/ Get next page of transactions (if any)
         firstPage.nextPagination?.let { nextPagination ->
             val secondPage = client.transactions.getTransactionList(
-                slug = slug,
+                bankAccountSlug = bankAccountSlug,
                 status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
                 updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
