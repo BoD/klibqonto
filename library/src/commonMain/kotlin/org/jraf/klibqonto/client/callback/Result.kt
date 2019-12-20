@@ -33,7 +33,7 @@ package org.jraf.klibqonto.client.callback
  * A discriminated union that encapsulates successful outcome with a value of type [T]
  * or a failure with an arbitrary [Throwable] exception.
  */
-class Result<T>(
+class Result<T : Any>(
     internal val value: Any?
 ) {
     /**
@@ -92,13 +92,13 @@ class Result<T>(
         /**
          * Returns an instance that encapsulates the given [value] as successful value.
          */
-        fun <T> success(value: T): Result<T> =
+        fun <T : Any> success(value: T): Result<T> =
             Result(value)
 
         /**
          * Returns an instance that encapsulates the given [exception] as failure.
          */
-        fun <T> failure(exception: Throwable): Result<T> =
+        fun <T : Any> failure(exception: Throwable): Result<T> =
             Result(
                 createFailure(exception)
             )
@@ -173,7 +173,7 @@ class Result<T>(
      * Note, that an exception thrown by [transform] function is rethrown by this function.
      * See [mapCatching] for an alternative that encapsulates exceptions.
      */
-    fun <R> map(transform: (value: T) -> R): Result<R> {
+    fun <R : Any> map(transform: (value: T) -> R): Result<R> {
         return when {
             isSuccess -> success(transform(value as T))
             else -> Result(value)
@@ -188,7 +188,7 @@ class Result<T>(
      * Any exception thrown by [transform] function is caught, encapsulated as a failure and returned by this function.
      * See [map] for an alternative that rethrows exceptions.
      */
-    fun <R> mapCatching(transform: (value: T) -> R): Result<R> {
+    fun <R : Any> mapCatching(transform: (value: T) -> R): Result<R> {
         return when {
             isSuccess -> runCatching { transform(value as T) }
             else -> Result(value)
@@ -265,7 +265,7 @@ internal fun Result<*>.throwOnFailure() {
  * Calls the specified function [block] and returns its encapsulated result if invocation was successful,
  * catching and encapsulating any thrown exception as a failure.
  */
-fun <R> runCatching(block: () -> R): Result<R> {
+fun <R : Any> runCatching(block: () -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (e: Throwable) {
@@ -277,7 +277,7 @@ fun <R> runCatching(block: () -> R): Result<R> {
  * Calls the specified function [block] with `this` value as its receiver and returns its encapsulated result
  * if invocation was successful, catching and encapsulating any thrown exception as a failure.
  */
-fun <T, R> T.runCatching(block: T.() -> R): Result<R> {
+fun <T, R : Any> T.runCatching(block: T.() -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (e: Throwable) {
@@ -289,7 +289,7 @@ fun <T, R> T.runCatching(block: T.() -> R): Result<R> {
  * Calls the specified function [block] and returns its encapsulated result if invocation was successful,
  * catching and encapsulating any thrown exception as a failure.
  */
-suspend fun <R> suspendRunCatching(block: suspend () -> R): Result<R> {
+suspend fun <R : Any> suspendRunCatching(block: suspend () -> R): Result<R> {
     return try {
         Result.success(block())
     } catch (e: Throwable) {

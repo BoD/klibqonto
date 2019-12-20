@@ -99,7 +99,7 @@ internal class CallbackQontoClientImpl(
         qontoClient.attachments.getAttachment(id)
     }
 
-    private fun <T> launchAndCallback(
+    private fun <T : Any> launchAndCallback(
         onResult: (Result<T>) -> Unit,
         block: suspend () -> T
     ) {

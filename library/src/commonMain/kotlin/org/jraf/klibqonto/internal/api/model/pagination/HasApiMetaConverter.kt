@@ -24,13 +24,12 @@
 
 package org.jraf.klibqonto.internal.api.model.pagination
 
-import org.jraf.klibqonto.internal.model.pagination.PageImpl
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 
 internal object HasApiMetaConverter {
-    fun <MODEL> convert(hasApiMeta: HasApiMeta, list: List<MODEL>): Page<MODEL> {
-        return PageImpl(
+    fun <MODEL : Any> convert(hasApiMeta: HasApiMeta, list: List<MODEL>): Page<MODEL> {
+        return Page(
             items = list,
             pageIndex = hasApiMeta.meta.current_page,
             nextPagination = hasApiMeta.meta.next_page?.let { Pagination(it, hasApiMeta.meta.per_page) },
