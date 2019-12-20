@@ -88,7 +88,7 @@ interface QontoClient : Closeable {
          * The response contains the list of transactions that contributed to the bank account's balances
          * (e.g., incomes, transfers, cards). All transactions visible in Qonto's UI can be fetched, as of API V2.
          *
-         * @param slug the [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug] of the bank account from which to get the transactions
+         * @param bankAccountSlug the [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug] of the bank account from which to get the transactions
          * @param status filter to get only transactions matching these status (default: no filter)
          * @param updatedDateRange filter to get only transactions matching this update date range (default: no filter)
          * @param settledDateRange filter to get only transactions matching this settled date range (default: no filter)
@@ -99,7 +99,7 @@ interface QontoClient : Closeable {
          * See also [the API documentation](https://api-doc.qonto.eu/2.0/transactions/list-transactions)
          */
         suspend fun getTransactionList(
-            slug: String,
+            bankAccountSlug: String,
             status: Set<Transaction.Status> = emptySet(),
             updatedDateRange: DateRange? = null,
             settledDateRange: DateRange? = null,

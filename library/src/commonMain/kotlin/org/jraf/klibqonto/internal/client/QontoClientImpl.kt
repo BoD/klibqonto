@@ -86,7 +86,7 @@ internal class QontoClientImpl(
     }
 
     override suspend fun getTransactionList(
-        slug: String,
+        bankAccountSlug: String,
         status: Set<Transaction.Status>,
         updatedDateRange: DateRange?,
         settledDateRange: DateRange?,
@@ -101,7 +101,7 @@ internal class QontoClientImpl(
         val settledAtTo = ApiDateConverter.modelToApi(settledDateRange?.to)
         val sortBy = ApiSortFieldConverter.modelToApi(sortField) + ":" + ApiSortOrderConverter.modelToApi(sortOrder)
         return service.getTransactionList(
-            slug,
+            bankAccountSlug,
             statusStrSet,
             updatedAtFrom,
             updatedAtTo,

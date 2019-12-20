@@ -43,7 +43,7 @@ internal class QontoService(private val httpClient: HttpClient) {
     }
 
     suspend fun getTransactionList(
-        slug: String,
+        bankAccountSlug: String,
         status: Set<String>,
         updatedAtFrom: String?,
         updatedAtTo: String?,
@@ -54,7 +54,7 @@ internal class QontoService(private val httpClient: HttpClient) {
         itemsPerPage: Int
     ): ApiTransactionListEnvelope {
         return httpClient.get(BASE_URL + "transactions") {
-            parameter("slug", slug)
+            parameter("slug", bankAccountSlug)
             url.parameters.appendAll("status[]", status)
             parameter("updated_at_from", updatedAtFrom)
             parameter("updated_at_to", updatedAtTo)

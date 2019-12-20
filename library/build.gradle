@@ -23,6 +23,8 @@ kotlin {
     macosX64('macos') {
         binaries {
             framework {
+                // See https://github.com/JetBrains/kotlin-native/blob/master/OBJC_INTEROP.md#to-use
+                freeCompilerArgs += '-Xobjc-generics'
             }
         }
     }
@@ -30,6 +32,8 @@ kotlin {
     iosX64('ios') {
         binaries {
             framework {
+                // See https://github.com/JetBrains/kotlin-native/blob/master/OBJC_INTEROP.md#to-use
+                freeCompilerArgs += '-Xobjc-generics'
             }
         }
     }
