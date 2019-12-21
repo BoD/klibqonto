@@ -42,6 +42,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
+                implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
                 implementation "io.ktor:ktor-client-core:$versions.ktor"
                 implementation "io.ktor:ktor-client-json:$versions.ktor"
                 implementation "io.ktor:ktor-client-serialization:$versions.ktor"

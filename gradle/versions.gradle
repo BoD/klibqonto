@@ -35,7 +35,8 @@ versions.testing = testing
 // Other dependencies
 versions.with {
     kotlin = '1.3.61'
-    ktor = '1.2.6'
+    ktor = '1.3.0-rc'
+    kotlinxIo = '0.1.16'
     coroutines = '1.3.3'
     slf4j = '1.7.30'
     retrofit = '2.6.1'
