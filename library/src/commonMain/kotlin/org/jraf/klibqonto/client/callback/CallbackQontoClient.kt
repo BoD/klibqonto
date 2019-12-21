@@ -28,7 +28,7 @@ package org.jraf.klibqonto.client.callback
 
 import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.client.QontoClient
-import org.jraf.klibqonto.internal.client.blocking.CallbackQontoClientImpl
+import org.jraf.klibqonto.internal.client.callback.CallbackQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label

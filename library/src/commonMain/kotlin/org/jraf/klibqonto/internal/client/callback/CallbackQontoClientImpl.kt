@@ -22,13 +22,14 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.client.blocking
+package org.jraf.klibqonto.internal.client.callback
 
 import kotlinx.coroutines.launch
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.callback.CallbackQontoClient
 import org.jraf.klibqonto.client.callback.Result
 import org.jraf.klibqonto.client.callback.suspendRunCatching
+import org.jraf.klibqonto.internal.client.klibQontoScope
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
