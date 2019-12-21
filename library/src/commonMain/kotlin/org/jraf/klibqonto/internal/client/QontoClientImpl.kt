@@ -25,9 +25,11 @@
 package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.engine.ProxyBuilder
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.request.header
+import io.ktor.http.URLBuilder
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
@@ -72,6 +74,15 @@ internal class QontoClientImpl(
                     "Authorization",
                     "${clientConfiguration.authentication.login}:${clientConfiguration.authentication.secretKey}"
                 )
+            }
+            engine {
+                // Setup a proxy if requested
+                clientConfiguration.httpConfiguration.httpProxy?.let { httpProxy ->
+                    proxy = ProxyBuilder.http(URLBuilder().apply {
+                        host = httpProxy.host
+                        port = httpProxy.port
+                    }.build())
+                }
             }
         }
     }

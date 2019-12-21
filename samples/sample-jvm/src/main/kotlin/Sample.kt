@@ -36,9 +36,6 @@ import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Date
 import kotlin.system.exitProcess
 
 // !!!!! DO THIS FIRST !!!!!
@@ -155,17 +152,6 @@ private suspend fun QontoClient.Memberships.getAllMembershipList(): List<Members
     }
     return allMembershipList
 }
-
-fun Transaction.toFormattedString(): String =
-    "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
-
-fun Date.toFormattedString(): String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(this)
-
-fun Long.toFormattedAmount(): String = NumberFormat.getCurrencyInstance()
-    .format(this / 100.0)
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun date(s: String): Date = SimpleDateFormat("yyyy-MM-dd").parse(s)
 
 
 fun main() = Sample().main()
