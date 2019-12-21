@@ -24,24 +24,9 @@
 
 package org.jraf.klibqonto.internal.client
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.Runnable
-import platform.darwin.dispatch_async
-import platform.darwin.dispatch_get_main_queue
-import kotlin.coroutines.CoroutineContext
+import kotlinx.coroutines.GlobalScope
 
-internal actual val klibQontoScope: CoroutineScope = object : CoroutineScope {
-    private val dispatcher = DarwinMainDispatcher()
-    private val job = Job()
+internal actual val klibQontoScope: CoroutineScope = GlobalScope
 
-    override val coroutineContext: CoroutineContext
-        get() = dispatcher + job
-}
-
-private class DarwinMainDispatcher : CoroutineDispatcher() {
-    override fun dispatch(context: CoroutineContext, block: Runnable) {
-        dispatch_async(dispatch_get_main_queue()) { block.run() }
-    }
-}
+internal actual fun <T> runBlocking(block: suspend () -> T) = kotlinx.coroutines.runBlocking { block() }

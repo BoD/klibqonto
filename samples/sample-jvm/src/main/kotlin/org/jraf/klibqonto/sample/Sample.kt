@@ -22,6 +22,8 @@
  * limitations under the License.
  */
 
+package org.jraf.klibqonto.sample
+
 import kotlinx.coroutines.runBlocking
 import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
@@ -113,7 +115,10 @@ class Sample {
         val firstPage = client.transactions.getTransactionList(
             bankAccountSlug = bankAccountSlug,
             status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-            updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
+            updatedDateRange = DateRange(
+                date("2018-01-01"),
+                date("2019-12-31")
+            ),
             sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
             pagination = Pagination(itemsPerPage = 10)
         )
@@ -124,7 +129,10 @@ class Sample {
             val secondPage = client.transactions.getTransactionList(
                 bankAccountSlug = bankAccountSlug,
                 status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
+                updatedDateRange = DateRange(
+                    date("2018-01-01"),
+                    date("2019-12-31")
+                ),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                 pagination = nextPagination
             )

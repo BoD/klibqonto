@@ -27,3 +27,5 @@ package org.jraf.klibqonto.internal.client
 import kotlinx.coroutines.CoroutineScope
 
 internal expect val klibQontoScope: CoroutineScope
+
+internal expect fun <T> runBlocking(block: suspend () -> T): T

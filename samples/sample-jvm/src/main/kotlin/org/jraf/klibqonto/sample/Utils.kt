@@ -1,8 +1,3 @@
-import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Date
-
 /*
  * This source is part of the
  *      _____  ___   ____
@@ -26,6 +21,13 @@ import java.util.Date
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+package org.jraf.klibqonto.sample
+
+import org.jraf.klibqonto.model.transactions.Transaction
+import java.text.NumberFormat
+import java.text.SimpleDateFormat
+import java.util.Date
 
 fun Transaction.toFormattedString(): String =
     "${emittedDate.toFormattedString()}\t\t$counterparty\t\t${amountCents.toFormattedAmount()}\t\t$side"
