@@ -42,7 +42,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation kotlin('stdlib-common')
-                implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
+                implementation "org.jetbrains.kotlinx:kotlinx-io:$versions.kotlinxIo"
                 implementation "io.ktor:ktor-client-core:$versions.ktor"
                 implementation "io.ktor:ktor-client-json:$versions.ktor"
                 implementation "io.ktor:ktor-client-serialization:$versions.ktor"
@@ -58,6 +58,7 @@ kotlin {
         jvmMain {
             dependencies {
                 implementation kotlin('stdlib-jdk8')
+                implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
                 implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
                 implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
             }
@@ -72,6 +73,7 @@ kotlin {
         jsMain {
             dependencies {
                 implementation kotlin('stdlib-js')
+                implementation "org.jetbrains.kotlinx:kotlinx-io-js:$versions.kotlinxIo"
                 api "io.ktor:ktor-client-serialization-js:$versions.ktor"
                 api "io.ktor:ktor-client-json-js:$versions.ktor"
             }
@@ -84,6 +86,7 @@ kotlin {
 
         macosMain {
             dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-io-native:$versions.kotlinxIo"
                 implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-json-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-curl:$versions.ktor"
@@ -94,6 +97,7 @@ kotlin {
 
         iosMain {
             dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-io-native:$versions.kotlinxIo"
                 implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-json-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-ios:$versions.ktor"

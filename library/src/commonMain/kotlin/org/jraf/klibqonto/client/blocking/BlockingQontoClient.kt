@@ -22,13 +22,13 @@
  * limitations under the License.
  */
 
-@file:JvmName("CallbackQontoClientUtils")
+@file:JvmName("BlockingQontoClientUtils")
 
-package org.jraf.klibqonto.client.callback
+package org.jraf.klibqonto.client.blocking
 
 import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.client.QontoClient
-import org.jraf.klibqonto.internal.client.callback.CallbackQontoClientImpl
+import org.jraf.klibqonto.internal.client.blocking.BlockingQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
@@ -40,15 +40,14 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import kotlin.jvm.JvmName
 
 /**
- * A callback based version of a Qonto client.
+ * A 'blocking' version of a Qonto client.
  *
- * All the methods here return immediately and take a lambda argument that will be executed
- * when the result is available (or an exception occurred).
- * The lambda is provided with a [Result] object.
+ * All the methods here are blocking, meaning the calling thread will wait for the
+ * result to be available.
  *
- * This is useful for Java and Swift, which don't have a notion of `suspend` functions.
+ * This is useful from Java, which doesn't have a notion of `suspend` functions.
  */
-interface CallbackQontoClient : Closeable {
+interface BlockingQontoClient : Closeable {
 
     /**
      * See [QontoClient.Organizations].
@@ -57,7 +56,7 @@ interface CallbackQontoClient : Closeable {
         /**
          * See [QontoClient.Organizations.getOrganization].
          */
-        fun getOrganization(onResult: (Result<Organization>) -> Unit)
+        fun getOrganization(): Organization
     }
 
     /**
@@ -74,9 +73,8 @@ interface CallbackQontoClient : Closeable {
             settledDateRange: DateRange? = null,
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
-            pagination: Pagination = Pagination(),
-            onResult: (Result<Page<Transaction>>) -> Unit
-        )
+            pagination: Pagination = Pagination()
+        ): Page<Transaction>
     }
 
     /**
@@ -87,9 +85,8 @@ interface CallbackQontoClient : Closeable {
          * See [QontoClient.Memberships.getMembershipList].
          */
         fun getMembershipList(
-            pagination: Pagination = Pagination(),
-            onResult: (Result<Page<Membership>>) -> Unit
-        )
+            pagination: Pagination = Pagination()
+        ): Page<Membership>
     }
 
     /**
@@ -100,9 +97,8 @@ interface CallbackQontoClient : Closeable {
          * See [QontoClient.Labels.getLabelList].
          */
         fun getLabelList(
-            pagination: Pagination = Pagination(),
-            onResult: (Result<Page<Label>>) -> Unit
-        )
+            pagination: Pagination = Pagination()
+        ): Page<Label>
     }
 
     /**
@@ -112,10 +108,7 @@ interface CallbackQontoClient : Closeable {
         /**
          * See [QontoClient.Attachments.getAttachment].
          */
-        fun getAttachment(
-            id: String,
-            onResult: (Result<Attachment>) -> Unit
-        )
+        fun getAttachment(id: String): Attachment
     }
 
     /**
@@ -153,10 +146,10 @@ interface CallbackQontoClient : Closeable {
 }
 
 /**
- * Get a callback based client from a [QontoClient].
+ * Get a blocking client from a [QontoClient].
  *
- * This is useful for Java and Swift, which don't have a notion of `suspend` functions.
+ * This is useful from Java, which doesn't have a notion of `suspend` functions.
  */
-fun QontoClient.asCallbackQontoClient(): CallbackQontoClient {
-    return CallbackQontoClientImpl(this)
+fun QontoClient.asBlockingQontoClient(): BlockingQontoClient {
+    return BlockingQontoClientImpl(this)
 }
