@@ -99,6 +99,8 @@ internal class CallbackQontoClientImpl(
         qontoClient.attachments.getAttachment(id)
     }
 
+    override fun close() = qontoClient.close()
+
     private fun <T : Any> launchAndCallback(
         onResult: (Result<T>) -> Unit,
         block: suspend () -> T

@@ -26,6 +26,7 @@
 
 package org.jraf.klibqonto.client.callback
 
+import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.blocking.CallbackQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
@@ -47,7 +48,7 @@ import kotlin.jvm.JvmName
  *
  * This is useful for Java and Swift, which don't have a notion of `suspend` functions.
  */
-interface CallbackQontoClient {
+interface CallbackQontoClient : Closeable {
 
     /**
      * See [QontoClient.Organizations].
@@ -141,6 +142,14 @@ interface CallbackQontoClient {
      * See [QontoClient.attachments].
      */
     val attachments: Attachments
+
+    /**
+     * Dispose of this client instance.
+     * This will release some resources so it is recommended to call it after use.
+     *
+     * **Note: this client will no longer be usable after this is called.**
+     */
+    override fun close()
 }
 
 /**
