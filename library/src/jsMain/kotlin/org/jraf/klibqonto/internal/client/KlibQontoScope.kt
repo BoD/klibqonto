@@ -22,7 +22,7 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.client.blocking
+package org.jraf.klibqonto.internal.client
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
