@@ -27,7 +27,6 @@ import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
-import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.Date
@@ -58,9 +57,11 @@ class Sample {
                 HttpConfiguration(
                     // Uncomment to see more logs
                     // loggingLevel = HttpLoggingLevel.BODY,
-                    loggingLevel = HttpLoggingLevel.NONE,
+                    loggingLevel = HttpLoggingLevel.ALL //,
                     // This is only needed to debug with, e.g., Charles Proxy
-                    httpProxy = HttpProxy("localhost", 8888)
+                    // XXX Currently this breaks serialization
+                    // See https://github.com/ktorio/ktor/issues/1548
+                    // httpProxy = HttpProxy("localhost", 8888)
                 )
             )
         )

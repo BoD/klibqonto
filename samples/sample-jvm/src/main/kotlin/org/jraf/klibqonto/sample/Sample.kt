@@ -58,7 +58,7 @@ class Sample {
                 HttpConfiguration(
                     // Uncomment to see more logs
                     // loggingLevel = HttpLoggingLevel.BODY,
-                    loggingLevel = HttpLoggingLevel.NONE,
+                    loggingLevel = HttpLoggingLevel.INFO,
                     // This is only needed to debug with, e.g., Charles Proxy
                     httpProxy = HttpProxy("localhost", 8888)
                 )
