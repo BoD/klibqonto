@@ -26,11 +26,17 @@ package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.ProxyBuilder
+import io.ktor.client.features.UserAgent
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.logging.DEFAULT
+import io.ktor.client.features.logging.LogLevel
+import io.ktor.client.features.logging.Logger
+import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.http.URLBuilder
 import org.jraf.klibqonto.client.ClientConfiguration
+import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelopeConverter
@@ -75,6 +81,9 @@ internal class QontoClientImpl(
                     "${clientConfiguration.authentication.login}:${clientConfiguration.authentication.secretKey}"
                 )
             }
+            install(UserAgent) {
+                agent = clientConfiguration.userAgent
+            }
             engine {
                 // Setup a proxy if requested
                 clientConfiguration.httpConfiguration.httpProxy?.let { httpProxy ->
@@ -82,6 +91,19 @@ internal class QontoClientImpl(
                         host = httpProxy.host
                         port = httpProxy.port
                     }.build())
+                }
+            }
+            // Setup logging if requested
+            if (clientConfiguration.httpConfiguration.loggingLevel != HttpLoggingLevel.NONE) {
+                install(Logging) {
+                    logger = Logger.DEFAULT
+                    level = when (clientConfiguration.httpConfiguration.loggingLevel) {
+                        HttpLoggingLevel.NONE -> LogLevel.NONE
+                        HttpLoggingLevel.INFO -> LogLevel.INFO
+                        HttpLoggingLevel.HEADERS -> LogLevel.HEADERS
+                        HttpLoggingLevel.BODY -> LogLevel.BODY
+                        HttpLoggingLevel.ALL -> LogLevel.ALL
+                    }
                 }
             }
         }
