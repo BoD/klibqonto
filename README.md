@@ -1,15 +1,21 @@
 # klibqonto
 
-A client library for the [Qonto API](https://api-doc.qonto.eu), for Kotlin and Java.
+A client library for the [Qonto API](https://api-doc.qonto.eu), for Kotlin, Java and more.
+
+This library is written in [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html)
+so _in theory_ it can be used from the JVM, Android, and native iOS, Linux, MacOS, Windows and more.
+In practice this library has been tested and has samples for the JVM
+(Kotlin and Java), MacOS (Kotlin), and iOS (Swift).
 
 Several flavors of the client are available to match your needs:
-- [Coroutines (`suspend`) based](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/client/QontoClient.kt): the default client for Kotlin projects
-- [`Flow` based](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/client/flow/FlowQontoClient.kt): useful if you like "reactive style" programming
-- [`Future` based](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/client/future/FutureQontoClient.kt): preferred for Java projects
-- [Blocking](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/client/blocking/BlockingQontoClient.kt): useful for Java projects, or if you have your own async mechanism
+- [Coroutines (`suspend`) based](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/QontoClient.kt): the default client for Kotlin projects
+- [Blocking](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/blocking/BlockingQontoClient.kt): useful for Java projects, or if you have your own async mechanism
+- [Callback based](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/callback/CallbackQontoClient.kt): useful for Java and Swift projects
+- [`Future` based (JVM only)](https://github.com/BoD/klibqonto/blob/master/library/src/jvmMain/kotlin/org/jraf/klibqonto/client/future/FutureQontoClient.kt): useful for Java projects
 
 ## Usage
 ### 1/ Add the dependencies to your project
+#### Gradle based projects
 The artifact is hosted on JCenter.
 ```groovy
 repositories {
@@ -20,17 +26,21 @@ repositories {
 ```groovy
 dependencies {
     /* ... */
-    implementation 'org.jraf:klibqonto:1.2.0'
+    implementation 'org.jraf:klibqonto:2.0.0'
 }
 ```
+
+#### OSX based projects
+**TODO**
 
 ### 2/ Use the client
 
 The easiest way to see how to use it is to look at the samples:
-- [default (Kotlin)](sample/src/main/kotlin/org/jraf/klibqonto/sample/Sample.kt)
-- [Flow (Kotlin)](sample/src/main/kotlin/org/jraf/klibqonto/sample/FlowSample.kt)
-- [Future (Java)](sample/src/main/java/org/jraf/klibqonto/sample/FutureSample.java)
-- [Blocking (Java)](sample/src/main/java/org/jraf/klibqonto/sample/BlockingSample.java)
+- [Coroutines (Kotlin)](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/Sample.kt)
+- [Blocking (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/BlockingSample.java)
+- [Callback (Kotlin)](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/CallbackSample.kt)
+- Callback (Swift) **TODO**
+- [Future (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/FutureSample.java)
 
 #### Get your login and secret key
 You will find your **login** and **secret key** in the Qonto web application under Settings, in the API tab.
@@ -48,9 +58,9 @@ val qontoClient = QontoClient.newInstance(
 )
 ```
 To get other flavors of the client:
-- Flow: `val flowClient = qontoClient.asFlowQontoClient()`
-- Future: `FutureQontoClient futureClient = FutureQontoClientUtils.asFutureQontoClient(qontoClient)`
 - Blocking: `BlockingQontoClient blockingClient = BlockingQontoClientUtils.asBlockingQontoClient(qontoClient)`
+- Callback: `CallbackQontoClient callbackClient = CallbackQontoClientUtils.asCallbackQontoClient(qontoClient)`
+- Future: `FutureQontoClient futureClient = FutureQontoClientUtils.asFutureQontoClient(qontoClient)`
 
 #### Use the `QontoClient`
 The client gives access to several API "areas":
@@ -64,13 +74,14 @@ Each area exposes related APIs, for instance: `qontoClient.transactions.getTrans
 
 #### Pagination
 The APIs that are paginated all follow the same principle:
-- take a [`Pagination`](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/model/pagination/Pagination.kt) object as a parameter, which defines the page to retrieve, as well as the number of items per page
-- return a [`Page<T>`](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/model/pagination/Page.kt) with the result list but also a reference to the next and previous `Pagination` objects (handy when retrieving several pages).
+- take a [`Pagination`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/model/pagination/Pagination.kt) object as a parameter, which defines the page to retrieve, as well as the number of items per page
+- return a [`Page<T>`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/model/pagination/Page.kt) with the result list but also a reference to the next and previous `Pagination` objects (handy when retrieving several pages).
 
 #### Logging
-To log HTTP requests/response, pass a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/main/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
+**TODO** To log HTTP requests/response, pass a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
 
-Other logs are available via `slf4j` - one way to enable them is `System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")`
+#### Proxy
+A proxy can be configured by passing a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
 
 ## Author and License
 *Note: this project is not officially related to or endorsed by Qonto or Olinda SAS.*
