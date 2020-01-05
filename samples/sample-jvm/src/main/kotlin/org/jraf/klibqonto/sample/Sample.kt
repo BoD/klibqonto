@@ -67,9 +67,6 @@ class Sample {
     }
 
     fun main() {
-        // Enable more logging
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
-
         runBlocking {
             // Get organization
             println("Organization:")

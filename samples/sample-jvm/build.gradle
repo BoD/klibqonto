@@ -15,9 +15,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$versions.kotlin"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
 
-    // Slf4j
-    implementation "org.slf4j:slf4j-simple:$versions.slf4j"
-
     // Library
     implementation project(':klibqonto')
 }

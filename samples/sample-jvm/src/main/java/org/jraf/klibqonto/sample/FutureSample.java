@@ -72,9 +72,6 @@ class FutureSample {
     }
 
     private void main() throws Exception {
-        // Enable more logging
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-
         // Init client
         initClient();
 

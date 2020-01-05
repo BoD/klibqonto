@@ -68,9 +68,6 @@ class CallbackSample {
     }
 
     fun main() {
-        // Enable more logging
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace")
-
         // Use a countDownLatch to wait between each call
         var countDownLatch = CountDownLatch(1)
 

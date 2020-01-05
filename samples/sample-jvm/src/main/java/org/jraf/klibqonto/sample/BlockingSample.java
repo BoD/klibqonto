@@ -72,9 +72,6 @@ class BlockingSample {
     }
 
     private void main() {
-        // Enable more logging
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "trace");
-
         // Init client
         initClient();
 
