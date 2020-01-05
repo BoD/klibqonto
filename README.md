@@ -1,6 +1,6 @@
 # klibqonto
 
-A client library for the [Qonto API](https://api-doc.qonto.eu), for Kotlin, Java and more.
+A [Qonto API](https://api-doc.qonto.eu) client library for Kotlin, Java and more.
 
 This library is written in [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html)
 so _in theory_ it can be used from the JVM, Android, and native iOS, Linux, MacOS, Windows and more.
@@ -14,6 +14,13 @@ Several flavors of the client are available to match your needs:
 - [`Future` based (JVM only)](https://github.com/BoD/klibqonto/blob/master/library/src/jvmMain/kotlin/org/jraf/klibqonto/client/future/FutureQontoClient.kt): useful for Java projects
 
 ## Usage
+
+### Minimum requirements
+- Java: 1.8? **TODO**
+- Kotlin: 1.3? **TODO**
+- Android: ? **TODO**
+- Swift: ? **TODO**
+
 ### 1/ Add the dependencies to your project
 #### Gradle based projects
 The artifact is hosted on JCenter.
@@ -82,6 +89,11 @@ The APIs that are paginated all follow the same principle:
 
 #### Proxy
 A proxy can be configured by passing a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
+
+## Javascript support
+In theory Kotlin Multiplatform projects can also target Javascript
+but as of today the author couldn't understand how to make
+that work.  Please contact me if you want to help :)
 
 ## Author and License
 *Note: this project is not officially related to or endorsed by Qonto or Olinda SAS.*
