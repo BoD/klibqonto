@@ -36,15 +36,10 @@ import org.jraf.klibqonto.model.pagination.Page;
 import org.jraf.klibqonto.model.pagination.Pagination;
 import org.jraf.klibqonto.model.transactions.Transaction;
 
-import static org.jraf.klibqonto.sample.UtilsKt.toFormattedString;
-import static org.jraf.klibqonto.sample.UtilsKt.date;
-
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
+import java.util.*;
 import java.util.stream.Collectors;
-import java.util.Optional;
+
+import static org.jraf.klibqonto.sample.UtilsKt.date;
 
 class BlockingSample {
 
