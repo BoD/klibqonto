@@ -3,14 +3,18 @@ plugins {
     id 'org.jetbrains.kotlin.plugin.serialization' version '1.3.61'
 }
 
+apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
 
 kotlin {
     jvm {
         compilations.main.kotlinOptions {
-            // Setup the Kotlin compiler options for the 'main' compilation:
             jvmTarget = '1.8'
         }
+    }
+
+    android {
+        publishLibraryVariants("release")
     }
 
     js {
@@ -46,7 +50,7 @@ kotlin {
                 implementation "io.ktor:ktor-client-core:$versions.ktor"
                 implementation "io.ktor:ktor-client-json:$versions.ktor"
                 implementation "io.ktor:ktor-client-serialization:$versions.ktor"
-                implementation("io.ktor:ktor-client-logging:$versions.ktor")
+                implementation "io.ktor:ktor-client-logging:$versions.ktor"
             }
         }
         commonTest {
@@ -63,10 +67,28 @@ kotlin {
                 implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
                 implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
                 implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
-                implementation("io.ktor:ktor-client-logging-jvm:$versions.ktor")
+                implementation "io.ktor:ktor-client-logging-jvm:$versions.ktor"
             }
         }
         jvmTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
+                implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
+                implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
+                implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging-jvm:$versions.ktor"
+                // implementation("org.slf4j:slf4j-android:1.7.30")
+            }
+        }
+        androidTest {
             dependencies {
                 implementation kotlin('test')
                 implementation kotlin('test-junit')
@@ -79,7 +101,7 @@ kotlin {
                 implementation "org.jetbrains.kotlinx:kotlinx-io-js:$versions.kotlinxIo"
                 api "io.ktor:ktor-client-serialization-js:$versions.ktor"
                 api "io.ktor:ktor-client-json-js:$versions.ktor"
-                implementation("io.ktor:ktor-client-logging-js:$versions.ktor")
+                implementation "io.ktor:ktor-client-logging-js:$versions.ktor"
             }
         }
         jsTest {
@@ -94,7 +116,7 @@ kotlin {
                 implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-json-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-curl:$versions.ktor"
-                implementation("io.ktor:ktor-client-logging-native:$versions.ktor")
+                implementation "io.ktor:ktor-client-logging-native:$versions.ktor"
             }
         }
         macosTest {
@@ -106,11 +128,48 @@ kotlin {
                 implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-json-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-ios:$versions.ktor"
-                implementation("io.ktor:ktor-client-logging-native:$versions.ktor")
+                implementation "io.ktor:ktor-client-logging-native:$versions.ktor"
             }
         }
         iosTest {
         }
+    }
+}
+
+android {
+    compileSdkVersion 29
+
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+            java.srcDirs = ['src/androidMain/kotlin']
+            res.srcDirs = ['src/androidMain/res']
+        }
+
+        androidTest {
+            java.srcDirs = ['src/androidTest/kotlin']
+            res.srcDirs = ['src/androidTest/res']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
