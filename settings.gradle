@@ -5,7 +5,8 @@ rootProject.name = 'klibqonto-root'
 include ':library'
 project(':library').name = 'klibqonto'
 
-include ':sample-jvm', ':sample-native-osx'
-[':sample-jvm', ':sample-native-osx'].forEach {
-    project(it).projectDir = file("samples${it.replace(':', "/")}")
+// Include all the sample modules from the 'samples' directory
+file('samples').eachDir { dir ->
+    include dir.name
+    project(":${dir.name}").projectDir = dir
 }

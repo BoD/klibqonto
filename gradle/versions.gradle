@@ -42,6 +42,7 @@ versions.with {
     retrofit = '2.6.1'
     okHttp = '4.1.1'
     gson = '2.8.5'
+    slf4j = '1.7.30'
 }
 
 ext.versions = versions
