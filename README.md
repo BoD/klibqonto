@@ -5,7 +5,7 @@ A [Qonto API](https://api-doc.qonto.eu) client library for Kotlin, Java and more
 This library is written in [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html)
 so _in theory_ it can be used from the JVM, Android, and native iOS, Linux, MacOS, Windows and more.
 In practice this library has been tested and has samples for the JVM
-(Kotlin and Java), MacOS (Kotlin), and iOS (Swift).
+(Kotlin and Java), Android (Kotlin), MacOS (Kotlin), and iOS (Swift).
 
 Several flavors of the client are available to match your needs:
 - [Coroutines (`suspend`) based](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/QontoClient.kt): the default client for Kotlin projects
@@ -18,7 +18,7 @@ Several flavors of the client are available to match your needs:
 ### Minimum requirements
 - Java: 1.8? **TODO**
 - Kotlin: 1.3? **TODO**
-- Android: ? **TODO**
+- Android: 21
 - Swift: ? **TODO**
 
 ### 1/ Add the dependencies to your project
@@ -52,7 +52,7 @@ The easiest way to see how to use it is to look at the samples:
 #### Get your login and secret key
 You will find your **login** and **secret key** in the Qonto web application under Settings, in the API tab.
 
-#### Instanciate a `QontoClient`
+#### Instantiate a `QontoClient`
 
 ```kotlin
 val qontoClient = QontoClient.newInstance(
@@ -85,10 +85,14 @@ The APIs that are paginated all follow the same principle:
 - return a [`Page<T>`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/model/pagination/Page.kt) with the result list but also a reference to the next and previous `Pagination` objects (handy when retrieving several pages).
 
 #### Logging
-**TODO** To log HTTP requests/response, pass a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
+To log HTTP requests/response, pass a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
+
+Several levels are available: `NONE`, `INFO`, `HEADERS`, `BODY` and `ALL`
 
 #### Proxy
 A proxy can be configured by passing a [`HttpConfiguration`](https://github.com/BoD/klibqonto/blob/master/library/src/commonMain/kotlin/org/jraf/klibqonto/client/HttpConfiguration.kt) to `QontoClient.newInstance()`.
+
+On Android, the proxy set in the system settings is automatically used.
 
 ## Javascript support
 In theory Kotlin Multiplatform projects can also target Javascript
