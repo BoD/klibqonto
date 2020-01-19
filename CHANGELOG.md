@@ -1,5 +1,11 @@
 # Changelog
 
+## v2.0.0 (upcoming!)
+Migrated the project to Kotlin Multiplatform
+- Removed Flow based client (was not really useful)
+- Added a Callback based client (useful for Swift)
+- Tweaked the API a bit to make it work well with Multiplatform
+
 ## v1.2.0 (2019-09-14)
 Add `pageIndex` to the `Page` object.
 

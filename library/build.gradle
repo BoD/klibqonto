@@ -1,46 +1,176 @@
-description = 'klibqonto'
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.3.61'
+}
 
-apply plugin: 'java-library'
-apply plugin: 'kotlin'
+apply plugin: 'com.android.library'
 apply plugin: 'maven-publish'
-apply plugin: "idea"
-apply plugin: 'org.jetbrains.dokka'
 
-compileKotlin {
-    kotlinOptions {
-        jvmTarget = versions.build.kotlinJvmTarget
-        // Ensure the kotlin module name is unique
-        freeCompilerArgs += ['-module-name', "$project.group.$project.name"]
+kotlin {
+    jvm {
+        compilations.main.kotlinOptions {
+            jvmTarget = '1.8'
+        }
+    }
+
+    android {
+        publishLibraryVariants("release")
+    }
+
+    // Javascript is commented for now - I don't know how this actually works and how to test it
+//    js {
+//        browser {
+//        }
+//        nodejs {
+//        }
+//    }
+
+    macosX64('macos') {
+        binaries {
+            framework {
+                // See https://github.com/JetBrains/kotlin-native/blob/master/OBJC_INTEROP.md#to-use
+                freeCompilerArgs += '-Xobjc-generics'
+            }
+        }
+    }
+
+    iosX64('ios') {
+        binaries {
+            framework {
+                // See https://github.com/JetBrains/kotlin-native/blob/master/OBJC_INTEROP.md#to-use
+                freeCompilerArgs += '-Xobjc-generics'
+            }
+        }
+    }
+
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+                implementation "org.jetbrains.kotlinx:kotlinx-io:$versions.kotlinxIo"
+                implementation "io.ktor:ktor-client-core:$versions.ktor"
+                implementation "io.ktor:ktor-client-json:$versions.ktor"
+                implementation "io.ktor:ktor-client-serialization:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging:$versions.ktor"
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+
+        jvmMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
+                implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
+                implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
+                implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging-jvm:$versions.ktor"
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+            }
+        }
+
+        androidMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
+                implementation "org.jetbrains.kotlinx:kotlinx-io-jvm:$versions.kotlinxIo"
+                implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
+                implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging-jvm:$versions.ktor"
+                implementation "org.slf4j:slf4j-android:$versions.slf4j"
+            }
+        }
+        androidTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+            }
+        }
+
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+                implementation "org.jetbrains.kotlinx:kotlinx-io-js:$versions.kotlinxIo"
+                api "io.ktor:ktor-client-serialization-js:$versions.ktor"
+                api "io.ktor:ktor-client-json-js:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging-js:$versions.ktor"
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+            }
+        }
+
+        macosMain {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-io-native:$versions.kotlinxIo"
+                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
+                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
+                implementation "io.ktor:ktor-client-curl:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging-native:$versions.ktor"
+            }
+        }
+        macosTest {
+        }
+
+        iosMain {
+            dependencies {
+                implementation "org.jetbrains.kotlinx:kotlinx-io-native:$versions.kotlinxIo"
+                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
+                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
+                implementation "io.ktor:ktor-client-ios:$versions.ktor"
+                implementation "io.ktor:ktor-client-logging-native:$versions.ktor"
+            }
+        }
+        iosTest {
+        }
     }
 }
 
-javadoc.failOnError = false
+android {
+    compileSdkVersion 29
 
-task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
-    from sourceSets.main.allSource
-}
+    defaultConfig {
+        minSdkVersion 21
+        targetSdkVersion 29
+    }
 
-task dokkaJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
-    outputFormat = 'html'
-    outputDirectory = javadoc.destinationDir
-    inputs.dir 'src/main/kotlin'
-}
-
-task javadocJar(type: Jar, dependsOn: dokkaJavadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            artifactId project.description
-
-            artifact sourcesJar
-            artifact javadocJar
+    buildTypes {
+        release {
+            minifyEnabled false
         }
+    }
+
+    sourceSets {
+        main {
+            manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+            java.srcDirs = ['src/androidMain/kotlin']
+            res.srcDirs = ['src/androidMain/res']
+        }
+
+        androidTest {
+            java.srcDirs = ['src/androidTest/kotlin']
+            res.srcDirs = ['src/androidTest/res']
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = '1.8'
     }
 }
 
@@ -54,40 +184,4 @@ task generateSources {
         new File(outputWithPackageDir, "Version.kt").write("package org.jraf.klibqonto.internal.client\ninternal const val VERSION = \"$project.version\"")
     }
 }
-compileKotlin.dependsOn generateSources
-compileKotlin.source += generateSources.outputs.files
-
-idea {
-    module {
-        sourceDirs += generateSources.outputs.files
-        generatedSourceDirs += generateSources.outputs.files
-    }
-}
-
-dependencies {
-    // Kotlin
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$versions.coroutines"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
-
-    // Retrofit
-    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
-    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
-
-    // OkHttp
-    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okHttp"
-
-    // Gson
-    implementation "com.google.code.gson:gson:$versions.gson"
-
-    // Slf4j
-    implementation "org.slf4j:slf4j-api:$versions.slf4j"
-
-    // JUnit
-    testImplementation "junit:junit:$versions.testing.junit"
-
-    // Wiremock
-    testImplementation "com.github.tomakehurst:wiremock-standalone:$versions.testing.wireMock"
-}
-
-// Use "./gradlew publishToMavenLocal" to deploy the artifacts to your local maven repository
+kotlin.sourceSets.commonMain.kotlin.srcDir(generateSources.outputs.files)

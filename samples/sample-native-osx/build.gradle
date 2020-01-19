@@ -1,0 +1,20 @@
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform'
+}
+
+kotlin {
+    macosX64("macos") {
+        binaries {
+            executable()
+        }
+    }
+
+    sourceSets {
+        macosMain {
+            dependencies {
+                // Library
+                implementation project(':klibqonto')
+            }
+        }
+    }
+}
