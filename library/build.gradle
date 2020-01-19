@@ -174,16 +174,14 @@ android {
     }
 }
 
-//// Create a Version.kt file and add it to the source set
-//task generateSources {
-//    def outputDir = file("$buildDir/generated/source/kotlin")
-//    outputs.dir outputDir
-//    doFirst {
-//        def outputWithPackageDir = new File(outputDir, "org/jraf/klibqonto/internal/client")
-//        outputWithPackageDir.mkdirs()
-//        new File(outputWithPackageDir, "Version.kt").write("package org.jraf.klibqonto.internal.client\ninternal const val VERSION = \"$project.version\"")
-//    }
-//}
-//compileKotlin.dependsOn generateSources
-//compileKotlin.source += generateSources.outputs.files
-
+// Create a Version.kt file and add it to the source set
+task generateSources {
+    def outputDir = file("$buildDir/generated/source/kotlin")
+    outputs.dir outputDir
+    doFirst {
+        def outputWithPackageDir = new File(outputDir, "org/jraf/klibqonto/internal/client")
+        outputWithPackageDir.mkdirs()
+        new File(outputWithPackageDir, "Version.kt").write("package org.jraf.klibqonto.internal.client\ninternal const val VERSION = \"$project.version\"")
+    }
+}
+kotlin.sourceSets.commonMain.kotlin.srcDir(generateSources.outputs.files)
