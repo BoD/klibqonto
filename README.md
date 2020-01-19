@@ -23,11 +23,11 @@ Several flavors of the client are available to match your needs:
 
 ### 1/ Add the dependencies to your project
 #### Gradle based projects
-The artifact is hosted on JCenter.
+The artifact is hosted on a specific bintray repository.
 ```groovy
 repositories {
     /* ... */
-    jcenter()
+    maven { url 'https://dl.bintray.com/bod/JRAF' }
 }
 ```
 ```groovy
