@@ -26,7 +26,6 @@
 
 package org.jraf.klibqonto.client.blocking
 
-import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.blocking.BlockingQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
@@ -47,7 +46,7 @@ import kotlin.jvm.JvmName
  *
  * This is useful from Java, which doesn't have a notion of `suspend` functions.
  */
-interface BlockingQontoClient : Closeable {
+interface BlockingQontoClient {
 
     /**
      * See [QontoClient.Organizations].
@@ -142,7 +141,7 @@ interface BlockingQontoClient : Closeable {
      *
      * **Note: this client will no longer be usable after this is called.**
      */
-    override fun close()
+    fun close()
 }
 
 /**

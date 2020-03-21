@@ -26,7 +26,6 @@
 
 package org.jraf.klibqonto.client.future
 
-import kotlinx.io.core.Closeable
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.future.FutureQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
@@ -46,7 +45,7 @@ import java.util.concurrent.Future
  *
  * This is useful from Java, which doesn't have a notion of `suspend` functions.
  */
-interface FutureQontoClient : Closeable {
+interface FutureQontoClient {
 
     /**
      * See [QontoClient.Organizations].
@@ -141,7 +140,7 @@ interface FutureQontoClient : Closeable {
      *
      * **Note: this client will no longer be usable after this is called.**
      */
-    override fun close()
+    fun close()
 }
 
 /**
