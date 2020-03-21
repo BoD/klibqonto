@@ -4,9 +4,9 @@ def versions = [:]
 // Plugins
 def plugins = [:]
 plugins.with {
-    gradleVersions = '0.27.0'
-    dokka = '0.10.0'
-    android = '3.5.3'
+    gradleVersions = '0.28.0'
+    dokka = '0.10.1'
+    android = '3.6.1'
 }
 versions.plugins = plugins
 
@@ -20,7 +20,7 @@ versions.buildLibs = buildLibs
 // Build parameters
 def build = [:]
 build.with {
-    gradle = '6.1'
+    gradle = '6.2.2'
     kotlinJvmTarget = '1.8'
 }
 versions.build = build
@@ -28,15 +28,15 @@ versions.build = build
 // Testing dependencies
 def testing = [:]
 testing.with {
-    junit = '4.12'
+    junit = '4.13'
     wireMock = '2.24.1'
 }
 versions.testing = testing
 
 // Other dependencies
 versions.with {
-    kotlin = '1.3.61'
-    ktor = '1.3.0'
+    kotlin = '1.3.70'
+    ktor = '1.3.2'
     kotlinxIo = '0.1.16'
     coroutines = '1.3.3'
     retrofit = '2.6.1'

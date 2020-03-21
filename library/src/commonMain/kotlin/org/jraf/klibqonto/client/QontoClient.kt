@@ -50,7 +50,6 @@ interface QontoClient : Closeable {
          * Retrieve the list and details of a company's bank accounts.
          *
          * The response contains the list of bank accounts of the authenticated company.
-         * There can currently only be one bank account per company.
          *
          * The [balance][org.jraf.klibqonto.model.organizations.BankAccount.balanceCents] represents
          * the actual amount of money on the account, in Euros.

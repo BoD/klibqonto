@@ -1,6 +1,9 @@
 # Changelog
 
-## v2.0.0 (upcoming!)
+## v2.0.1
+Minor comment fix, and dependency updates
+
+## v2.0.0
 Migrated the project to Kotlin Multiplatform
 - Removed Flow based client (was not really useful)
 - Added a Callback based client (useful for Swift)
