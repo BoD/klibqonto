@@ -29,6 +29,7 @@ import org.jraf.klibqonto.model.dates.Date
 
 internal data class AttachmentImpl(
     override val id: String,
+    override val fileName: String,
     override val createdDate: Date,
     override val size: Long,
     override val contentType: String,

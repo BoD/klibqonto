@@ -33,6 +33,11 @@ interface Attachment {
     val id: String
 
     /**
+     * Name of the file
+     */
+    val fileName: String
+
+    /**
      * Timestamp of the file upload
      */
     val createdDate: Date
