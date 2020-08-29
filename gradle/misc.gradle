@@ -15,10 +15,10 @@ buildscript {
 
 // Run './gradlew dependencyUpdates' to see new versions of dependencies
 apply plugin: 'com.github.ben-manes.versions'
-dependencyUpdates.resolutionStrategy = {
+dependencyUpdates.resolutionStrategy {
     componentSelection { rules ->
         rules.all { selection ->
-            boolean rejected = ['alpha', 'beta', 'rc', 'm1'].any { qualifier ->
+            boolean rejected = ['alpha', 'beta', 'rc', 'm1', 'm2', 'm3'].any { qualifier ->
                 selection.candidate.version.toLowerCase() ==~ /.*-${qualifier}.*/
             }
             if (rejected) {
