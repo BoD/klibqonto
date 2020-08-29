@@ -1,6 +1,6 @@
 # klibqonto
 
-A [Qonto API](https://api-doc.qonto.eu) client library for Kotlin, Java and more.
+A [Qonto API](https://api-doc.qonto.com) client library for Kotlin, Java and more.
 
 This library is written in [Kotlin Multiplatform](https://kotlinlang.org/docs/reference/multiplatform.html)
 so _in theory_ it can be used from the JVM, Android, and native iOS, Linux, MacOS, Windows and more.
@@ -23,17 +23,17 @@ Several flavors of the client are available to match your needs:
 
 ### 1/ Add the dependencies to your project
 #### Gradle based projects
-The artifact is hosted on a specific bintray repository.
+The artifact is hosted on the JCenter repository.
 ```groovy
 repositories {
     /* ... */
-    maven { url 'https://dl.bintray.com/bod/JRAF' }
+    jcenter()
 }
 ```
 ```groovy
 dependencies {
     /* ... */
-    implementation 'org.jraf:klibqonto:2.1.0'
+    implementation 'org.jraf:klibqonto:2.1.1'
 }
 ```
 
@@ -97,7 +97,7 @@ On Android, the proxy set in the system settings is automatically used.
 ## Javascript support
 In theory Kotlin Multiplatform projects can also target Javascript
 but as of today the author couldn't understand how to make
-that work.  Please contact me if you want to help :)
+that work.  Please [contact me](mailto:BoD@JRAF.org) if you want to help :)
 
 ## Author and License
 *Note: this project is not officially related to or endorsed by Qonto or Olinda SAS.*

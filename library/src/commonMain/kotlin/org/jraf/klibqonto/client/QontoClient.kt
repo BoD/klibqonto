@@ -55,13 +55,13 @@ interface QontoClient {
          *
          * The [authorized balance][org.jraf.klibqonto.model.organizations.BankAccount.authorizedBalanceCents]
          * represents the amount available for payments, taking into account transactions that are being processed.
-         * More information [here](https://support.qonto.eu/hc/en-us/articles/115000493249-How-is-the-balance-of-my-account-calculated-).
+         * More information [here](https://support.qonto.com/hc/en-us/articles/115000493249-How-is-the-balance-of-my-account-calculated-).
          *
          * The bank account's [slug][org.jraf.klibqonto.model.organizations.BankAccount.slug]
          * and [iban][org.jraf.klibqonto.model.organizations.BankAccount.iban] will be required for you to retrieve the
          * list of transactions inside that bank account, using [Transactions.getTransactionList].
          *
-         * See also [the API documentation](https://api-doc.qonto.eu/2.0/organizations/show-organization-1)
+         * See also [the API documentation](https://api-doc.qonto.com/2.0/organizations/show-organization-1)
          */
         suspend fun getOrganization(): Organization
     }
@@ -94,7 +94,7 @@ interface QontoClient {
          * @param sortOrder sort order (default: descending)
          * @param pagination pagination settings
          *
-         * See also [the API documentation](https://api-doc.qonto.eu/2.0/transactions/list-transactions)
+         * See also [the API documentation](https://api-doc.qonto.com/2.0/transactions/list-transactions)
          */
         suspend fun getTransactionList(
             bankAccountSlug: String,
@@ -121,7 +121,7 @@ interface QontoClient {
          * The [id][org.jraf.klibqonto.model.memberships.Membership.id] field uniquely identifies the membership
          * and is used to identify the [initiator of a transaction][org.jraf.klibqonto.model.transactions.Transaction.initiatorId].
          *
-         * See also [the API documentation](https://api-doc.qonto.eu/2.0/memberships/list-memberships)
+         * See also [the API documentation](https://api-doc.qonto.com/2.0/memberships/list-memberships)
          */
         suspend fun getMembershipList(
             pagination: Pagination = Pagination()
@@ -144,7 +144,7 @@ interface QontoClient {
          * The parent label can be identified thanks to the [parentId][org.jraf.klibqonto.model.labels.Label.parentId]
          * field.
          *
-         * See also [the API documentation](https://api-doc.qonto.eu/2.0/labels/list-labels)
+         * See also [the API documentation](https://api-doc.qonto.com/2.0/labels/list-labels)
          */
         suspend fun getLabelList(
             pagination: Pagination = Pagination()
@@ -171,7 +171,7 @@ interface QontoClient {
          *
          * @param id the id of the [Attachment] to retrieve
          *
-         * See also [the API documentation](https://api-doc.qonto.eu/2.0/attachments/show-attachment)
+         * See also [the API documentation](https://api-doc.qonto.com/2.0/attachments/show-attachment)
          */
         suspend fun getAttachment(id: String): Attachment
     }

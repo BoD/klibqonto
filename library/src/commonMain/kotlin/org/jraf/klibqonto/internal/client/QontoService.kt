@@ -35,7 +35,7 @@ import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnve
 
 internal class QontoService(private val httpClient: HttpClient) {
     companion object {
-        private const val BASE_URL = "https://thirdparty.qonto.eu/v2/"
+        private const val BASE_URL = "https://thirdparty.qonto.com/v2/"
     }
 
     suspend fun getOrganization(): ApiOrganizationEnvelope {

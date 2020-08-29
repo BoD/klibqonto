@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.1 (2020-08-29)
+- Updated all dependencies to their latest version
+- Use the new qonto.com domain instead of qonto.eu
+
 ## 2.1.0
 Add the `fileName: String` field to the `Attachment` model.
 
