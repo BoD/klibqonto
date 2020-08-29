@@ -36,7 +36,9 @@ versions.testing = testing
 // Other dependencies
 versions.with {
     kotlin = '1.4.0'
-    ktor = '1.4.0'
+    // Cannot use 1.4.0 because of this issue:
+    // https://github.com/ktorio/ktor/issues/1550 and https://github.com/Kotlin/kotlinx.coroutines/issues/2025
+    ktor = '1.3.2-1.4.0-rc'
     coroutines = '1.3.9'
     retrofit = '2.6.1'
     okHttp = '4.1.1'

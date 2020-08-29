@@ -27,19 +27,13 @@ kotlin {
 
     macosX64('macos') {
         binaries {
-            framework {
-                // See https://github.com/JetBrains/kotlin-native/blob/master/OBJC_INTEROP.md#to-use
-                freeCompilerArgs += '-Xobjc-generics'
-            }
+            framework()
         }
     }
 
     iosX64('ios') {
         binaries {
-            framework {
-                // See https://github.com/JetBrains/kotlin-native/blob/master/OBJC_INTEROP.md#to-use
-                freeCompilerArgs += '-Xobjc-generics'
-            }
+            framework()
         }
     }
 
@@ -62,11 +56,8 @@ kotlin {
 
         jvmMain {
             dependencies {
-//                implementation kotlin('stdlib-jdk8')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:$versions.coroutines"
                 implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
-//                implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
-//                implementation "io.ktor:ktor-client-logging-jvm:$versions.ktor"
             }
         }
         jvmTest {
@@ -78,11 +69,8 @@ kotlin {
 
         androidMain {
             dependencies {
-//                implementation kotlin('stdlib-jdk8')
                 implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$versions.coroutines"
                 implementation "io.ktor:ktor-client-okhttp:$versions.ktor"
-//                implementation "io.ktor:ktor-client-serialization-jvm:$versions.ktor"
-//                implementation "io.ktor:ktor-client-logging-jvm:$versions.ktor"
                 implementation "org.slf4j:slf4j-android:$versions.slf4j"
             }
         }
@@ -95,10 +83,7 @@ kotlin {
 
         jsMain {
             dependencies {
-//                implementation kotlin('stdlib-js')
-//                api "io.ktor:ktor-client-serialization-js:$versions.ktor"
-                api "io.ktor:ktor-client-json-js:$versions.ktor"
-//                implementation "io.ktor:ktor-client-logging-js:$versions.ktor"
+                implementation "io.ktor:ktor-client-json-js:$versions.ktor"
             }
         }
         jsTest {
@@ -109,10 +94,7 @@ kotlin {
 
         macosMain {
             dependencies {
-//                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
-//                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-curl:$versions.ktor"
-//                implementation "io.ktor:ktor-client-logging-native:$versions.ktor"
             }
         }
         macosTest {
@@ -120,10 +102,7 @@ kotlin {
 
         iosMain {
             dependencies {
-//                implementation "io.ktor:ktor-client-serialization-native:$versions.ktor"
-//                implementation "io.ktor:ktor-client-json-native:$versions.ktor"
                 implementation "io.ktor:ktor-client-ios:$versions.ktor"
-//                implementation "io.ktor:ktor-client-logging-native:$versions.ktor"
             }
         }
         iosTest {
