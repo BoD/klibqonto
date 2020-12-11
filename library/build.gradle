@@ -1,6 +1,6 @@
 plugins {
     id 'org.jetbrains.kotlin.multiplatform'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.0'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.4.21'
 }
 
 apply plugin: 'com.android.library'
@@ -10,6 +10,7 @@ kotlin {
     jvm {
         compilations.main.kotlinOptions {
             jvmTarget = '1.8'
+            languageVersion = '1.4'
         }
     }
 
@@ -38,6 +39,11 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.useExperimentalAnnotation('kotlin.RequiresOptIn')
+            languageSettings.useExperimentalAnnotation('io.ktor.util.KtorExperimentalAPI')
+        }
+
         commonMain {
             dependencies {
                 implementation kotlin('stdlib')
@@ -81,16 +87,17 @@ kotlin {
             }
         }
 
-        jsMain {
-            dependencies {
-                implementation "io.ktor:ktor-client-json-js:$versions.ktor"
-            }
-        }
-        jsTest {
-            dependencies {
-                implementation kotlin('test-js')
-            }
-        }
+        // Javascript is commented for now - I don't know how this actually works and how to test it
+//        jsMain {
+//            dependencies {
+//                implementation "io.ktor:ktor-client-json-js:$versions.ktor"
+//            }
+//        }
+//        jsTest {
+//            dependencies {
+//                implementation kotlin('test-js')
+//            }
+//        }
 
         macosMain {
             dependencies {
@@ -111,11 +118,11 @@ kotlin {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
 
     defaultConfig {
         minSdkVersion 21
-        targetSdkVersion 29
+        targetSdkVersion 30
     }
 
     buildTypes {

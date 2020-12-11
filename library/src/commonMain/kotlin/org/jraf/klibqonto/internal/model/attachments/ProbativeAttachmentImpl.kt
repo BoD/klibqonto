@@ -22,17 +22,14 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.api.model.attachments
+package org.jraf.klibqonto.internal.model.attachments
 
-import kotlinx.serialization.Serializable
+import org.jraf.klibqonto.model.attachments.ProbativeAttachment
 
-@Serializable
-internal data class ApiAttachment(
-    val id: String,
-    val created_at: String,
-    val file_name: String,
-    val file_size: Long,
-    val file_content_type: String,
-    val url: String,
-    val probative_attachment: ApiProbativeAttachment,
-)
+internal data class ProbativeAttachmentImpl(
+    override val status: ProbativeAttachment.Status,
+    override val fileName: String?,
+    override val size: Long?,
+    override val contentType: String?,
+    override val url: String?
+) : ProbativeAttachment

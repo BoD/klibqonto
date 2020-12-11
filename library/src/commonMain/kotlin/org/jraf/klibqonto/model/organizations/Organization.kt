@@ -31,6 +31,11 @@ interface Organization {
     val slug: String
 
     /**
+     * Legal name of the organization
+     */
+    val legalName: String
+
+    /**
      * List of the bank accounts
      */
     val bankAccounts: List<BankAccount>

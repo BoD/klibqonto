@@ -29,12 +29,15 @@ import io.ktor.client.engine.ProxyBuilder
 import io.ktor.client.features.UserAgent
 import io.ktor.client.features.defaultRequest
 import io.ktor.client.features.json.JsonFeature
+import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.features.logging.DEFAULT
 import io.ktor.client.features.logging.LogLevel
 import io.ktor.client.features.logging.Logger
 import io.ktor.client.features.logging.Logging
 import io.ktor.client.request.header
 import io.ktor.http.URLBuilder
+import io.ktor.util.KtorExperimentalAPI
+import kotlinx.serialization.json.Json
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.QontoClient
@@ -72,9 +75,17 @@ internal class QontoClientImpl(
     override val labels = this
     override val attachments = this
 
+    @OptIn(KtorExperimentalAPI::class)
     private val httpClient by lazy {
         HttpClient {
-            install(JsonFeature)
+            install(JsonFeature) {
+                serializer = KotlinxSerializer(
+                    Json {
+                        // XXX Comment this to have API changes make the parsing fail
+                        ignoreUnknownKeys = true
+                    }
+                )
+            }
             defaultRequest {
                 header(
                     "Authorization",

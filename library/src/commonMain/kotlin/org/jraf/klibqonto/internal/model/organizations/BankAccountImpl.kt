@@ -24,6 +24,7 @@
 
 package org.jraf.klibqonto.internal.model.organizations
 
+import org.jraf.klibqonto.model.dates.Date
 import org.jraf.klibqonto.model.organizations.BankAccount
 
 internal data class BankAccountImpl(
@@ -32,5 +33,6 @@ internal data class BankAccountImpl(
     override val bic: String,
     override val currency: String,
     override val balanceCents: Long,
-    override val authorizedBalanceCents: Long
+    override val authorizedBalanceCents: Long,
+    override val updatedDate: Date,
 ) : BankAccount

@@ -43,7 +43,7 @@ import java.util.concurrent.CountDownLatch
 
 // !!!!! DO THIS FIRST !!!!!
 // Replace these constants with your login / secret key
-// that you will find in the Qonto web application under Settings, in the API tab.
+// that you will find in the Qonto web application under Settings, in the "Integrations (API)" section.
 private const val LOGIN = "xxx"
 private const val SECRET_KEY = "yyy"
 

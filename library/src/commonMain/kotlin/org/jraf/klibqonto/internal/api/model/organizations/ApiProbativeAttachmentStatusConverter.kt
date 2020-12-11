@@ -22,17 +22,20 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.api.model.attachments
+package org.jraf.klibqonto.internal.api.model.organizations
 
-import kotlinx.serialization.Serializable
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.internal.api.model.ApiConverterException
+import org.jraf.klibqonto.model.attachments.ProbativeAttachment
 
-@Serializable
-internal data class ApiAttachment(
-    val id: String,
-    val created_at: String,
-    val file_name: String,
-    val file_size: Long,
-    val file_content_type: String,
-    val url: String,
-    val probative_attachment: ApiProbativeAttachment,
-)
+internal object ApiProbativeAttachmentStatusConverter : ApiConverter<String, ProbativeAttachment.Status>() {
+    override fun apiToModel(apiModel: String): ProbativeAttachment.Status {
+        return when (apiModel) {
+            "pending" -> ProbativeAttachment.Status.PENDING
+            "available" -> ProbativeAttachment.Status.AVAILABLE
+            "unavailable" -> ProbativeAttachment.Status.UNAVAILABLE
+            "corrupted" -> ProbativeAttachment.Status.CORRUPTED
+            else -> throw ApiConverterException("Unknown probative attachment status '$apiModel'")
+        }
+    }
+}

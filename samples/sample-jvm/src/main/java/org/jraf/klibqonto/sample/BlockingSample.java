@@ -45,7 +45,7 @@ class BlockingSample {
 
     // !!!!! DO THIS FIRST !!!!!
     // Replace these constants with your login / secret key
-    // that you will find in the Qonto web application under Settings, in the API tab.
+    // that you will find in the Qonto web application under Settings, in the "Integrations (API)" section.
     private static final String LOGIN = "xxx";
     private static final String SECRET_KEY = "yyy";
 

@@ -7,6 +7,7 @@ apply plugin: 'java'
 compileKotlin {
     kotlinOptions {
         jvmTarget = versions.build.kotlinJvmTarget
+        languageVersion = '1.4'
     }
 }
 

@@ -29,5 +29,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class ApiOrganization(
     val slug: String,
-    val bank_accounts: List<ApiBankAccount>
+    val legal_name: String,
+    val bank_accounts: List<ApiBankAccount>,
 )

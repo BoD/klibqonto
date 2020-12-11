@@ -35,5 +35,6 @@ internal data class ApiBankAccount(
     val balance: Float,
     val balance_cents: Long,
     val authorized_balance: Float,
-    val authorized_balance_cents: Long
+    val authorized_balance_cents: Long,
+    val updated_at: String,
 )

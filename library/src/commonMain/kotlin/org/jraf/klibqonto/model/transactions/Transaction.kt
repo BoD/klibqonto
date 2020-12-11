@@ -48,6 +48,38 @@ interface Transaction {
         COMPLETED,
     }
 
+    enum class Category {
+        ATM,
+        FEES,
+        FINANCE,
+        FOOD_AND_GROCERY,
+        GAS_STATION,
+        HARDWARE_AND_EQUIPMENT,
+        HOTEL_AND_LODGING,
+        INSURANCE,
+        IT_AND_ELECTRONICS,
+        LEGAL_AND_ACCOUNTING,
+        LOGISTICS,
+        MANUFACTURING,
+        MARKETING,
+        OFFICE_RENTAL,
+        OFFICE_SUPPLY,
+        ONLINE_SERVICE,
+        OTHER_EXPENSE,
+        OTHER_INCOME,
+        OTHER_SERVICE,
+        REFUND,
+        RESTAURANT_AND_BAR,
+        SALARY,
+        SALES,
+        SUBSCRIPTION,
+        TAX,
+        TRANSPORT,
+        TREASURY_AND_INTERCO,
+        UTILITY,
+        VOUCHER,
+    }
+
     /**
      * ID of the transaction (e.g: acme-corp-1111-1-transaction-123)
      */
@@ -77,6 +109,11 @@ interface Transaction {
      * Operation type
      */
     val operationType: OperationType
+
+    /**
+     * Category
+     */
+    val category: Category
 
     /**
      * ISO 4217 currency code of the bank account (can only be EUR, currently)
@@ -152,4 +189,9 @@ interface Transaction {
      * Indicates if the transaction's attachment is  (default: true)
      */
     val attachmentRequired: Boolean
+
+    /**
+     * If this transaction's []operationType] is [OperationType.CARD], this will contain the card's last few digits, or `null` otherwise.
+     */
+    val cardLastDigits: String?
 }
