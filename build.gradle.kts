@@ -26,7 +26,7 @@ allprojects {
     }
 
     group = "org.jraf"
-    version = "2.1.1"
+    version = "2.2.0"
 
     // Show a report in the log when running tests
     tasks.withType<Test> {

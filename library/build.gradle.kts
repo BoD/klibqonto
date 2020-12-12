@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization") version Versions.KOTLIN_SERIALIZATION
@@ -166,11 +168,8 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+}
 
-//    extensions.configure<KotlinJvmOptions>("kotlinOptions") {
-//        jvmTarget = JavaVersion.VERSION_1_8.toString()
-//    }
-//    extensions.configure<KotlinJvmOptions>("kotlin") {
-//        jvmTarget = JavaVersion.VERSION_1_8.toString()
-//    }
+tasks.withType<KotlinCompile> {
+    kotlinOptions.jvmTarget = "1.8"
 }
