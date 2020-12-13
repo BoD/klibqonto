@@ -67,10 +67,10 @@ kotlin {
 
             dependencies {
                 implementation(kotlin("stdlib"))
-                implementation(dependency("io.ktor", "ktor-client-core", Versions.KTOR))
-                implementation(dependency("io.ktor", "ktor-client-json", Versions.KTOR))
-                implementation(dependency("io.ktor", "ktor-client-serialization", Versions.KTOR))
-                implementation(dependency("io.ktor", "ktor-client-logging", Versions.KTOR))
+                implementation("io.ktor", "ktor-client-core", Versions.KTOR)
+                implementation("io.ktor", "ktor-client-json", Versions.KTOR)
+                implementation("io.ktor", "ktor-client-serialization", Versions.KTOR)
+                implementation("io.ktor", "ktor-client-logging", Versions.KTOR)
             }
         }
         val commonTest by getting {
@@ -82,8 +82,8 @@ kotlin {
 
         val jvmMain by getting {
             dependencies {
-                implementation(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", Versions.COROUTINES))
-                implementation(dependency("io.ktor", "ktor-client-okhttp", Versions.KTOR))
+                implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-jdk8", Versions.COROUTINES)
+                implementation("io.ktor", "ktor-client-okhttp", Versions.KTOR)
             }
         }
         val jvmTest by getting {
@@ -95,9 +95,9 @@ kotlin {
 
         val androidMain by getting {
             dependencies {
-                implementation(dependency("org.jetbrains.kotlinx", "kotlinx-coroutines-android", Versions.COROUTINES))
-                implementation(dependency("io.ktor", "ktor-client-okhttp", Versions.KTOR))
-                implementation(dependency("org.slf4j", "slf4j-android", Versions.SLF4J))
+                implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-android", Versions.COROUTINES)
+                implementation("io.ktor", "ktor-client-okhttp", Versions.KTOR)
+                implementation("org.slf4j", "slf4j-android", Versions.SLF4J)
             }
         }
         val androidTest by getting {
@@ -110,7 +110,7 @@ kotlin {
         // Javascript is commented for now - I don't know how this actually works and how to test it
 //        val jsMain by getting {
 //            dependencies {
-//                implementation(dependency("io.ktor", "ktor-client-json-js", "$versions.ktor"))
+//                implementation("io.ktor", "ktor-client-json-js", "$versions.ktor")
 //            }
 //        }
 //        val jsTest by getting {
@@ -121,7 +121,7 @@ kotlin {
 
         val macosMain by getting {
             dependencies {
-                implementation(dependency("io.ktor", "ktor-client-curl", Versions.KTOR))
+                implementation("io.ktor", "ktor-client-curl", Versions.KTOR)
             }
         }
         val macosTest by getting {
@@ -129,7 +129,7 @@ kotlin {
 
         val iosMain by getting {
             dependencies {
-                implementation(dependency("io.ktor", "ktor-client-ios", Versions.KTOR))
+                implementation("io.ktor", "ktor-client-ios", Versions.KTOR)
             }
         }
         val iosTest by getting {

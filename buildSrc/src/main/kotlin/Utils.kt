@@ -1,5 +1,6 @@
 import ca.rmen.lfrc.FrenchRevolutionaryCalendar
 import org.gradle.api.Project
+import org.jetbrains.kotlin.gradle.plugin.KotlinDependencyHandler
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -132,4 +133,5 @@ fun Project.printSplashScreen() {
     )
 }
 
-fun dependency(group: String, artifact: String, version: String) = "$group:$artifact:$version"
+fun KotlinDependencyHandler.implementation(group: String, artifact: String, version: String) =
+    implementation("$group:$artifact:$version")
