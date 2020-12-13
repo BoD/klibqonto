@@ -191,7 +191,7 @@ interface Transaction {
     val attachmentRequired: Boolean
 
     /**
-     * If this transaction's []operationType] is [OperationType.CARD], this will contain the card's last few digits, or `null` otherwise.
+     * If this transaction's [operationType] is [OperationType.CARD], this will contain the card's last few digits, or `null` otherwise.
      */
     val cardLastDigits: String?
 }
