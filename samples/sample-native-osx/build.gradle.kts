@@ -1,5 +1,5 @@
 plugins {
-    id 'org.jetbrains.kotlin.multiplatform'
+    kotlin("multiplatform")
 }
 
 kotlin {
@@ -10,10 +10,10 @@ kotlin {
     }
 
     sourceSets {
-        macosMain {
+        val macosMain by getting {
             dependencies {
                 // Library
-                implementation project(':klibqonto')
+                implementation(project(":klibqonto"))
             }
         }
     }

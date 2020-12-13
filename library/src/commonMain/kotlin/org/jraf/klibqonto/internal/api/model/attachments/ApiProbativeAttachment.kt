@@ -27,12 +27,10 @@ package org.jraf.klibqonto.internal.api.model.attachments
 import kotlinx.serialization.Serializable
 
 @Serializable
-internal data class ApiAttachment(
-    val id: String,
-    val created_at: String,
-    val file_name: String,
-    val file_size: Long,
-    val file_content_type: String,
-    val url: String,
-    val probative_attachment: ApiProbativeAttachment,
+internal data class ApiProbativeAttachment(
+    val status: String,
+    val file_name: String? = null,
+    val file_size: Long? = null,
+    val file_content_type: String? = null,
+    val url: String? = null,
 )

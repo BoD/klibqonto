@@ -30,7 +30,8 @@ import org.jraf.klibqonto.model.organizations.Organization
 
 internal object ApiOrganizationEnvelopeConverter : ApiConverter<ApiOrganizationEnvelope, Organization>() {
     override fun apiToModel(apiModel: ApiOrganizationEnvelope) = OrganizationImpl(
-        apiModel.organization.slug,
-        ApiBankAccountConverter.apiToModel(apiModel.organization.bank_accounts)
+        slug = apiModel.organization.slug,
+        legalName = apiModel.organization.legal_name,
+        bankAccounts = ApiBankAccountConverter.apiToModel(apiModel.organization.bank_accounts),
     )
 }

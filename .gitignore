@@ -6,3 +6,4 @@ out
 .idea/*
 !.idea/codeStyles
 !.idea/copyright
+local.properties

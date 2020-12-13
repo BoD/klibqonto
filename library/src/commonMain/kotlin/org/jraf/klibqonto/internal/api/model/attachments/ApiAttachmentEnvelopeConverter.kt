@@ -31,11 +31,12 @@ import org.jraf.klibqonto.model.attachments.Attachment
 
 internal object ApiAttachmentEnvelopeConverter : ApiConverter<ApiAttachmentEnvelope, Attachment>() {
     override fun apiToModel(apiModel: ApiAttachmentEnvelope) = AttachmentImpl(
-        apiModel.attachment.id,
-        apiModel.attachment.file_name,
-        ApiDateConverter.apiToModel(apiModel.attachment.created_at)!!,
-        apiModel.attachment.file_size,
-        apiModel.attachment.file_content_type,
-        apiModel.attachment.url
+        id = apiModel.attachment.id,
+        fileName = apiModel.attachment.file_name,
+        createdDate = ApiDateConverter.apiToModel(apiModel.attachment.created_at)!!,
+        size = apiModel.attachment.file_size,
+        contentType = apiModel.attachment.file_content_type,
+        url = apiModel.attachment.url,
+        probativeAttachment = ApiProbativeAttachmentConverter.apiToModel(apiModel.attachment.probative_attachment)
     )
 }

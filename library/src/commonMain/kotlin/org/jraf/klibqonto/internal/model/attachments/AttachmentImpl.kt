@@ -25,6 +25,7 @@
 package org.jraf.klibqonto.internal.model.attachments
 
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.ProbativeAttachment
 import org.jraf.klibqonto.model.dates.Date
 
 internal data class AttachmentImpl(
@@ -33,5 +34,6 @@ internal data class AttachmentImpl(
     override val createdDate: Date,
     override val size: Long,
     override val contentType: String,
-    override val url: String
+    override val url: String,
+    override val probativeAttachment: ProbativeAttachment,
 ) : Attachment

@@ -29,5 +29,6 @@ import org.jraf.klibqonto.model.organizations.Organization
 
 internal data class OrganizationImpl(
     override val slug: String,
-    override val bankAccounts: List<BankAccount>
+    override val legalName: String,
+    override val bankAccounts: List<BankAccount>,
 ) : Organization

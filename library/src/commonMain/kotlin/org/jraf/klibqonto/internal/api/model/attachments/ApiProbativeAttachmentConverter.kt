@@ -24,15 +24,17 @@
 
 package org.jraf.klibqonto.internal.api.model.attachments
 
-import kotlinx.serialization.Serializable
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.internal.api.model.organizations.ApiProbativeAttachmentStatusConverter
+import org.jraf.klibqonto.internal.model.attachments.ProbativeAttachmentImpl
+import org.jraf.klibqonto.model.attachments.ProbativeAttachment
 
-@Serializable
-internal data class ApiAttachment(
-    val id: String,
-    val created_at: String,
-    val file_name: String,
-    val file_size: Long,
-    val file_content_type: String,
-    val url: String,
-    val probative_attachment: ApiProbativeAttachment,
-)
+internal object ApiProbativeAttachmentConverter : ApiConverter<ApiProbativeAttachment, ProbativeAttachment>() {
+    override fun apiToModel(apiModel: ApiProbativeAttachment) = ProbativeAttachmentImpl(
+        status = ApiProbativeAttachmentStatusConverter.apiToModel(apiModel.status),
+        fileName = apiModel.file_name,
+        size = apiModel.file_size,
+        contentType = apiModel.file_content_type,
+        url = apiModel.url,
+    )
+}

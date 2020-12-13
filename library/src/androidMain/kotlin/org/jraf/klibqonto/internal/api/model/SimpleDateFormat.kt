@@ -30,7 +30,7 @@ internal actual class SimpleDateFormat actual constructor(format: String) {
     private val simpleDateFormat = java.text.SimpleDateFormat(format)
 
     actual fun parse(formattedDate: String): Date {
-        return simpleDateFormat.parse(formattedDate)
+        return simpleDateFormat.parse(formattedDate)!!
     }
 
     actual fun format(dateToFormat: Date): String {

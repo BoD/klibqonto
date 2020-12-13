@@ -56,4 +56,9 @@ interface Attachment {
      * URL to download the file (Expires after 30 minutes)
      */
     val url: String
+
+    /**
+     * Probative version of attachment
+     */
+    val probativeAttachment: ProbativeAttachment
 }

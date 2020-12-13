@@ -22,17 +22,38 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.api.model.attachments
+package org.jraf.klibqonto.model.attachments
 
-import kotlinx.serialization.Serializable
+interface ProbativeAttachment {
+    enum class Status {
+        PENDING,
+        AVAILABLE,
+        UNAVAILABLE,
+        CORRUPTED,
+    }
 
-@Serializable
-internal data class ApiAttachment(
-    val id: String,
-    val created_at: String,
-    val file_name: String,
-    val file_size: Long,
-    val file_content_type: String,
-    val url: String,
-    val probative_attachment: ApiProbativeAttachment,
-)
+    /**
+     * Status of probative attachment
+     */
+    val status: Status
+
+    /**
+     * Filename of probative attachment. Non null only when [status] is [Status.AVAILABLE].
+     */
+    val fileName: String?
+
+    /**
+     * Size of the file in bytes (Max size of Qonto files is 10Mo). Non null only when [status] is [Status.AVAILABLE].
+     */
+    val size: Long?
+
+    /**
+     * MIME type of the file. Non null only when [status] is [Status.AVAILABLE].
+     */
+    val contentType: String?
+
+    /**
+     * URL to download the file (Expires after 30 minutes). Non null only when [status] is [Status.AVAILABLE].
+     */
+    val url: String?
+}

@@ -29,6 +29,10 @@ import kotlinx.serialization.Serializable
 @Serializable
 internal data class ApiTransaction(
     val transaction_id: String,
+
+    // Note: this "internal" id is probably not useful so it's not reflected on the [Transaction] class.
+    val id: String,
+
     val amount: Float,
     val amount_cents: Long,
     val attachment_ids: List<String>,
@@ -36,6 +40,7 @@ internal data class ApiTransaction(
     val local_amount_cents: Long,
     val side: String,
     val operation_type: String,
+    val category: String,
     val currency: String,
     val local_currency: String,
     val label: String,
@@ -51,5 +56,6 @@ internal data class ApiTransaction(
     val initiator_id: String?,
     val label_ids: List<String>,
     val attachment_lost: Boolean,
-    val attachment_required: Boolean
+    val attachment_required: Boolean,
+    val card_last_digits: String?,
 )

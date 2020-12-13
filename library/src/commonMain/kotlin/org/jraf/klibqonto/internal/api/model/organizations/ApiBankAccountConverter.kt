@@ -25,16 +25,18 @@
 package org.jraf.klibqonto.internal.api.model.organizations
 
 import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.internal.api.model.ApiDateConverter
 import org.jraf.klibqonto.internal.model.organizations.BankAccountImpl
 import org.jraf.klibqonto.model.organizations.BankAccount
 
 internal object ApiBankAccountConverter : ApiConverter<ApiBankAccount, BankAccount>() {
     override fun apiToModel(apiModel: ApiBankAccount) = BankAccountImpl(
-        apiModel.slug,
-        apiModel.iban,
-        apiModel.bic,
-        apiModel.currency,
-        apiModel.balance_cents,
-        apiModel.authorized_balance_cents
+        slug = apiModel.slug,
+        iban = apiModel.iban,
+        bic = apiModel.bic,
+        currency = apiModel.currency,
+        balanceCents = apiModel.balance_cents,
+        authorizedBalanceCents = apiModel.authorized_balance_cents,
+        updatedDate = ApiDateConverter.apiToModel(apiModel.updated_at)!!,
     )
 }

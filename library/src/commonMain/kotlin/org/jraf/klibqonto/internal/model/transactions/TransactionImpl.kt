@@ -33,6 +33,7 @@ internal data class TransactionImpl(
     override val attachmentIds: List<String>,
     override val localAmountCents: Long,
     override val side: Transaction.Side,
+    override val category: Transaction.Category,
     override val operationType: Transaction.OperationType,
     override val currency: String,
     override val localCurrency: String,
@@ -48,5 +49,6 @@ internal data class TransactionImpl(
     override val initiatorId: String?,
     override val labelIds: List<String>,
     override val attachmentLost: Boolean,
-    override val attachmentRequired: Boolean
+    override val attachmentRequired: Boolean,
+    override val cardLastDigits: String?,
 ) : Transaction

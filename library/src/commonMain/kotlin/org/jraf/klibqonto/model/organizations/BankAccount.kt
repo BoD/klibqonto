@@ -24,6 +24,8 @@
 
 package org.jraf.klibqonto.model.organizations
 
+import org.jraf.klibqonto.model.dates.Date
+
 interface BankAccount {
     /**
      * Slug of the bank account
@@ -54,4 +56,9 @@ interface BankAccount {
      * Amount of money available for payment from the account, in euro cents
      */
     val authorizedBalanceCents: Long
+
+    /**
+     * Date at which this object was last updated.
+     */
+    val updatedDate: Date
 }
