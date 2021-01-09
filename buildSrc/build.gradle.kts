@@ -11,5 +11,5 @@ repositories {
 
 dependencies {
     implementation("ca.rmen:lib-french-revolutionary-calendar:1.8.0")
-    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.4.21")
+    implementation("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.4.21-2")
 }

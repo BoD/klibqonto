@@ -53,7 +53,7 @@ tasks {
             componentSelection {
                 all {
                     if (
-                        setOf("alpha", /*"beta", "rc",*/ "preview", "eap", "m1").any {
+                        setOf("alpha", "beta", "rc", "preview", "eap", "m1").any {
                             candidate.version.contains(it, true)
                         }
                     ) {
