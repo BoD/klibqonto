@@ -61,7 +61,7 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal class QontoClientImpl(
-    private val clientConfiguration: ClientConfiguration
+    clientConfiguration: ClientConfiguration
 ) : QontoClient,
     QontoClient.Organizations,
     QontoClient.Transactions,
