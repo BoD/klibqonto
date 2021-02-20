@@ -72,8 +72,16 @@ interface BlockingQontoClient {
             settledDateRange: DateRange? = null,
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Page<Transaction>
+
+
+        /**
+         * See [QontoClient.Transactions.getTransaction].
+         */
+        fun getTransaction(
+            internalId: String,
+        ): Transaction
     }
 
     /**
@@ -84,7 +92,7 @@ interface BlockingQontoClient {
          * See [QontoClient.Memberships.getMembershipList].
          */
         fun getMembershipList(
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Page<Membership>
     }
 
@@ -96,7 +104,7 @@ interface BlockingQontoClient {
          * See [QontoClient.Labels.getLabelList].
          */
         fun getLabelList(
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Page<Label>
     }
 

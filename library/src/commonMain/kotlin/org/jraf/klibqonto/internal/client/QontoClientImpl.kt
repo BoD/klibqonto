@@ -43,6 +43,7 @@ import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
+import org.jraf.klibqonto.internal.api.model.apiToModel
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelopeConverter
@@ -50,6 +51,7 @@ import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelo
 import org.jraf.klibqonto.internal.api.model.pagination.HasApiMetaConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiSortFieldConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiSortOrderConverter
+import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.model.attachments.Attachment
@@ -62,7 +64,7 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal class QontoClientImpl(
-    clientConfiguration: ClientConfiguration
+    clientConfiguration: ClientConfiguration,
 ) : QontoClient,
     QontoClient.Organizations,
     QontoClient.Transactions,
@@ -127,7 +129,7 @@ internal class QontoClientImpl(
 
     override suspend fun getOrganization(): Organization {
         return service.getOrganization()
-            .let { ApiOrganizationEnvelopeConverter.apiToModel(it) }
+            .apiToModel(ApiOrganizationEnvelopeConverter)
     }
 
     override suspend fun getTransactionList(
@@ -137,7 +139,7 @@ internal class QontoClientImpl(
         settledDateRange: DateRange?,
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
-        pagination: Pagination
+        pagination: Pagination,
     ): Page<Transaction> {
         val statusStrSet = status.map { ApiTransactionStatusConverter.modelToApi(it) }.toSet()
         val updatedAtFrom = ApiDateConverter.modelToApi(updatedDateRange?.from)
@@ -159,6 +161,10 @@ internal class QontoClientImpl(
             .let { HasApiMetaConverter.convert(it, ApiTransactionListEnvelopeConverter.apiToModel(it)) }
     }
 
+    override suspend fun getTransaction(internalId: String): Transaction {
+        return service.getTransaction(internalId).apiToModel(ApiTransactionEnvelopeConverter)
+    }
+
     override suspend fun getMembershipList(pagination: Pagination): Page<Membership> {
         return service.getMembershipList(
             pagination.pageIndex.coerceAtLeast(Pagination.FIRST_PAGE_INDEX),
@@ -177,7 +183,7 @@ internal class QontoClientImpl(
 
     override suspend fun getAttachment(id: String): Attachment {
         return service.getAttachment(id)
-            .let { ApiAttachmentEnvelopeConverter.apiToModel(it) }
+            .apiToModel(ApiAttachmentEnvelopeConverter)
     }
 
     override fun close() = httpClient.close()

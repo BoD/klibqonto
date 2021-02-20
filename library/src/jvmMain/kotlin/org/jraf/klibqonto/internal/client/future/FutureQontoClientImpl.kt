@@ -39,7 +39,7 @@ import org.jraf.klibqonto.model.transactions.Transaction
 import java.util.concurrent.Future
 
 internal class FutureQontoClientImpl(
-    private val qontoClient: QontoClient
+    private val qontoClient: QontoClient,
 ) : FutureQontoClient,
     FutureQontoClient.Organizations,
     FutureQontoClient.Transactions,
@@ -64,7 +64,7 @@ internal class FutureQontoClientImpl(
         settledDateRange: DateRange?,
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
-        pagination: Pagination
+        pagination: Pagination,
     ): Future<Page<Transaction>> = GlobalScope.future {
         qontoClient.transactions.getTransactionList(
             bankAccountSlug,
@@ -75,6 +75,10 @@ internal class FutureQontoClientImpl(
             sortOrder,
             pagination
         )
+    }
+
+    override fun getTransaction(internalId: String): Future<Transaction> = GlobalScope.future {
+        qontoClient.transactions.getTransaction(internalId)
     }
 
     override fun getMembershipList(pagination: Pagination): Future<Page<Membership>> = GlobalScope.future {

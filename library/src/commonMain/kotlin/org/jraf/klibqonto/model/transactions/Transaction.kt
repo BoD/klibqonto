@@ -88,6 +88,13 @@ interface Transaction {
     val id: String
 
     /**
+     * Internal ID of the transaction (e.g.: 4c306508-dac9-410b-9937-e87b02462e42).
+     *
+     * This is the ID you would pass to the `getTransaction` API.
+     */
+    val internalId: String
+
+    /**
      * Amount of the transaction, in euro cents
      */
     val amountCents: Long

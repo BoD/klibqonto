@@ -71,8 +71,15 @@ interface FutureQontoClient {
             settledDateRange: DateRange? = null,
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Future<Page<Transaction>>
+
+        /**
+         * See [QontoClient.Transactions.getTransaction].
+         */
+        fun getTransaction(
+            internalId: String,
+        ): Future<Transaction>
     }
 
     /**
@@ -83,7 +90,7 @@ interface FutureQontoClient {
          * See [QontoClient.Memberships.getMembershipList].
          */
         fun getMembershipList(
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Future<Page<Membership>>
     }
 
@@ -95,7 +102,7 @@ interface FutureQontoClient {
          * See [QontoClient.Labels.getLabelList].
          */
         fun getLabelList(
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Future<Page<Label>>
     }
 

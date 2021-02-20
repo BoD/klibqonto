@@ -74,7 +74,15 @@ interface CallbackQontoClient {
             sortField: QontoClient.Transactions.SortField = QontoClient.Transactions.SortField.SETTLED_DATE,
             sortOrder: QontoClient.Transactions.SortOrder = QontoClient.Transactions.SortOrder.DESCENDING,
             pagination: Pagination = Pagination(),
-            onResult: (Result<Page<Transaction>>) -> Unit
+            onResult: (Result<Page<Transaction>>) -> Unit,
+        )
+
+        /**
+         * See [QontoClient.Transactions.getTransaction].
+         */
+        fun getTransaction(
+            internalId: String,
+            onResult: (Result<Transaction>) -> Unit,
         )
     }
 
@@ -87,7 +95,7 @@ interface CallbackQontoClient {
          */
         fun getMembershipList(
             pagination: Pagination = Pagination(),
-            onResult: (Result<Page<Membership>>) -> Unit
+            onResult: (Result<Page<Membership>>) -> Unit,
         )
     }
 
@@ -100,7 +108,7 @@ interface CallbackQontoClient {
          */
         fun getLabelList(
             pagination: Pagination = Pagination(),
-            onResult: (Result<Page<Label>>) -> Unit
+            onResult: (Result<Page<Label>>) -> Unit,
         )
     }
 
@@ -113,7 +121,7 @@ interface CallbackQontoClient {
          */
         fun getAttachment(
             id: String,
-            onResult: (Result<Attachment>) -> Unit
+            onResult: (Result<Attachment>) -> Unit,
         )
     }
 

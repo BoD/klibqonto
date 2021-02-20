@@ -37,7 +37,7 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal class BlockingQontoClientImpl(
-    private val qontoClient: QontoClient
+    private val qontoClient: QontoClient,
 ) : BlockingQontoClient,
     BlockingQontoClient.Organizations,
     BlockingQontoClient.Transactions,
@@ -62,7 +62,7 @@ internal class BlockingQontoClientImpl(
         settledDateRange: DateRange?,
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
-        pagination: Pagination
+        pagination: Pagination,
     ): Page<Transaction> = runBlocking {
         qontoClient.transactions.getTransactionList(
             bankAccountSlug,
@@ -73,6 +73,12 @@ internal class BlockingQontoClientImpl(
             sortOrder,
             pagination
         )
+    }
+
+    override fun getTransaction(
+        internalId: String,
+    ): Transaction = runBlocking {
+        qontoClient.transactions.getTransaction(internalId)
     }
 
     override fun getMembershipList(pagination: Pagination): Page<Membership> = runBlocking {

@@ -31,6 +31,7 @@ import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
+import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
 
 internal class QontoService(private val httpClient: HttpClient) {
@@ -51,7 +52,7 @@ internal class QontoService(private val httpClient: HttpClient) {
         settledAtTo: String?,
         sortBy: String,
         pageIndex: Int,
-        itemsPerPage: Int
+        itemsPerPage: Int,
     ): ApiTransactionListEnvelope {
         return httpClient.get(BASE_URL + "transactions") {
             parameter("slug", bankAccountSlug)
@@ -68,9 +69,16 @@ internal class QontoService(private val httpClient: HttpClient) {
         }
     }
 
+    suspend fun getTransaction(internalId: String): ApiTransactionEnvelope {
+        return httpClient.get(BASE_URL + "transactions/$internalId") {
+            parameter("includes[]", "labels")
+            parameter("includes[]", "attachments")
+        }
+    }
+
     suspend fun getMembershipList(
         pageIndex: Int,
-        itemsPerPage: Int
+        itemsPerPage: Int,
     ): ApiMembershipListEnvelope {
         return httpClient.get(BASE_URL + "memberships") {
             parameter("current_page", pageIndex)
@@ -80,7 +88,7 @@ internal class QontoService(private val httpClient: HttpClient) {
 
     suspend fun getLabelList(
         pageIndex: Int,
-        itemsPerPage: Int
+        itemsPerPage: Int,
     ): ApiLabelListEnvelope {
         return httpClient.get(BASE_URL + "labels") {
             parameter("current_page", pageIndex)
@@ -89,7 +97,7 @@ internal class QontoService(private val httpClient: HttpClient) {
     }
 
     suspend fun getAttachment(
-        id: String
+        id: String,
     ): ApiAttachmentEnvelope {
         return httpClient.get(BASE_URL + "attachments/$id")
     }

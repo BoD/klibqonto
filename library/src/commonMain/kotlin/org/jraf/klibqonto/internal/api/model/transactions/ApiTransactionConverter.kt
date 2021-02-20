@@ -35,6 +35,7 @@ import org.jraf.klibqonto.model.transactions.Transaction
 internal object ApiTransactionConverter : ApiConverter<ApiTransaction, Transaction>() {
     override fun apiToModel(apiModel: ApiTransaction) = TransactionImpl(
         id = apiModel.transaction_id,
+        internalId = apiModel.id,
         amountCents = apiModel.amount_cents,
         attachmentIds = apiModel.attachment_ids,
         attachments = apiModel.attachments.apiToModel(ApiAttachmentConverter),

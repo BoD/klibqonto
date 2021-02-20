@@ -27,6 +27,7 @@ import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
+import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.Date
@@ -44,6 +45,9 @@ import platform.Foundation.NSDateFormatter
 private const val LOGIN = "xxx"
 private const val SECRET_KEY = "yyy"
 
+// Replace this with a transaction internal id that exists
+private const val TRANSACTION_INTERNAL_ID = "00000000-0000-0000-0000-000000000000"
+
 class Sample {
 
     private val client: QontoClient by lazy {
@@ -57,11 +61,11 @@ class Sample {
                 HttpConfiguration(
                     // Uncomment to see more logs
                     // loggingLevel = HttpLoggingLevel.BODY,
-                    loggingLevel = HttpLoggingLevel.ALL //,
+                    loggingLevel = HttpLoggingLevel.INFO,
                     // This is only needed to debug with, e.g., Charles Proxy
-                    // XXX Currently this breaks serialization
-                    // See https://github.com/ktorio/ktor/issues/1548
-                    // httpProxy = HttpProxy("localhost", 8888)
+                    httpProxy = HttpProxy("localhost", 8888),
+                    // Can be useful in certain circumstances, but unwise to use in production
+                    bypassSslChecks = true
                 )
             )
         )
@@ -88,6 +92,11 @@ class Sample {
             println("\n\nLabels:")
             val labels = client.labels.getLabelList()
             println(labels.items.joinToString("\n"))
+
+            // Get a specific transaction
+            println("\n\nTransaction $TRANSACTION_INTERNAL_ID:")
+            val transaction = client.transactions.getTransaction(TRANSACTION_INTERNAL_ID)
+            println(transaction)
 
             // Get first 2 pages of transactions
             println("\n\nTransactions:")

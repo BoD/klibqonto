@@ -46,6 +46,9 @@ import kotlin.system.exitProcess
 private const val LOGIN = "xxx"
 private const val SECRET_KEY = "yyy"
 
+// Replace this with a transaction internal id that exists
+private const val TRANSACTION_INTERNAL_ID = "00000000-0000-0000-0000-000000000000"
+
 class Sample {
     private val client: QontoClient by lazy {
         // Create the client
@@ -60,7 +63,9 @@ class Sample {
                     // loggingLevel = HttpLoggingLevel.BODY,
                     loggingLevel = HttpLoggingLevel.INFO,
                     // This is only needed to debug with, e.g., Charles Proxy
-                    httpProxy = HttpProxy("localhost", 8888)
+                    httpProxy = HttpProxy("localhost", 8888),
+                    // Can be useful in certain circumstances, but unwise to use in production
+                    bypassSslChecks = true
                 )
             )
         )
@@ -88,10 +93,15 @@ class Sample {
             val labels = client.labels.getLabelList()
             println(labels.items.joinToString("\n"))
 
+            // Get a specific transaction
+            println("\n\nTransaction $TRANSACTION_INTERNAL_ID:")
+            val transaction = client.transactions.getTransaction(TRANSACTION_INTERNAL_ID)
+            println(transaction)
+
             // Get first 2 pages of transactions
             println("\n\nTransactions:")
             val transactionList = getTransactionList(organization)
-            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
+            println(transactionList.joinToString("\n\n") { it.toFormattedString() })
 
             // Get the first attachment from the transaction list
             println("\n\nAttachment:")

@@ -31,10 +31,7 @@ import org.jraf.klibqonto.internal.api.model.labels.ApiLabel
 @Serializable
 internal data class ApiTransaction(
     val transaction_id: String,
-
-    // Note: this "internal" id is probably not useful so it's not reflected on the [Transaction] class.
     val id: String,
-
     val amount: Float,
     val amount_cents: Long,
     val attachment_ids: List<String>,
@@ -60,6 +57,12 @@ internal data class ApiTransaction(
     val attachment_lost: Boolean,
     val attachment_required: Boolean,
     val card_last_digits: String?,
-    val attachments: List<ApiAttachment>,
-    val labels: List<ApiLabel>,
+
+    // TODO: this should never be absent but, as of now, it is when calling the "show transaction" API, so fallback to an empty list.
+    // TODO: remove when has been fixed on the API side.
+    val attachments: List<ApiAttachment> = emptyList(),
+
+    // TODO: this should never be absent but, as of now, it is when calling the "show transaction" API, so fallback to an empty list.
+    // TODO: remove when has been fixed on the API side.
+    val labels: List<ApiLabel> = emptyList(),
 )

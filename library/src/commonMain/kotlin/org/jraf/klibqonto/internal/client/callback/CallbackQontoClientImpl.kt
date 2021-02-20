@@ -40,7 +40,7 @@ import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal class CallbackQontoClientImpl(
-    private val qontoClient: QontoClient
+    private val qontoClient: QontoClient,
 ) : CallbackQontoClient,
     CallbackQontoClient.Organizations,
     CallbackQontoClient.Transactions,
@@ -66,7 +66,7 @@ internal class CallbackQontoClientImpl(
         sortField: QontoClient.Transactions.SortField,
         sortOrder: QontoClient.Transactions.SortOrder,
         pagination: Pagination,
-        onResult: (Result<Page<Transaction>>) -> Unit
+        onResult: (Result<Page<Transaction>>) -> Unit,
     ) = launchAndCallback(onResult) {
         qontoClient.transactions.getTransactionList(
             bankAccountSlug,
@@ -79,23 +79,30 @@ internal class CallbackQontoClientImpl(
         )
     }
 
+    override fun getTransaction(
+        internalId: String,
+        onResult: (Result<Transaction>) -> Unit,
+    ) = launchAndCallback(onResult) {
+        qontoClient.transactions.getTransaction(internalId)
+    }
+
     override fun getMembershipList(
         pagination: Pagination,
-        onResult: (Result<Page<Membership>>) -> Unit
+        onResult: (Result<Page<Membership>>) -> Unit,
     ) = launchAndCallback(onResult) {
         qontoClient.memberships.getMembershipList(pagination)
     }
 
     override fun getLabelList(
         pagination: Pagination,
-        onResult: (Result<Page<Label>>) -> Unit
+        onResult: (Result<Page<Label>>) -> Unit,
     ) = launchAndCallback(onResult) {
         qontoClient.labels.getLabelList(pagination)
     }
 
     override fun getAttachment(
         id: String,
-        onResult: (Result<Attachment>) -> Unit
+        onResult: (Result<Attachment>) -> Unit,
     ) = launchAndCallback(onResult) {
         qontoClient.attachments.getAttachment(id)
     }
@@ -104,7 +111,7 @@ internal class CallbackQontoClientImpl(
 
     private fun <T : Any> launchAndCallback(
         onResult: (Result<T>) -> Unit,
-        block: suspend () -> T
+        block: suspend () -> T,
     ) {
         klibQontoScope.launch {
             onResult(suspendRunCatching(block))

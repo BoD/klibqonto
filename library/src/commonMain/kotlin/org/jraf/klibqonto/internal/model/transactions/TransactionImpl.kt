@@ -31,6 +31,7 @@ import org.jraf.klibqonto.model.transactions.Transaction
 
 internal data class TransactionImpl(
     override val id: String,
+    override val internalId: String,
     override val amountCents: Long,
     override val attachmentIds: List<String>,
     override val attachments: List<Attachment>,

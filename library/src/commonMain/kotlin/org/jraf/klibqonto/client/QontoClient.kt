@@ -103,8 +103,21 @@ interface QontoClient {
             settledDateRange: DateRange? = null,
             sortField: SortField = SortField.SETTLED_DATE,
             sortOrder: SortOrder = SortOrder.DESCENDING,
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Page<Transaction>
+
+        /**
+         * Retrieve a transaction by id.
+         *
+         * Note: you must not pass a [Transaction.id] here but a [Transaction.internalId]!
+         *
+         * @param internalId the internal id of the Transaction to retrieve - e.g. `4c306508-dac9-410b-9937-e87b02462e42`
+         *
+         * See also [the API documentation](https://api-doc.qonto.com/2.0/transactions/list-transactions-1)
+         */
+        suspend fun getTransaction(
+            internalId: String,
+        ): Transaction
     }
 
     /**
@@ -124,7 +137,7 @@ interface QontoClient {
          * See also [the API documentation](https://api-doc.qonto.com/2.0/memberships/list-memberships)
          */
         suspend fun getMembershipList(
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Page<Membership>
     }
 
@@ -147,7 +160,7 @@ interface QontoClient {
          * See also [the API documentation](https://api-doc.qonto.com/2.0/labels/list-labels)
          */
         suspend fun getLabelList(
-            pagination: Pagination = Pagination()
+            pagination: Pagination = Pagination(),
         ): Page<Label>
     }
 
