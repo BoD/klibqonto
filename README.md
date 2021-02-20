@@ -97,7 +97,7 @@ On Android, the proxy set in the system settings is automatically used.
 ## Javascript support
 In theory Kotlin Multiplatform projects can also target Javascript
 but as of today the author couldn't understand how to make
-that work.  Please [contact me](mailto:BoD@JRAF.org) if you want to help :)
+that work.  Please [contact the author](mailto:BoD@JRAF.org) if you want to help :)
 
 ## Author and License
 *Note: this project is not officially related to or endorsed by Qonto or Olinda SAS.*

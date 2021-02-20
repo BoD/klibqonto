@@ -14,7 +14,6 @@ buildscript {
         classpath("com.android.tools.build", "gradle", Versions.ANDROID_GRADLE_PLUGIN)
         classpath(kotlin("gradle-plugin", Versions.KOTLIN))
         classpath("com.github.ben-manes", "gradle-versions-plugin", Versions.BEN_MANES_VERSIONS_PLUGIN)
-        classpath("org.jetbrains.dokka", "dokka-gradle-plugin", Versions.DOKKA_PLUGIN)
     }
 }
 

@@ -135,16 +135,13 @@ interface FutureQontoClient {
     val attachments: Attachments
 
     /**
-     * Dispose of this client instance.
-     * This will release some resources so it is recommended to call it after use.
-     *
-     * **Note: this client will no longer be usable after this is called.**
+     * See [QontoClient.close].
      */
     fun close()
 }
 
 /**
- * Get a blocking client from a [QontoClient].
+ * Get a Future based client from a [QontoClient].
  *
  * This is useful from Java, which doesn't have a notion of `suspend` functions.
  */
