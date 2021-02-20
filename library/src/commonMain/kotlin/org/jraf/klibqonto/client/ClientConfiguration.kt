@@ -30,5 +30,5 @@ import kotlin.jvm.JvmOverloads
 data class ClientConfiguration @JvmOverloads constructor(
     val authentication: Authentication,
     val httpConfiguration: HttpConfiguration = HttpConfiguration(),
-    val userAgent: String = "klibqonto/$VERSION"
+    val userAgent: String = "klibqonto/$VERSION",
 )

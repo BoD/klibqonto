@@ -25,18 +25,9 @@
 package org.jraf.klibqonto.internal.api.model.attachments
 
 import org.jraf.klibqonto.internal.api.model.ApiConverter
-import org.jraf.klibqonto.internal.api.model.ApiDateConverter
-import org.jraf.klibqonto.internal.model.attachments.AttachmentImpl
+import org.jraf.klibqonto.internal.api.model.apiToModel
 import org.jraf.klibqonto.model.attachments.Attachment
 
 internal object ApiAttachmentEnvelopeConverter : ApiConverter<ApiAttachmentEnvelope, Attachment>() {
-    override fun apiToModel(apiModel: ApiAttachmentEnvelope) = AttachmentImpl(
-        id = apiModel.attachment.id,
-        fileName = apiModel.attachment.file_name,
-        createdDate = ApiDateConverter.apiToModel(apiModel.attachment.created_at)!!,
-        size = apiModel.attachment.file_size,
-        contentType = apiModel.attachment.file_content_type,
-        url = apiModel.attachment.url,
-        probativeAttachment = ApiProbativeAttachmentConverter.apiToModel(apiModel.attachment.probative_attachment)
-    )
+    override fun apiToModel(apiModel: ApiAttachmentEnvelope) = apiModel.attachment.apiToModel(ApiAttachmentConverter)
 }

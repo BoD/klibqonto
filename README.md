@@ -33,7 +33,7 @@ repositories {
 ```groovy
 dependencies {
     /* ... */
-    implementation 'org.jraf:klibqonto:2.2.0'
+    implementation 'org.jraf:klibqonto:2.3.0'
 }
 ```
 

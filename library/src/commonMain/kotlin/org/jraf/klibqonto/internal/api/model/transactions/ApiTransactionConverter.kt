@@ -26,6 +26,9 @@ package org.jraf.klibqonto.internal.api.model.transactions
 
 import org.jraf.klibqonto.internal.api.model.ApiConverter
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
+import org.jraf.klibqonto.internal.api.model.apiToModel
+import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentConverter
+import org.jraf.klibqonto.internal.api.model.labels.ApiLabelConverter
 import org.jraf.klibqonto.internal.model.transactions.TransactionImpl
 import org.jraf.klibqonto.model.transactions.Transaction
 
@@ -34,6 +37,7 @@ internal object ApiTransactionConverter : ApiConverter<ApiTransaction, Transacti
         id = apiModel.transaction_id,
         amountCents = apiModel.amount_cents,
         attachmentIds = apiModel.attachment_ids,
+        attachments = apiModel.attachments.apiToModel(ApiAttachmentConverter),
         localAmountCents = apiModel.local_amount_cents,
         side = ApiTransactionSideConverter.apiToModel(apiModel.side),
         category = ApiTransactionCategoryConverter.apiToModel(apiModel.category),
@@ -51,6 +55,7 @@ internal object ApiTransactionConverter : ApiConverter<ApiTransaction, Transacti
         vatRate = apiModel.vat_rate,
         initiatorId = apiModel.initiator_id,
         labelIds = apiModel.label_ids,
+        labels = apiModel.labels.apiToModel(ApiLabelConverter),
         attachmentLost = apiModel.attachment_lost,
         attachmentRequired = apiModel.attachment_required,
         cardLastDigits = apiModel.card_last_digits,

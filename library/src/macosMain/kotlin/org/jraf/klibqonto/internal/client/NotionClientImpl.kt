@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2019-present Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2021-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,13 +22,20 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.client
 
-import kotlin.jvm.JvmOverloads
+import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
+import io.ktor.client.engine.curl.Curl
 
-data class HttpConfiguration @JvmOverloads constructor(
-    val loggingLevel: HttpLoggingLevel = HttpLoggingLevel.NONE,
-    val mockServerBaserUri: BaseUri? = null,
-    val httpProxy: HttpProxy? = null,
-    val bypassSslChecks: Boolean = false,
-)
+internal actual fun createHttpClient(
+    bypassSslChecks: Boolean,
+    block: HttpClientConfig<*>.() -> Unit,
+): HttpClient {
+    return HttpClient(Curl) {
+        apply(block)
+        if (bypassSslChecks) engine {
+            sslVerify = false
+        }
+    }
+}

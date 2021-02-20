@@ -24,7 +24,9 @@
 
 package org.jraf.klibqonto.model.transactions
 
+import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.Date
+import org.jraf.klibqonto.model.labels.Label
 
 interface Transaction {
     enum class Side {
@@ -93,7 +95,13 @@ interface Transaction {
     /**
      * List of attachments' id
      */
+    @Deprecated("Use attachments instead")
     val attachmentIds: List<String>
+
+    /**
+     * Attachments
+     */
+    val attachments: List<Attachment>
 
     /**
      * Amount in cents of the local_currency
@@ -178,7 +186,13 @@ interface Transaction {
     /**
      * List of labels' id
      */
+    @Deprecated("Use labels instead")
     val labelIds: List<String>
+
+    /**
+     * Labels
+     */
+    val labels: List<Label>
 
     /**
      * Indicates if the transaction's attachment was lost (default: false)

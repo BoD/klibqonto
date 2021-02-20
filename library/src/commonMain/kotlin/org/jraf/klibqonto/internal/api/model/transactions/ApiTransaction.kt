@@ -25,6 +25,8 @@
 package org.jraf.klibqonto.internal.api.model.transactions
 
 import kotlinx.serialization.Serializable
+import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachment
+import org.jraf.klibqonto.internal.api.model.labels.ApiLabel
 
 @Serializable
 internal data class ApiTransaction(
@@ -58,4 +60,6 @@ internal data class ApiTransaction(
     val attachment_lost: Boolean,
     val attachment_required: Boolean,
     val card_last_digits: String?,
+    val attachments: List<ApiAttachment>,
+    val labels: List<ApiLabel>,
 )

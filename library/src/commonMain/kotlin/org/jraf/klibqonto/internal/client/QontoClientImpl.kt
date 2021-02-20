@@ -25,6 +25,7 @@
 package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.ProxyBuilder
 import io.ktor.client.features.UserAgent
 import io.ktor.client.features.defaultRequest
@@ -77,7 +78,7 @@ internal class QontoClientImpl(
 
     @OptIn(KtorExperimentalAPI::class)
     private val httpClient by lazy {
-        HttpClient {
+        createHttpClient(clientConfiguration.httpConfiguration.bypassSslChecks) {
             install(JsonFeature) {
                 serializer = KotlinxSerializer(
                     Json {
@@ -181,3 +182,9 @@ internal class QontoClientImpl(
 
     override fun close() = httpClient.close()
 }
+
+
+internal expect fun createHttpClient(
+    bypassSslChecks: Boolean,
+    block: HttpClientConfig<*>.() -> Unit,
+): HttpClient

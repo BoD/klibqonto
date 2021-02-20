@@ -24,13 +24,16 @@
 
 package org.jraf.klibqonto.internal.model.transactions
 
+import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.Date
+import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.transactions.Transaction
 
 internal data class TransactionImpl(
     override val id: String,
     override val amountCents: Long,
     override val attachmentIds: List<String>,
+    override val attachments: List<Attachment>,
     override val localAmountCents: Long,
     override val side: Transaction.Side,
     override val category: Transaction.Category,
@@ -48,6 +51,7 @@ internal data class TransactionImpl(
     override val vatRate: Float?,
     override val initiatorId: String?,
     override val labelIds: List<String>,
+    override val labels: List<Label>,
     override val attachmentLost: Boolean,
     override val attachmentRequired: Boolean,
     override val cardLastDigits: String?,

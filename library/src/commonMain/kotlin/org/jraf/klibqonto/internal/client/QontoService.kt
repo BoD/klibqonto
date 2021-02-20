@@ -63,6 +63,8 @@ internal class QontoService(private val httpClient: HttpClient) {
             parameter("sort_by", sortBy)
             parameter("current_page", pageIndex)
             parameter("per_page", itemsPerPage)
+            parameter("includes[]", "labels")
+            parameter("includes[]", "attachments")
         }
     }
 

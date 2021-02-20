@@ -22,24 +22,21 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.sample
+package org.jraf.klibqonto.internal.api.model.attachments
 
-import org.jraf.klibqonto.model.transactions.Transaction
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.Date
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.internal.api.model.ApiDateConverter
+import org.jraf.klibqonto.internal.model.attachments.AttachmentImpl
+import org.jraf.klibqonto.model.attachments.Attachment
 
-fun Transaction.toFormattedString(): String =
-    "${emittedDate.toFormattedString()} ${counterparty.padEnd(32)} ${
-        amountCents.toFormattedAmount().padEnd(10)
-    } $side" +
-            "\nLabels: ${labels.joinToString(", ") { it.name }}" +
-            "\nAttachments: ${attachments.joinToString(", ") { it.fileName }}"
-
-fun Date.toFormattedString(): String = SimpleDateFormat("yyyy-MM-dd HH:mm").format(this)
-
-fun Long.toFormattedAmount(): String = NumberFormat.getCurrencyInstance()
-    .format(this / 100.0)
-
-@Suppress("NOTHING_TO_INLINE")
-inline fun date(s: String): Date = SimpleDateFormat("yyyy-MM-dd").parse(s)
+internal object ApiAttachmentConverter : ApiConverter<ApiAttachment, Attachment>() {
+    override fun apiToModel(apiModel: ApiAttachment) = AttachmentImpl(
+        id = apiModel.id,
+        fileName = apiModel.file_name,
+        createdDate = ApiDateConverter.apiToModel(apiModel.created_at)!!,
+        size = apiModel.file_size,
+        contentType = apiModel.file_content_type,
+        url = apiModel.url,
+        probativeAttachment = ApiProbativeAttachmentConverter.apiToModel(apiModel.probative_attachment)
+    )
+}
