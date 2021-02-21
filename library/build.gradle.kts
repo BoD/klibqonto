@@ -181,64 +181,67 @@ android {
     }
 }
 
-publishing {
-    repositories {
-        maven {
-            // Note: declare your user name / password in your home's gradle.properties like this:
-            // mavenCentralNexusUsername = <user name>
-            // mavenCentralNexusPassword = <password>
-            url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
-            name = "mavenCentralNexus"
-            credentials(PasswordCredentials::class)
+// This must be done in `afterEvaluate` because otherwise it doesn't work for the Android artifact ¯\_(ツ)_/¯
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                // Note: declare your user name / password in your home's gradle.properties like this:
+                // mavenCentralNexusUsername = <user name>
+                // mavenCentralNexusPassword = <password>
+                url = uri("https://oss.sonatype.org/service/local/staging/deploy/maven2")
+                name = "mavenCentralNexus"
+                credentials(PasswordCredentials::class)
+            }
         }
-    }
 
-    publications.withType<MavenPublication>().forEach { publication ->
+        publications.withType<MavenPublication>().forEach { publication ->
 
-        publication.artifact(tasks.getByName("dokkaHtmlJar"))
+            publication.artifact(tasks.getByName("dokkaHtmlJar"))
 
-        publication.pom {
-            name.set("klibqonto")
-            description.set("A Qonto API client library for Kotlin, Java and more.")
-            url.set("https://github.com/BoD/klibqonto")
-            licenses {
-                license {
-                    name.set("The Apache License, Version 2.0")
-                    url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
-                    distribution.set("repo")
-                }
-            }
-            developers {
-                developer {
-                    id.set("BoD")
-                    name.set("Benoit 'BoD' Lubek")
-                    email.set("BoD@JRAF.org")
-                    url.set("https://JRAF.org")
-                    organization.set("JRAF.org")
-                    organizationUrl.set("https://JRAF.org")
-                    roles.set(listOf("developer"))
-                    timezone.set("+1")
-                }
-            }
-            scm {
-                connection.set("scm:git:https://github.com/BoD/klibqonto")
-                developerConnection.set("scm:git:https://github.com/BoD/klibqonto")
+            publication.pom {
+                name.set("klibqonto")
+                description.set("A Qonto API client library for Kotlin, Java and more.")
                 url.set("https://github.com/BoD/klibqonto")
-            }
-            issueManagement {
-                url.set("https://github.com/BoD/klibqonto/issues")
-                system.set("GitHub Issues")
+                licenses {
+                    license {
+                        name.set("The Apache License, Version 2.0")
+                        url.set("http://www.apache.org/licenses/LICENSE-2.0.txt")
+                        distribution.set("repo")
+                    }
+                }
+                developers {
+                    developer {
+                        id.set("BoD")
+                        name.set("Benoit 'BoD' Lubek")
+                        email.set("BoD@JRAF.org")
+                        url.set("https://JRAF.org")
+                        organization.set("JRAF.org")
+                        organizationUrl.set("https://JRAF.org")
+                        roles.set(listOf("developer"))
+                        timezone.set("+1")
+                    }
+                }
+                scm {
+                    connection.set("scm:git:https://github.com/BoD/klibqonto")
+                    developerConnection.set("scm:git:https://github.com/BoD/klibqonto")
+                    url.set("https://github.com/BoD/klibqonto")
+                }
+                issueManagement {
+                    url.set("https://github.com/BoD/klibqonto/issues")
+                    system.set("GitHub Issues")
+                }
             }
         }
     }
-}
 
-signing {
-    // Note: declare the signature key, password and file in your home's gradle.properties like this:
-    // signing.keyId=<8 character key>
-    // signing.password=<your password>
-    // signing.secretKeyRingFile=<absolute path to the gpg private key>
-    sign(publishing.publications)
+    signing {
+        // Note: declare the signature key, password and file in your home's gradle.properties like this:
+        // signing.keyId=<8 character key>
+        // signing.password=<your password>
+        // signing.secretKeyRingFile=<absolute path to the gpg private key>
+        sign(publishing.publications)
+    }
 }
 
 tasks.withType<KotlinCompile> {
