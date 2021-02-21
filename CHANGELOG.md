@@ -8,6 +8,7 @@
   - A new `getTransaction(id)` API to get a single `Transaction` by id
 - Add a `bypassSslChecks` option on `HttpConfiguration` (should never be used in production)
 - Update all dependencies to their latest version
+- Now the artifacts are hosted on Maven Central
 
 ## 2.2.0 (2020-12-12)
 

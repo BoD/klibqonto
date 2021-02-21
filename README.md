@@ -16,20 +16,27 @@ Several flavors of the client are available to match your needs:
 ## Usage
 
 ### Minimum requirements
+
 - Java: 1.8? **TODO**
 - Kotlin: 1.3? **TODO**
 - Android: 21
 - Swift: ? **TODO**
 
 ### 1/ Add the dependencies to your project
+
 #### Gradle based projects
-The artifact is hosted on the JCenter repository.
+
+The artifacts are hosted on the Maven Central repository.
+
+Note: prior to v2.3.0, the artifacts used to be hosted on JCenter.
+
 ```groovy
 repositories {
     /* ... */
-    jcenter()
+    mavenCentral()
 }
 ```
+
 ```groovy
 dependencies {
     /* ... */
