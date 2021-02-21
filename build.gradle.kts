@@ -8,6 +8,7 @@ buildscript {
     repositories {
         mavenCentral()
         google()
+        jcenter()
     }
 
     dependencies {
@@ -21,6 +22,7 @@ allprojects {
         mavenLocal()
         mavenCentral()
         google()
+        jcenter()
     }
 
     group = "org.jraf"

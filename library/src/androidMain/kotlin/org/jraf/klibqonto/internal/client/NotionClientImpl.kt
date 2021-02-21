@@ -27,7 +27,6 @@ package org.jraf.klibqonto.internal.client
 import io.ktor.client.HttpClient
 import io.ktor.client.HttpClientConfig
 import io.ktor.client.engine.okhttp.OkHttp
-import sun.net.www.http.HttpClient
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
 import javax.net.ssl.SSLContext
