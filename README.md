@@ -40,7 +40,7 @@ repositories {
 ```groovy
 dependencies {
     /* ... */
-    implementation 'org.jraf:klibqonto:2.3.0'
+    implementation 'org.jraf:klibqonto:2.4.0'
 }
 ```
 
@@ -50,24 +50,35 @@ dependencies {
 ### 2/ Use the client
 
 The easiest way to see how to use it is to look at the samples:
+
 - [Coroutines (Kotlin)](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/Sample.kt)
 - [Blocking (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/BlockingSample.java)
 - [Callback (Kotlin)](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/CallbackSample.kt)
 - Callback (Swift) **TODO**
 - [Future (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/FutureSample.java)
 
-#### Get your login and secret key
-You will find your **login** and **secret key** in the Qonto web application under Settings, in the API tab.
+#### Authentication by login and secret key
+
+You will find your **login** and **secret key** in the Qonto web application under Settings, in the Integrations (API)
+tab.
+
+#### Authentication by OAuth
+
+To use OAuth, you must register your application by reaching out to Qonto as
+documented [here](https://api-doc.qonto.com/2.0/welcome/register-your-application).
+
+OAuth usage is demonstrated in the [sample](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/Sample.kt).
 
 #### Instantiate a `QontoClient`
 
 ```kotlin
 val qontoClient = QontoClient.newInstance(
     ClientConfiguration(
-        Authentication(
+        LoginSecretKeyAuthentication(
             LOGIN,
             SECRET_KEY
         )
+        // Or use OAuthAuthentication for OAuth
     )
 )
 ```
@@ -78,6 +89,8 @@ To get other flavors of the client:
 
 #### Use the `QontoClient`
 The client gives access to several API "areas":
+
+- `oAuth`
 - `organizations`
 - `transactions`
 - `memberships`

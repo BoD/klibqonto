@@ -25,22 +25,94 @@
 package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.get
+import io.ktor.client.request.header
 import io.ktor.client.request.parameter
+import io.ktor.client.request.post
+import io.ktor.http.HttpHeaders
+import io.ktor.http.Parameters
+import io.ktor.util.InternalAPI
+import io.ktor.util.encodeBase64
+import org.jraf.klibqonto.client.BaseUri
+import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
+import org.jraf.klibqonto.internal.api.model.oauth.ApiOAuthTokens
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
 
-internal class QontoService(private val httpClient: HttpClient) {
-    companion object {
-        private const val BASE_URL = "https://thirdparty.qonto.com/v2/"
+internal class QontoService(
+    clientConfiguration: ClientConfiguration,
+    private val httpClient: HttpClient,
+) {
+    private val apiServerBaserUri = clientConfiguration.httpConfiguration.apiServerBaserUri ?: BaseUri(
+        scheme = "https",
+        host = "thirdparty.qonto.com",
+    )
+    private val apiBaseUri = "$apiServerBaserUri/v2/"
+
+    private val oAuthServerBaserUri = clientConfiguration.httpConfiguration.oAuthServerBaserUri ?: BaseUri(
+        scheme = "https",
+        host = "oauth.qonto.com",
+    )
+    val oAuthBaseScheme = oAuthServerBaserUri.scheme
+    val oAuthBaseHost = oAuthServerBaserUri.host
+    val oAuthBasePath = "oauth2"
+    private val oAuthBaseUri = "$oAuthServerBaserUri/$oAuthBasePath/"
+
+    @OptIn(InternalAPI::class)
+    suspend fun getOAuthTokens(
+        clientId: String,
+        clientSecret: String,
+        redirectUri: String,
+        code: String,
+    ): ApiOAuthTokens {
+        return httpClient.post(oAuthBaseUri + "token") {
+            header(
+                HttpHeaders.Authorization,
+                getClientSecretBase64(clientId, clientSecret)
+            )
+            body = FormDataContent(Parameters.build {
+                append("code", code)
+                append("redirect_uri", redirectUri)
+                append("grant_type", "authorization_code")
+            })
+        }
     }
 
+    @OptIn(InternalAPI::class)
+    suspend fun refreshOAuthTokens(
+        clientId: String,
+        clientSecret: String,
+        redirectUri: String,
+        refreshToken: String,
+    ): ApiOAuthTokens {
+        return httpClient.post(oAuthBaseUri + "token") {
+            header(
+                HttpHeaders.Authorization,
+                getClientSecretBase64(clientId, clientSecret)
+            )
+            body = FormDataContent(Parameters.build {
+                append("refresh_token", refreshToken)
+                append("redirect_uri", redirectUri)
+                append("grant_type", "refresh_token")
+            })
+        }
+    }
+
+    @OptIn(InternalAPI::class)
+    private fun getClientSecretBase64(clientId: String, clientSecret: String): String {
+        // TODO Don't depend on private encodeBase64 KTOR API
+        val clientSecretBase64 = "$clientId:$clientSecret".encodeBase64()
+        return "Basic $clientSecretBase64"
+    }
+
+
     suspend fun getOrganization(): ApiOrganizationEnvelope {
-        return httpClient.get(BASE_URL + "organizations/0")
+        return httpClient.get(apiBaseUri + "organizations/0")
     }
 
     suspend fun getTransactionList(
@@ -54,7 +126,7 @@ internal class QontoService(private val httpClient: HttpClient) {
         pageIndex: Int,
         itemsPerPage: Int,
     ): ApiTransactionListEnvelope {
-        return httpClient.get(BASE_URL + "transactions") {
+        return httpClient.get(apiBaseUri + "transactions") {
             parameter("slug", bankAccountSlug)
             url.parameters.appendAll("status[]", status)
             parameter("updated_at_from", updatedAtFrom)
@@ -70,7 +142,7 @@ internal class QontoService(private val httpClient: HttpClient) {
     }
 
     suspend fun getTransaction(internalId: String): ApiTransactionEnvelope {
-        return httpClient.get(BASE_URL + "transactions/$internalId") {
+        return httpClient.get(apiBaseUri + "transactions/$internalId") {
             parameter("includes[]", "labels")
             parameter("includes[]", "attachments")
         }
@@ -80,7 +152,7 @@ internal class QontoService(private val httpClient: HttpClient) {
         pageIndex: Int,
         itemsPerPage: Int,
     ): ApiMembershipListEnvelope {
-        return httpClient.get(BASE_URL + "memberships") {
+        return httpClient.get(apiBaseUri + "memberships") {
             parameter("current_page", pageIndex)
             parameter("per_page", itemsPerPage)
         }
@@ -90,7 +162,7 @@ internal class QontoService(private val httpClient: HttpClient) {
         pageIndex: Int,
         itemsPerPage: Int,
     ): ApiLabelListEnvelope {
-        return httpClient.get(BASE_URL + "labels") {
+        return httpClient.get(apiBaseUri + "labels") {
             parameter("current_page", pageIndex)
             parameter("per_page", itemsPerPage)
         }
@@ -99,6 +171,8 @@ internal class QontoService(private val httpClient: HttpClient) {
     suspend fun getAttachment(
         id: String,
     ): ApiAttachmentEnvelope {
-        return httpClient.get(BASE_URL + "attachments/$id")
+        return httpClient.get(apiBaseUri + "attachments/$id")
     }
+
+
 }

@@ -22,26 +22,17 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.internal.api.model.oauth
 
-import kotlin.jvm.JvmOverloads
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.model.oauth.OAuthTokens
 
-data class HttpConfiguration @JvmOverloads constructor(
-    val loggingLevel: HttpLoggingLevel = HttpLoggingLevel.NONE,
-    val httpProxy: HttpProxy? = null,
-    val bypassSslChecks: Boolean = false,
-
-    /**
-     * Base url for the api service to use instead of the production one.
-     * Used for tests only.
-     * Set to `null` to use the production server.
-     */
-    val apiServerBaserUri: BaseUri? = null,
-
-    /**
-     * Base url for the OAuth service to use instead of the production one.
-     * Used for tests only.
-     * Set to `null` to use the production server.
-     */
-    val oAuthServerBaserUri: BaseUri? = null,
-)
+internal object ApiOAuthTokensConverter : ApiConverter<ApiOAuthTokens, OAuthTokens>() {
+    override fun apiToModel(apiModel: ApiOAuthTokens): OAuthTokens {
+        return OAuthTokens(
+            accessToken = apiModel.access_token,
+            refreshToken = apiModel.refresh_token,
+            accessTokenExpiresInSeconds = apiModel.expires_in,
+        )
+    }
+}

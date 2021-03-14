@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.0 (2021-03-14)
+
+- Add OAuth support
+
 ## 2.3.0 (2021-02-21)
 
 - Reflect API changes:

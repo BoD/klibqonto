@@ -27,5 +27,11 @@ package org.jraf.klibqonto.client
 data class BaseUri(
     val scheme: String,
     val host: String,
-    val port: Int
-)
+
+    /**
+     * The port to use, or -1 for default port.
+     */
+    val port: Int = -1,
+) {
+    override fun toString() = "$scheme://$host" + if (port == -1) "" else ":$port"
+}

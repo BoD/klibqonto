@@ -54,7 +54,7 @@ class BlockingSample {
     private void initClient() {
         QontoClient qontoClient = QontoClient.newInstance(
                 new ClientConfiguration(
-                        new Authentication(
+                        new LoginSecretKeyAuthentication(
                                 LOGIN,
                                 SECRET_KEY
                         ),
@@ -62,7 +62,6 @@ class BlockingSample {
                                 // Uncomment to see more logs
                                 // HttpLoggingLevel.BODY,
                                 HttpLoggingLevel.NONE,
-                                null,
                                 // This is only needed to debug with, e.g., Charles Proxy
                                 new HttpProxy("localhost", 8888)
                         )

@@ -24,7 +24,17 @@
 
 package org.jraf.klibqonto.client
 
-data class Authentication(
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
+import org.jraf.klibqonto.model.oauth.OAuthTokens
+
+sealed class Authentication
+
+data class LoginSecretKeyAuthentication(
     val login: String,
-    val secretKey: String
-)
+    val secretKey: String,
+) : Authentication()
+
+data class OAuthAuthentication(
+    val oAuthCredentials: OAuthCredentials,
+    var oAuthTokens: OAuthTokens?,
+) : Authentication()

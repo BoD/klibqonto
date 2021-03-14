@@ -29,6 +29,7 @@ import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
+import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.callback.CallbackQontoClient
 import org.jraf.klibqonto.client.callback.Result
@@ -52,7 +53,7 @@ class CallbackSample {
         // Create the client
         QontoClient.newInstance(
             ClientConfiguration(
-                Authentication(
+                LoginSecretKeyAuthentication(
                     LOGIN,
                     SECRET_KEY
                 ),

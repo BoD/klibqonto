@@ -25,19 +25,22 @@
 package org.jraf.klibqonto.sample
 
 import kotlinx.coroutines.runBlocking
-import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
+import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
+import org.jraf.klibqonto.client.OAuthAuthentication
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
+import kotlin.random.Random
 import kotlin.system.exitProcess
 
 // !!!!! DO THIS FIRST !!!!!
@@ -46,18 +49,42 @@ import kotlin.system.exitProcess
 private const val LOGIN = "xxx"
 private const val SECRET_KEY = "yyy"
 
+// Or use OAuth if you have registered your app with Qonto.
+private const val OAUTH_CLIENT_ID = "aaa"
+private const val OAUTH_CLIENT_SECRET = "bbb"
+private const val OAUTH_REDIRECT_URI = "https://example.com/callback"
+
+// Set to false to use login / secret key, true to use OAuth
+private const val USE_OAUTH = false
+
 // Replace this with a transaction internal id that exists
 private const val TRANSACTION_INTERNAL_ID = "00000000-0000-0000-0000-000000000000"
 
 class Sample {
+    private val oAuthCredentials = OAuthCredentials(
+        clientId = OAUTH_CLIENT_ID,
+        clientSecret = OAUTH_CLIENT_SECRET,
+        redirectUri = OAUTH_REDIRECT_URI
+    )
+
+    private val oAuthAuthentication = OAuthAuthentication(
+        oAuthCredentials = oAuthCredentials,
+        // OAuthTokens will be set later, after authentication
+        oAuthTokens = null
+    )
+
     private val client: QontoClient by lazy {
         // Create the client
         QontoClient.newInstance(
             ClientConfiguration(
-                Authentication(
-                    LOGIN,
-                    SECRET_KEY
-                ),
+                if (USE_OAUTH) {
+                    oAuthAuthentication
+                } else {
+                    LoginSecretKeyAuthentication(
+                        LOGIN,
+                        SECRET_KEY
+                    )
+                },
                 HttpConfiguration(
                     // Uncomment to see more logs
                     // loggingLevel = HttpLoggingLevel.BODY,
@@ -65,7 +92,7 @@ class Sample {
                     // This is only needed to debug with, e.g., Charles Proxy
                     httpProxy = HttpProxy("localhost", 8888),
                     // Can be useful in certain circumstances, but unwise to use in production
-                    bypassSslChecks = true
+                    bypassSslChecks = true,
                 )
             )
         )
@@ -73,6 +100,41 @@ class Sample {
 
     fun main() {
         runBlocking {
+            if (USE_OAUTH) {
+                // 1/ Authenticate the user / app
+                val uniqueState = Random.nextLong().toString()
+                println("Navigate to this URL in a browser:")
+                println(client.oAuth.getLoginUri(oAuthCredentials = oAuthCredentials, uniqueState = uniqueState))
+
+                // 2/ Extract code
+                println("After successful authentication please paste the URL in the browser's bar, and press enter:")
+                val redirectUri = readLine()!!
+                val codeAndUniqueState = client.oAuth.extractCodeAndUniqueStateFromRedirectUri(redirectUri)
+                println(codeAndUniqueState)
+                if (codeAndUniqueState == null || codeAndUniqueState.uniqueState != uniqueState) {
+                    println("Something is wrong! Giving up.")
+                    return@runBlocking
+                }
+
+                // 3/ Get tokens from code
+                val tokens = client.oAuth.getTokens(
+                    oAuthCredentials = oAuthCredentials,
+                    code = codeAndUniqueState.code
+                )
+                println(tokens)
+
+                // 4/ Use obtained tokens for subsequent API calls
+                oAuthAuthentication.oAuthTokens = tokens
+
+                // Later: refresh the tokens if needed.
+                // Note: for now this must be handled manually. A future version of this library will handle this automatically.
+                if (tokens.areAboutToExpire) {
+                    val refreshedTokens = client.oAuth.refreshTokens(oAuthCredentials, tokens)
+                    println(refreshedTokens)
+                    oAuthAuthentication.oAuthTokens = refreshedTokens
+                }
+            }
+
             // Get organization
             println("Organization:")
             val organization = client.organizations.getOrganization()

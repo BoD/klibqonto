@@ -29,6 +29,10 @@ import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCodeAndUniqueState
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
+import org.jraf.klibqonto.model.oauth.OAuthScope
+import org.jraf.klibqonto.model.oauth.OAuthTokens
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -39,6 +43,46 @@ interface QontoClient {
     companion object {
         @JvmStatic
         fun newInstance(configuration: ClientConfiguration): QontoClient = QontoClientImpl(configuration)
+    }
+
+    /**
+     * OAuth related APIs.
+     */
+    interface OAuth {
+        /**
+         * Get the URI used to login to the Qonto service with your application.
+         */
+        fun getLoginUri(
+            oAuthCredentials: OAuthCredentials,
+            scopes: List<OAuthScope> = listOf(
+                OAuthScope.OFFLINE_ACCESS,
+                OAuthScope.ORGANIZATION_READ,
+                OAuthScope.OPENID,
+            ),
+            uniqueState: String,
+        ): String
+
+        /**
+         * Extract the code and unique state from the URI that the user was redirected to after login.
+         *
+         * @return The code and unique state, or `null` if extraction failed.
+         */
+        fun extractCodeAndUniqueStateFromRedirectUri(redirectUri: String): OAuthCodeAndUniqueState?
+
+        /**
+         * Retrieve OAuth tokens from a code obtained via [getLoginUri] and [extractCodeAndUniqueStateFromRedirectUri].
+         */
+        suspend fun getTokens(oAuthCredentials: OAuthCredentials, code: String): OAuthTokens
+
+        /**
+         * Retrieve fresh OAuth tokens from previously obtained OAuth tokens.
+         *
+         * Note: for now this must be handled manually. A future version of this library will handle this automatically.
+         * See:
+         * - https://youtrack.jetbrains.com/issue/KTOR-331
+         * - https://github.com/ktorio/ktor/pull/1991/files
+         */
+        suspend fun refreshTokens(oAuthCredentials: OAuthCredentials, oAuthTokens: OAuthTokens): OAuthTokens
     }
 
     /**
@@ -189,6 +233,11 @@ interface QontoClient {
         suspend fun getAttachment(id: String): Attachment
     }
 
+
+    /**
+     * OAuth related APIs.
+     */
+    val oAuth: OAuth
 
     /**
      * Organization related APIs.

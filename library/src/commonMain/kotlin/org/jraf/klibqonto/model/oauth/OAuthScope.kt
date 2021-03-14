@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2019-present Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2021-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,26 +22,10 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.client
+package org.jraf.klibqonto.model.oauth
 
-import kotlin.jvm.JvmOverloads
-
-data class HttpConfiguration @JvmOverloads constructor(
-    val loggingLevel: HttpLoggingLevel = HttpLoggingLevel.NONE,
-    val httpProxy: HttpProxy? = null,
-    val bypassSslChecks: Boolean = false,
-
-    /**
-     * Base url for the api service to use instead of the production one.
-     * Used for tests only.
-     * Set to `null` to use the production server.
-     */
-    val apiServerBaserUri: BaseUri? = null,
-
-    /**
-     * Base url for the OAuth service to use instead of the production one.
-     * Used for tests only.
-     * Set to `null` to use the production server.
-     */
-    val oAuthServerBaserUri: BaseUri? = null,
-)
+enum class OAuthScope {
+    OFFLINE_ACCESS,
+    ORGANIZATION_READ,
+    OPENID,
+}
