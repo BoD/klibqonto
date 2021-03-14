@@ -30,7 +30,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.jraf.klibqonto.client.Authentication
+import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
         // Create the client
         QontoClient.newInstance(
             ClientConfiguration(
-                Authentication(
+                LoginSecretKeyAuthentication(
                     LOGIN,
                     SECRET_KEY
                 ),

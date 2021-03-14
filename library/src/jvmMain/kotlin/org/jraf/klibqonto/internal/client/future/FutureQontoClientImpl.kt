@@ -32,6 +32,10 @@ import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCodeAndUniqueState
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
+import org.jraf.klibqonto.model.oauth.OAuthScope
+import org.jraf.klibqonto.model.oauth.OAuthTokens
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -41,17 +45,46 @@ import java.util.concurrent.Future
 internal class FutureQontoClientImpl(
     private val qontoClient: QontoClient,
 ) : FutureQontoClient,
+    FutureQontoClient.OAuth,
     FutureQontoClient.Organizations,
     FutureQontoClient.Transactions,
     FutureQontoClient.Memberships,
     FutureQontoClient.Labels,
     FutureQontoClient.Attachments {
 
+    override val oAuth = this
     override val organizations = this
     override val transactions = this
     override val memberships = this
     override val labels = this
     override val attachments = this
+
+    override fun getLoginUri(
+        oAuthCredentials: OAuthCredentials,
+        scopes: List<OAuthScope>,
+        uniqueState: String,
+    ): String = qontoClient.oAuth.getLoginUri(
+        oAuthCredentials = oAuthCredentials,
+        scopes = scopes,
+        uniqueState = uniqueState,
+    )
+
+    override fun extractCodeAndUniqueStateFromRedirectUri(redirectUri: String): OAuthCodeAndUniqueState? =
+        qontoClient.oAuth.extractCodeAndUniqueStateFromRedirectUri(redirectUri)
+
+    override fun getTokens(oAuthCredentials: OAuthCredentials, code: String) = GlobalScope.future {
+        qontoClient.oAuth.getTokens(
+            oAuthCredentials = oAuthCredentials,
+            code = code,
+        )
+    }
+
+    override fun refreshTokens(oAuthCredentials: OAuthCredentials, oAuthTokens: OAuthTokens) = GlobalScope.future {
+        qontoClient.oAuth.refreshTokens(
+            oAuthCredentials = oAuthCredentials,
+            oAuthTokens = oAuthTokens,
+        )
+    }
 
     override fun getOrganization(): Future<Organization> = GlobalScope.future {
         qontoClient.organizations.getOrganization()

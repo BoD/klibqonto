@@ -27,11 +27,17 @@
 package org.jraf.klibqonto.client.future
 
 import org.jraf.klibqonto.client.QontoClient
+import org.jraf.klibqonto.client.blocking.BlockingQontoClient
+import org.jraf.klibqonto.client.callback.Result
 import org.jraf.klibqonto.internal.client.future.FutureQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCodeAndUniqueState
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
+import org.jraf.klibqonto.model.oauth.OAuthScope
+import org.jraf.klibqonto.model.oauth.OAuthTokens
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -46,6 +52,39 @@ import java.util.concurrent.Future
  * This is useful from Java, which doesn't have a notion of `suspend` functions.
  */
 interface FutureQontoClient {
+
+    /**
+     * See [QontoClient.OAuth].
+     */
+    interface OAuth {
+        /**
+         * Get the URI used to login to the Qonto service with your application.
+         */
+        fun getLoginUri(
+            oAuthCredentials: OAuthCredentials,
+            scopes: List<OAuthScope> = listOf(
+                OAuthScope.OFFLINE_ACCESS,
+                OAuthScope.ORGANIZATION_READ,
+                OAuthScope.OPENID,
+            ),
+            uniqueState: String,
+        ): String
+
+        /**
+         * See [QontoClient.OAuth.extractCodeAndUniqueStateFromRedirectUri].
+         */
+        fun extractCodeAndUniqueStateFromRedirectUri(redirectUri: String): OAuthCodeAndUniqueState?
+
+        /**
+         * See [QontoClient.OAuth.getTokens].
+         */
+        fun getTokens(oAuthCredentials: OAuthCredentials, code: String): Future<OAuthTokens>
+
+        /**
+         * See [QontoClient.OAuth.refreshTokens].
+         */
+        fun refreshTokens(oAuthCredentials: OAuthCredentials, oAuthTokens: OAuthTokens): Future<OAuthTokens>
+    }
 
     /**
      * See [QontoClient.Organizations].
@@ -115,6 +154,12 @@ interface FutureQontoClient {
          */
         fun getAttachment(id: String): Future<Attachment>
     }
+
+
+    /**
+     * See [QontoClient.OAuth].
+     */
+    val oAuth: OAuth
 
     /**
      * See [QontoClient.organizations].

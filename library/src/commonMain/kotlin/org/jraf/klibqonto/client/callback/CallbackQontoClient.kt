@@ -32,6 +32,10 @@ import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCodeAndUniqueState
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
+import org.jraf.klibqonto.model.oauth.OAuthScope
+import org.jraf.klibqonto.model.oauth.OAuthTokens
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -48,6 +52,43 @@ import kotlin.jvm.JvmName
  * This is useful for Java and Swift, which don't have a notion of `suspend` functions.
  */
 interface CallbackQontoClient {
+
+    /**
+     * See [QontoClient.OAuth].
+     */
+    interface OAuth {
+        /**
+         * Get the URI used to login to the Qonto service with your application.
+         */
+        fun getLoginUri(
+            oAuthCredentials: OAuthCredentials,
+            scopes: List<OAuthScope> = listOf(
+                OAuthScope.OFFLINE_ACCESS,
+                OAuthScope.ORGANIZATION_READ,
+                OAuthScope.OPENID,
+            ),
+            uniqueState: String,
+        ): String
+
+        /**
+         * See [QontoClient.OAuth.extractCodeAndUniqueStateFromRedirectUri].
+         */
+        fun extractCodeAndUniqueStateFromRedirectUri(redirectUri: String): OAuthCodeAndUniqueState?
+
+        /**
+         * See [QontoClient.OAuth.getTokens].
+         */
+        fun getTokens(oAuthCredentials: OAuthCredentials, code: String, onResult: (Result<OAuthTokens>) -> Unit)
+
+        /**
+         * See [QontoClient.OAuth.refreshTokens].
+         */
+        fun refreshTokens(
+            oAuthCredentials: OAuthCredentials,
+            oAuthTokens: OAuthTokens,
+            onResult: (Result<OAuthTokens>) -> Unit,
+        )
+    }
 
     /**
      * See [QontoClient.Organizations].
@@ -125,6 +166,12 @@ interface CallbackQontoClient {
         )
     }
 
+
+    /**
+     * See [QontoClient.OAuth].
+     */
+    val oAuth: OAuth
+
     /**
      * See [QontoClient.organizations].
      */
@@ -151,10 +198,7 @@ interface CallbackQontoClient {
     val attachments: Attachments
 
     /**
-     * Dispose of this client instance.
-     * This will release some resources so it is recommended to call it after use.
-     *
-     * **Note: this client will no longer be usable after this is called.**
+     * See [QontoClient.close].
      */
     fun close()
 }

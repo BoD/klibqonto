@@ -31,6 +31,10 @@ import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCodeAndUniqueState
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
+import org.jraf.klibqonto.model.oauth.OAuthScope
+import org.jraf.klibqonto.model.oauth.OAuthTokens
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
@@ -39,17 +43,47 @@ import org.jraf.klibqonto.model.transactions.Transaction
 internal class BlockingQontoClientImpl(
     private val qontoClient: QontoClient,
 ) : BlockingQontoClient,
+    BlockingQontoClient.OAuth,
     BlockingQontoClient.Organizations,
     BlockingQontoClient.Transactions,
     BlockingQontoClient.Memberships,
     BlockingQontoClient.Labels,
     BlockingQontoClient.Attachments {
 
+    override val oAuth = this
     override val organizations = this
     override val transactions = this
     override val memberships = this
     override val labels = this
     override val attachments = this
+
+    override fun getLoginUri(
+        oAuthCredentials: OAuthCredentials,
+        scopes: List<OAuthScope>,
+        uniqueState: String,
+    ): String = qontoClient.oAuth.getLoginUri(
+        oAuthCredentials = oAuthCredentials,
+        scopes = scopes,
+        uniqueState = uniqueState,
+    )
+
+    override fun extractCodeAndUniqueStateFromRedirectUri(redirectUri: String): OAuthCodeAndUniqueState? =
+        qontoClient.oAuth.extractCodeAndUniqueStateFromRedirectUri(redirectUri)
+
+    override fun getTokens(oAuthCredentials: OAuthCredentials, code: String): OAuthTokens = runBlocking {
+        qontoClient.oAuth.getTokens(
+            oAuthCredentials = oAuthCredentials,
+            code = code,
+        )
+    }
+
+    override fun refreshTokens(oAuthCredentials: OAuthCredentials, oAuthTokens: OAuthTokens): OAuthTokens =
+        runBlocking {
+            qontoClient.oAuth.refreshTokens(
+                oAuthCredentials = oAuthCredentials,
+                oAuthTokens = oAuthTokens,
+            )
+        }
 
     override fun getOrganization(): Organization = runBlocking {
         qontoClient.organizations.getOrganization()
