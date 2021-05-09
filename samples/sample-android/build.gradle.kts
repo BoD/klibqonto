@@ -38,8 +38,7 @@ android {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin", "kotlin-stdlib-jdk8", Versions.KOTLIN)
-    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-core", Versions.COROUTINES)
+    implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-android", Versions.COROUTINES)
     implementation("androidx.appcompat", "appcompat", "1.2.0")
     implementation("androidx.constraintlayout", "constraintlayout", "2.0.4")
     testImplementation("junit", "junit", Versions.JUNIT)

@@ -38,7 +38,6 @@ kotlin {
         val main by compilations.getting {
             kotlinOptions {
                 jvmTarget = "1.8"
-                languageVersion = "1.4"
             }
         }
     }
@@ -77,7 +76,6 @@ kotlin {
             kotlin.srcDir(tasks.getByName("generateVersionKt").outputs.files)
 
             dependencies {
-                implementation(kotlin("stdlib"))
                 implementation("io.ktor", "ktor-client-core", Versions.KTOR)
                 implementation("io.ktor", "ktor-client-json", Versions.KTOR)
                 implementation("io.ktor", "ktor-client-serialization", Versions.KTOR)

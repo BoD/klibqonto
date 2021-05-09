@@ -1,5 +1,3 @@
-enableFeaturePreview("GRADLE_METADATA")
-
 rootProject.name = "klibqonto-root"
 
 include(":library")
