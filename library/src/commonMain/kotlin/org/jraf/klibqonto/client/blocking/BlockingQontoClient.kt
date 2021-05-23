@@ -153,6 +153,11 @@ interface BlockingQontoClient {
          * See [QontoClient.Attachments.getAttachment].
          */
         fun getAttachment(id: String): Attachment
+
+        /**
+         * See [QontoClient.Attachments.getAttachmentList].
+         */
+        fun getAttachmentList(transactionInternalId: String): List<Attachment>
     }
 
 

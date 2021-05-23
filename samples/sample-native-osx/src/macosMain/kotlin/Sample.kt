@@ -23,22 +23,25 @@
  */
 
 import kotlinx.coroutines.runBlocking
-import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
 import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
+import org.jraf.klibqonto.client.OAuthAuthentication
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.Date
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.memberships.Membership
+import org.jraf.klibqonto.model.oauth.OAuthCredentials
 import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
 import platform.Foundation.NSDateFormatter
+import kotlin.random.Random
+import kotlin.system.exitProcess
 
 // !!!!! DO THIS FIRST !!!!!
 // Replace these constants with your login / secret key
@@ -46,19 +49,42 @@ import platform.Foundation.NSDateFormatter
 private const val LOGIN = "xxx"
 private const val SECRET_KEY = "yyy"
 
+// Or use OAuth if you have registered your app with Qonto.
+private const val OAUTH_CLIENT_ID = "aaa"
+private const val OAUTH_CLIENT_SECRET = "bbb"
+private const val OAUTH_REDIRECT_URI = "https://example.com/callback"
+
+// Set to false to use login / secret key, true to use OAuth
+private const val USE_OAUTH = false
+
 // Replace this with a transaction internal id that exists
 private const val TRANSACTION_INTERNAL_ID = "00000000-0000-0000-0000-000000000000"
 
 class Sample {
+    private val oAuthCredentials = OAuthCredentials(
+        clientId = OAUTH_CLIENT_ID,
+        clientSecret = OAUTH_CLIENT_SECRET,
+        redirectUri = OAUTH_REDIRECT_URI
+    )
+
+    private val oAuthAuthentication = OAuthAuthentication(
+        oAuthCredentials = oAuthCredentials,
+        // OAuthTokens will be set later, after authentication
+        oAuthTokens = null
+    )
 
     private val client: QontoClient by lazy {
         // Create the client
         QontoClient.newInstance(
             ClientConfiguration(
-                LoginSecretKeyAuthentication(
-                    LOGIN,
-                    SECRET_KEY
-                ),
+                if (USE_OAUTH) {
+                    oAuthAuthentication
+                } else {
+                    LoginSecretKeyAuthentication(
+                        LOGIN,
+                        SECRET_KEY
+                    )
+                },
                 HttpConfiguration(
                     // Uncomment to see more logs
                     // loggingLevel = HttpLoggingLevel.BODY,
@@ -66,7 +92,7 @@ class Sample {
                     // This is only needed to debug with, e.g., Charles Proxy
                     httpProxy = HttpProxy("localhost", 8888),
                     // Can be useful in certain circumstances, but unwise to use in production
-                    bypassSslChecks = true
+                    bypassSslChecks = true,
                 )
             )
         )
@@ -74,6 +100,41 @@ class Sample {
 
     fun main() {
         runBlocking {
+            if (USE_OAUTH) {
+                // 1/ Authenticate the user / app
+                val uniqueState = Random.nextLong().toString()
+                println("Navigate to this URL in a browser:")
+                println(client.oAuth.getLoginUri(oAuthCredentials = oAuthCredentials, uniqueState = uniqueState))
+
+                // 2/ Extract code
+                println("After successful authentication please paste the URL in the browser's bar, and press enter:")
+                val redirectUri = readLine()!!
+                val codeAndUniqueState = client.oAuth.extractCodeAndUniqueStateFromRedirectUri(redirectUri)
+                println(codeAndUniqueState)
+                if (codeAndUniqueState == null || codeAndUniqueState.uniqueState != uniqueState) {
+                    println("Something is wrong! Giving up.")
+                    return@runBlocking
+                }
+
+                // 3/ Get tokens from code
+                val tokens = client.oAuth.getTokens(
+                    oAuthCredentials = oAuthCredentials,
+                    code = codeAndUniqueState.code
+                )
+                println(tokens)
+
+                // 4/ Use obtained tokens for subsequent API calls
+                oAuthAuthentication.oAuthTokens = tokens
+
+                // Later: refresh the tokens if needed.
+                // Note: for now this must be handled manually. A future version of this library will handle this automatically.
+                if (tokens.areAboutToExpire) {
+                    val refreshedTokens = client.oAuth.refreshTokens(oAuthCredentials, tokens)
+                    println(refreshedTokens)
+                    oAuthAuthentication.oAuthTokens = refreshedTokens
+                }
+            }
+
             // Get organization
             println("Organization:")
             val organization = client.organizations.getOrganization()
@@ -102,25 +163,38 @@ class Sample {
             // Get first 2 pages of transactions
             println("\n\nTransactions:")
             val transactionList = getTransactionList(organization)
-            println(transactionList.joinToString("\n") { transaction -> transaction.toFormattedString() })
+            println(transactionList.joinToString("\n\n") { it.toFormattedString() })
 
             // Get the first attachment from the transaction list
             println("\n\nAttachment:")
-            val attachment = getAttachment(transactionList)
+            val attachment = getAttachment(transaction)
             println(attachment)
+
+            // Get all the attachments of a specific transaction
+            println("\n\nAttachments of transaction:")
+            val attachmentList = client.attachments.getAttachmentList(TRANSACTION_INTERNAL_ID)
+            println(attachmentList)
         }
 
         // Close
         client.close()
+
+        // Exit process
+        exitProcess(0)
     }
 
     private suspend fun getTransactionList(organization: Organization): List<Transaction> {
+        // 0/ Choose bank account
+        val bankAccountSlug = organization.bankAccounts.first { it.name.contains("principal", true) }.slug
+
         // 1/ Get first page of transactions
-        val bankAccountSlug = organization.bankAccounts[0].slug
         val firstPage = client.transactions.getTransactionList(
             bankAccountSlug = bankAccountSlug,
             status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-            updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
+            updatedDateRange = DateRange(
+                date("2018-01-01"),
+                date("2019-12-31")
+            ),
             sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
             pagination = Pagination(itemsPerPage = 10)
         )
@@ -131,7 +205,10 @@ class Sample {
             val secondPage = client.transactions.getTransactionList(
                 bankAccountSlug = bankAccountSlug,
                 status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
-                updatedDateRange = DateRange(date("2018-01-01"), date("2019-12-31")),
+                updatedDateRange = DateRange(
+                    date("2018-01-01"),
+                    date("2019-12-31")
+                ),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                 pagination = nextPagination
             )
@@ -140,11 +217,9 @@ class Sample {
         return list
     }
 
-    private suspend fun getAttachment(transactionList: List<Transaction>): Attachment? {
-        // Get the first attachment id of the first transaction that has at least one
-        val firstAttachmentId = transactionList.firstOrNull { it.attachmentIds.isNotEmpty() }?.attachmentIds?.first()
-        // Call getAttachment from the id
-        return firstAttachmentId?.let { client.attachments.getAttachment(it) }
+    private suspend fun getAttachment(transaction: Transaction): Attachment? {
+        // Call getAttachment from the id of the first attachment (if any)
+        return transaction.attachments.firstOrNull()?.let { client.attachments.getAttachment(it.id) }
     }
 }
 

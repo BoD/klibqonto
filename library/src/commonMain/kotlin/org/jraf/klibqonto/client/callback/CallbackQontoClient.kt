@@ -164,6 +164,14 @@ interface CallbackQontoClient {
             id: String,
             onResult: (Result<Attachment>) -> Unit,
         )
+
+        /**
+         * See [QontoClient.Attachments.getAttachmentList].
+         */
+        fun getAttachmentList(
+            transactionInternalId: String,
+            onResult: (Result<List<Attachment>>) -> Unit,
+        )
     }
 
 

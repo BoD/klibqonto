@@ -22,18 +22,11 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.model.organizations
+package org.jraf.klibqonto.internal.api.model.attachments
 
-import org.jraf.klibqonto.model.dates.Date
-import org.jraf.klibqonto.model.organizations.BankAccount
+import kotlinx.serialization.Serializable
 
-internal data class BankAccountImpl(
-    override val slug: String,
-    override val iban: String,
-    override val bic: String,
-    override val currency: String,
-    override val balanceCents: Long,
-    override val authorizedBalanceCents: Long,
-    override val updatedDate: Date,
-    override val name: String,
-) : BankAccount
+@Serializable
+internal data class ApiAttachmentListEnvelope(
+    val attachments: List<ApiAttachment>,
+)

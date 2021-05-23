@@ -52,6 +52,7 @@ import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.api.model.ApiDateConverter
 import org.jraf.klibqonto.internal.api.model.apiToModel
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelopeConverter
+import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.modelToApi
@@ -137,18 +138,6 @@ internal class QontoClientImpl(
                         HttpLoggingLevel.ALL -> LogLevel.ALL
                     }
                 }
-            }
-        }
-    }
-
-    private fun getAuthorizationHeader(authentication: Authentication): String = when (authentication) {
-        is LoginSecretKeyAuthentication -> "${authentication.login}:${authentication.secretKey}"
-        is OAuthAuthentication -> {
-            val oAuthTokens = authentication.oAuthTokens
-            if (oAuthTokens == null) {
-                throw IllegalStateException("OAuthAuthentication is set, but oAuthTokens is null. It must be set to a non null value before making calls.")
-            } else {
-                "Bearer ${oAuthTokens.accessToken}"
             }
         }
     }
@@ -264,7 +253,24 @@ internal class QontoClientImpl(
             .apiToModel(ApiAttachmentEnvelopeConverter)
     }
 
+    override suspend fun getAttachmentList(transactionInternalId: String): List<Attachment> {
+        return service.getAttachmentList(transactionInternalId)
+            .apiToModel(ApiAttachmentListEnvelopeConverter)
+    }
+
     override fun close() = httpClient.close()
+}
+
+private fun getAuthorizationHeader(authentication: Authentication): String = when (authentication) {
+    is LoginSecretKeyAuthentication -> "${authentication.login}:${authentication.secretKey}"
+    is OAuthAuthentication -> {
+        val oAuthTokens = authentication.oAuthTokens
+        if (oAuthTokens == null) {
+            throw IllegalStateException("OAuthAuthentication is set, but oAuthTokens is null. It must be set to a non null value before making calls.")
+        } else {
+            "Bearer ${oAuthTokens.accessToken}"
+        }
+    }
 }
 
 

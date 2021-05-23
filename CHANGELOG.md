@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0 (2021-05-23)
+
+- Support for Attachment APIs
+
 ## 2.4.0 (2021-03-14)
 
 - Add OAuth support

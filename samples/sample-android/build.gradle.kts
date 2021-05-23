@@ -39,7 +39,7 @@ android {
 
 dependencies {
     implementation("org.jetbrains.kotlinx", "kotlinx-coroutines-android", Versions.COROUTINES)
-    implementation("androidx.appcompat", "appcompat", "1.2.0")
+    implementation("androidx.appcompat", "appcompat", "1.3.0")
     implementation("androidx.constraintlayout", "constraintlayout", "2.0.4")
     testImplementation("junit", "junit", Versions.JUNIT)
     androidTestImplementation("androidx.test.ext", "junit", "1.1.2")

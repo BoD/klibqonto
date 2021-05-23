@@ -61,4 +61,9 @@ interface BankAccount {
      * Date at which this object was last updated.
      */
     val updatedDate: Date
+
+    /**
+     * Name of the bank account.
+     */
+    val name: String
 }

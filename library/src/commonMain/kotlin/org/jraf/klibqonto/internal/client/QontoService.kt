@@ -37,6 +37,7 @@ import io.ktor.util.encodeBase64
 import org.jraf.klibqonto.client.BaseUri
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
+import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentListEnvelope
 import org.jraf.klibqonto.internal.api.model.labels.ApiLabelListEnvelope
 import org.jraf.klibqonto.internal.api.model.memberships.ApiMembershipListEnvelope
 import org.jraf.klibqonto.internal.api.model.oauth.ApiOAuthTokens
@@ -174,5 +175,10 @@ internal class QontoService(
         return httpClient.get(apiBaseUri + "attachments/$id")
     }
 
+    suspend fun getAttachmentList(
+        transactionInternalId: String,
+    ): ApiAttachmentListEnvelope {
+        return httpClient.get(apiBaseUri + "transactions/$transactionInternalId/attachments")
+    }
 
 }

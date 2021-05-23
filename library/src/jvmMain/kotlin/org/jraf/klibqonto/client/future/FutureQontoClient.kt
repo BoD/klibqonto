@@ -27,8 +27,6 @@
 package org.jraf.klibqonto.client.future
 
 import org.jraf.klibqonto.client.QontoClient
-import org.jraf.klibqonto.client.blocking.BlockingQontoClient
-import org.jraf.klibqonto.client.callback.Result
 import org.jraf.klibqonto.internal.client.future.FutureQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
@@ -153,6 +151,11 @@ interface FutureQontoClient {
          * See [QontoClient.Attachments.getAttachment].
          */
         fun getAttachment(id: String): Future<Attachment>
+
+        /**
+         * See [QontoClient.Attachments.getAttachmentList].
+         */
+        fun getAttachmentList(transactionInternalId: String): Future<List<Attachment>>
     }
 
 

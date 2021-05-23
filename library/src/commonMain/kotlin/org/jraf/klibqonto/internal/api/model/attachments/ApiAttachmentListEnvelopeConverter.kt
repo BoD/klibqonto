@@ -22,18 +22,13 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.internal.model.organizations
+package org.jraf.klibqonto.internal.api.model.attachments
 
-import org.jraf.klibqonto.model.dates.Date
-import org.jraf.klibqonto.model.organizations.BankAccount
+import org.jraf.klibqonto.internal.api.model.ApiConverter
+import org.jraf.klibqonto.internal.api.model.apiToModel
+import org.jraf.klibqonto.model.attachments.Attachment
 
-internal data class BankAccountImpl(
-    override val slug: String,
-    override val iban: String,
-    override val bic: String,
-    override val currency: String,
-    override val balanceCents: Long,
-    override val authorizedBalanceCents: Long,
-    override val updatedDate: Date,
-    override val name: String,
-) : BankAccount
+internal object ApiAttachmentListEnvelopeConverter : ApiConverter<ApiAttachmentListEnvelope, List<Attachment>>() {
+    override fun apiToModel(apiModel: ApiAttachmentListEnvelope) =
+        apiModel.attachments.apiToModel(ApiAttachmentConverter)
+}

@@ -38,5 +38,6 @@ internal object ApiBankAccountConverter : ApiConverter<ApiBankAccount, BankAccou
         balanceCents = apiModel.balance_cents,
         authorizedBalanceCents = apiModel.authorized_balance_cents,
         updatedDate = ApiDateConverter.apiToModel(apiModel.updated_at)!!,
+        name = apiModel.name,
     )
 }

@@ -148,6 +148,13 @@ internal class CallbackQontoClientImpl(
         qontoClient.attachments.getAttachment(id)
     }
 
+    override fun getAttachmentList(
+        transactionInternalId: String,
+        onResult: (Result<List<Attachment>>) -> Unit,
+    ) = launchAndCallback(onResult) {
+        qontoClient.attachments.getAttachmentList(transactionInternalId)
+    }
+
     override fun close() = qontoClient.close()
 
     private fun <T : Any> launchAndCallback(

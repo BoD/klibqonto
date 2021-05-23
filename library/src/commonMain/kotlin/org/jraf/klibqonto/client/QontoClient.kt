@@ -231,6 +231,15 @@ interface QontoClient {
          * See also [the API documentation](https://api-doc.qonto.com/2.0/attachments/show-attachment)
          */
         suspend fun getAttachment(id: String): Attachment
+
+        /**
+         * Retrieve the list of attachments within a transaction.
+         *
+         * @param transactionInternalId The internal id of the Transaction - e.g. `4c306508-dac9-410b-9937-e87b02462e42`
+         *
+         * See also [the API documentation](https://api-doc.qonto.com/docs/business-api/reference/openapi_v2.yml/paths/~1v2~1transactions~1%7Btransaction_id%7D~1attachments/get)
+         */
+        suspend fun getAttachmentList(transactionInternalId: String): List<Attachment>
     }
 
 

@@ -126,5 +126,9 @@ internal class FutureQontoClientImpl(
         qontoClient.attachments.getAttachment(id)
     }
 
+    override fun getAttachmentList(transactionInternalId: String) = GlobalScope.future {
+        qontoClient.attachments.getAttachmentList(transactionInternalId)
+    }
+
     override fun close() = qontoClient.close()
 }

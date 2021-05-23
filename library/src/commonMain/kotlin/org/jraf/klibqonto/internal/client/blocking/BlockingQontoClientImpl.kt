@@ -127,5 +127,9 @@ internal class BlockingQontoClientImpl(
         qontoClient.attachments.getAttachment(id)
     }
 
+    override fun getAttachmentList(transactionInternalId: String): List<Attachment> = runBlocking {
+        qontoClient.attachments.getAttachmentList(transactionInternalId)
+    }
+
     override fun close() = qontoClient.close()
 }

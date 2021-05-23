@@ -167,8 +167,13 @@ class Sample {
 
             // Get the first attachment from the transaction list
             println("\n\nAttachment:")
-            val attachment = getAttachment(transactionList)
+            val attachment = getAttachment(transaction)
             println(attachment)
+
+            // Get all the attachments of a specific transaction
+            println("\n\nAttachments of transaction:")
+            val attachmentList = client.attachments.getAttachmentList(TRANSACTION_INTERNAL_ID)
+            println(attachmentList)
         }
 
         // Close
@@ -179,8 +184,10 @@ class Sample {
     }
 
     private suspend fun getTransactionList(organization: Organization): List<Transaction> {
+        // 0/ Choose bank account
+        val bankAccountSlug = organization.bankAccounts.first { it.name.contains("principal", true) }.slug
+
         // 1/ Get first page of transactions
-        val bankAccountSlug = organization.bankAccounts[0].slug
         val firstPage = client.transactions.getTransactionList(
             bankAccountSlug = bankAccountSlug,
             status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
@@ -210,11 +217,9 @@ class Sample {
         return list
     }
 
-    private suspend fun getAttachment(transactionList: List<Transaction>): Attachment? {
-        // Get the first attachment id of the first transaction that has at least one
-        val firstAttachmentId = transactionList.firstOrNull { it.attachmentIds.isNotEmpty() }?.attachmentIds?.first()
-        // Call getAttachment from the id
-        return firstAttachmentId?.let { client.attachments.getAttachment(it) }
+    private suspend fun getAttachment(transaction: Transaction): Attachment? {
+        // Call getAttachment from the id of the first attachment (if any)
+        return transaction.attachments.firstOrNull()?.let { client.attachments.getAttachment(it.id) }
     }
 }
 
