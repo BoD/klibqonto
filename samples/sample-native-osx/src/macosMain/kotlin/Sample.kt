@@ -121,6 +121,7 @@ class Sample {
                     oAuthCredentials = oAuthCredentials,
                     code = codeAndUniqueState.code
                 )
+                // You can save these, and re-use them later.
                 println(tokens)
 
                 // 4/ Use obtained tokens for subsequent API calls

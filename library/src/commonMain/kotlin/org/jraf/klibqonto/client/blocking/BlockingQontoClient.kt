@@ -61,11 +61,7 @@ interface BlockingQontoClient {
          */
         fun getLoginUri(
             oAuthCredentials: OAuthCredentials,
-            scopes: List<OAuthScope> = listOf(
-                OAuthScope.OFFLINE_ACCESS,
-                OAuthScope.ORGANIZATION_READ,
-                OAuthScope.OPENID,
-            ),
+            scopes: List<OAuthScope> = OAuthScope.values().toList(),
             uniqueState: String,
         ): String
 

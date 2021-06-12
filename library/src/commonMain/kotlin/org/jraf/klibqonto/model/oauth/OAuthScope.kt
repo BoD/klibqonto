@@ -28,4 +28,5 @@ enum class OAuthScope {
     OFFLINE_ACCESS,
     ORGANIZATION_READ,
     OPENID,
+    ATTACHMENT_WRITE,
 }

@@ -34,6 +34,7 @@ internal object ApiOAuthScopeConverter : ApiConverter<String, OAuthScope>() {
             "offline_access" -> OAuthScope.OFFLINE_ACCESS
             "organization.read" -> OAuthScope.ORGANIZATION_READ
             "openid" -> OAuthScope.OPENID
+            "attachment.write" -> OAuthScope.ATTACHMENT_WRITE
 
             else -> throw ApiConverterException("Unknown OAuth scope '$apiModel'")
         }
@@ -43,5 +44,6 @@ internal object ApiOAuthScopeConverter : ApiConverter<String, OAuthScope>() {
         OAuthScope.OFFLINE_ACCESS -> "offline_access"
         OAuthScope.ORGANIZATION_READ -> "organization.read"
         OAuthScope.OPENID -> "openid"
+        OAuthScope.ATTACHMENT_WRITE -> "attachment.write"
     }
 }
