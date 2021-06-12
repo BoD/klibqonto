@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.5.0 (2021-05-23)
+## 2.5.0 (2021-06-12)
 
 - Support for Attachment APIs
 
