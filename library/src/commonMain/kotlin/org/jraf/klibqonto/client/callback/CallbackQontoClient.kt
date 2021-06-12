@@ -29,6 +29,8 @@ package org.jraf.klibqonto.client.callback
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.callback.CallbackQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -168,6 +170,17 @@ interface CallbackQontoClient {
             transactionInternalId: String,
             onResult: (Result<List<Attachment>>) -> Unit,
         )
+
+        /**
+         * See [QontoClient.Attachments.addAttachment].
+         */
+        fun addAttachment(
+            transactionInternalId: String,
+            type: AttachmentType,
+            input: AttachmentByteInput,
+            onResult: (Result<Unit>) -> Unit,
+        )
+
     }
 
 

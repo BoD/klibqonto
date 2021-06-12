@@ -66,6 +66,8 @@ import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelopeConverter
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionStatusConverter
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -256,6 +258,14 @@ internal class QontoClientImpl(
     override suspend fun getAttachmentList(transactionInternalId: String): List<Attachment> {
         return service.getAttachmentList(transactionInternalId)
             .apiToModel(ApiAttachmentListEnvelopeConverter)
+    }
+
+    override suspend fun addAttachment(
+        transactionInternalId: String,
+        type: AttachmentType,
+        input: AttachmentByteInput,
+    ) {
+        service.addAttachment(transactionInternalId, type, input)
     }
 
     override fun close() = httpClient.close()

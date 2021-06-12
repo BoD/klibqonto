@@ -31,6 +31,8 @@ import org.jraf.klibqonto.client.callback.Result
 import org.jraf.klibqonto.client.callback.suspendRunCatching
 import org.jraf.klibqonto.internal.client.klibQontoScope
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -153,6 +155,15 @@ internal class CallbackQontoClientImpl(
         onResult: (Result<List<Attachment>>) -> Unit,
     ) = launchAndCallback(onResult) {
         qontoClient.attachments.getAttachmentList(transactionInternalId)
+    }
+
+    override fun addAttachment(
+        transactionInternalId: String,
+        type: AttachmentType,
+        input: AttachmentByteInput,
+        onResult: (Result<Unit>) -> Unit,
+    ) = launchAndCallback(onResult) {
+        qontoClient.attachments.addAttachment(transactionInternalId, type, input)
     }
 
     override fun close() = qontoClient.close()

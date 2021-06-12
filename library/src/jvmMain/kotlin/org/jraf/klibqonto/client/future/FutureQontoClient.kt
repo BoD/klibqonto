@@ -29,6 +29,8 @@ package org.jraf.klibqonto.client.future
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.future.FutureQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -152,6 +154,15 @@ interface FutureQontoClient {
          * See [QontoClient.Attachments.getAttachmentList].
          */
         fun getAttachmentList(transactionInternalId: String): Future<List<Attachment>>
+
+        /**
+         * See [QontoClient.Attachments.addAttachment].
+         */
+        fun addAttachment(
+            transactionInternalId: String,
+            type: AttachmentType,
+            input: AttachmentByteInput,
+        ): Future<Void?>
     }
 
 

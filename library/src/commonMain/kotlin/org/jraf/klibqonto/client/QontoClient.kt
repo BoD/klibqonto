@@ -26,6 +26,8 @@ package org.jraf.klibqonto.client
 
 import org.jraf.klibqonto.internal.client.QontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -236,6 +238,19 @@ interface QontoClient {
          * See also [the API documentation](https://api-doc.qonto.com/docs/business-api/reference/openapi_v2.yml/paths/~1v2~1transactions~1%7Btransaction_id%7D~1attachments/get)
          */
         suspend fun getAttachmentList(transactionInternalId: String): List<Attachment>
+
+        /**
+         * Add an attachment to a transaction.
+         *
+         * @param transactionInternalId The internal id of the Transaction - e.g. `4c306508-dac9-410b-9937-e87b02462e42`
+         * @param type The image type of the attachment (currently only png, jpeg, and pdf are supported)
+         * @param input The byte data of the attachment.
+         *
+         * Note: the given input won't be closed by this method.
+         *
+         * See also [the API documentation](https://api-doc.qonto.com/docs/business-api/reference/openapi_v2.yml/paths/~1v2~1transactions~1%7Btransaction_id%7D~1attachments/post)
+         */
+        suspend fun addAttachment(transactionInternalId: String, type: AttachmentType, input: AttachmentByteInput)
     }
 
 
