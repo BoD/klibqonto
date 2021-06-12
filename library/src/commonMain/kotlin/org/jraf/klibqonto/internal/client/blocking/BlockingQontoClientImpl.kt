@@ -138,5 +138,13 @@ internal class BlockingQontoClientImpl(
             qontoClient.attachments.addAttachment(transactionInternalId, type, input)
         }
 
+    override fun removeAttachment(transactionInternalId: String, attachmentId: String) = runBlocking {
+        qontoClient.attachments.removeAttachment(transactionInternalId, attachmentId)
+    }
+
+    override fun removeAllAttachments(transactionInternalId: String) = runBlocking {
+        qontoClient.attachments.removeAllAttachments(transactionInternalId)
+    }
+
     override fun close() = qontoClient.close()
 }

@@ -181,12 +181,25 @@ class Sample {
             val attachmentList = client.attachments.getAttachmentList(TRANSACTION_INTERNAL_ID)
             println(attachmentList)
 
+            // Remove the last attachment
+            val attachmentId = attachmentList.last().id
+            client.attachments.removeAttachment(
+                transactionInternalId = TRANSACTION_INTERNAL_ID,
+                attachmentId = attachmentId
+            )
+            println("Attachment $attachmentId removed")
+
             // Add an attachment
             client.attachments.addAttachment(
                 transactionInternalId = TRANSACTION_INTERNAL_ID,
                 type = AttachmentType.PDF,
                 input = FileAttachmentByteInput(PATH_TO_A_PDF_FILE)
             )
+            println("Attachment added")
+
+            // Remove all attachments
+            // client.attachments.removeAllAttachments(TRANSACTION_INTERNAL_ID)
+            // println("All attachments removed")
         }
 
         // Close

@@ -24,7 +24,6 @@
 
 package org.jraf.klibqonto.sample
 
-import org.jraf.klibqonto.client.Authentication
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.client.HttpConfiguration
 import org.jraf.klibqonto.client.HttpLoggingLevel
@@ -32,7 +31,6 @@ import org.jraf.klibqonto.client.HttpProxy
 import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.callback.CallbackQontoClient
-import org.jraf.klibqonto.client.callback.Result
 import org.jraf.klibqonto.client.callback.asCallbackQontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
 import org.jraf.klibqonto.model.dates.DateRange
@@ -165,7 +163,7 @@ class CallbackSample {
 
     private fun getTransactionList(
         organization: Organization,
-        onResult: (Result<List<Transaction>>) -> Unit
+        onResult: (Result<List<Transaction>>) -> Unit,
     ) {
         val res = mutableListOf<Transaction>()
 
@@ -255,7 +253,7 @@ class CallbackSample {
         callbackQontoClientMemberships: CallbackQontoClient.Memberships,
         pagination: Pagination,
         allMembershipList: MutableList<Membership>,
-        onResult: (Result<List<Membership>>) -> Unit
+        onResult: (Result<List<Membership>>) -> Unit,
     ) {
         callbackQontoClientMemberships.getMembershipList(pagination) { result ->
             result.fold(

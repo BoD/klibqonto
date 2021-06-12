@@ -181,6 +181,15 @@ interface CallbackQontoClient {
             onResult: (Result<Unit>) -> Unit,
         )
 
+        /**
+         * See [QontoClient.Attachments.removeAttachment].
+         */
+        fun removeAttachment(transactionInternalId: String, attachmentId: String, onResult: (Result<Unit>) -> Unit)
+
+        /**
+         * See [QontoClient.Attachments.removeAllAttachments].
+         */
+        fun removeAllAttachments(transactionInternalId: String, onResult: (Result<Unit>) -> Unit)
     }
 
 

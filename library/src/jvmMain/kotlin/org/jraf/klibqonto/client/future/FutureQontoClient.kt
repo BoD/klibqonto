@@ -162,7 +162,17 @@ interface FutureQontoClient {
             transactionInternalId: String,
             type: AttachmentType,
             input: AttachmentByteInput,
-        ): Future<Void?>
+        ): Future<Nothing?>
+
+        /**
+         * See [QontoClient.Attachments.removeAttachment].
+         */
+        fun removeAttachment(transactionInternalId: String, attachmentId: String): Future<Nothing?>
+
+        /**
+         * See [QontoClient.Attachments.removeAllAttachments].
+         */
+        fun removeAllAttachments(transactionInternalId: String): Future<Nothing?>
     }
 
 

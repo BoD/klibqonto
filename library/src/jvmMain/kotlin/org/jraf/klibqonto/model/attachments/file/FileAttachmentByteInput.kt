@@ -30,8 +30,8 @@ import java.io.File
 actual class FileAttachmentByteInput actual constructor(filePath: String) : AttachmentByteInput {
     private val inputStream by lazy { File(filePath).inputStream() }
 
-    override fun read(byteArray: ByteArray, length: Int): Int {
-        return inputStream.read(byteArray, 0, length)
+    override fun read(byteArray: ByteArray): Int {
+        return inputStream.read(byteArray, 0, byteArray.size)
     }
 
     override fun close() {

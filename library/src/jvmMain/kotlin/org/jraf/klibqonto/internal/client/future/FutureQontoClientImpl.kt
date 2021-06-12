@@ -138,8 +138,17 @@ internal class FutureQontoClientImpl(
         input: AttachmentByteInput,
     ) = GlobalScope.future {
         qontoClient.attachments.addAttachment(transactionInternalId, type, input)
-        @Suppress("USELESS_CAST")
-        null as Void?
+        null
+    }
+
+    override fun removeAttachment(transactionInternalId: String, attachmentId: String) = GlobalScope.future {
+        qontoClient.attachments.removeAttachment(transactionInternalId, attachmentId)
+        null
+    }
+
+    override fun removeAllAttachments(transactionInternalId: String) = GlobalScope.future {
+        qontoClient.attachments.removeAllAttachments(transactionInternalId)
+        null
     }
 
     override fun close() = qontoClient.close()

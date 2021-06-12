@@ -268,6 +268,14 @@ internal class QontoClientImpl(
         service.addAttachment(transactionInternalId, type, input)
     }
 
+    override suspend fun removeAttachment(transactionInternalId: String, attachmentId: String) {
+        service.removeAttachment(transactionInternalId, attachmentId)
+    }
+
+    override suspend fun removeAllAttachments(transactionInternalId: String) {
+        service.removeAllAttachments(transactionInternalId)
+    }
+
     override fun close() = httpClient.close()
 }
 

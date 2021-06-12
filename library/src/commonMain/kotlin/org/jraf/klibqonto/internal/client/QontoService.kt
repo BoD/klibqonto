@@ -25,6 +25,7 @@
 package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
 import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.forms.append
 import io.ktor.client.request.forms.formData
@@ -215,5 +216,13 @@ internal class QontoService(
                 }
             }
         )
+    }
+
+    suspend fun removeAttachment(transactionInternalId: String, attachmentId: String) {
+        httpClient.delete<Unit>(apiBaseUri + "transactions/$transactionInternalId/attachments/$attachmentId")
+    }
+
+    suspend fun removeAllAttachments(transactionInternalId: String) {
+        httpClient.delete<Unit>(apiBaseUri + "transactions/$transactionInternalId/attachments")
     }
 }

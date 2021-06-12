@@ -161,6 +161,16 @@ interface BlockingQontoClient {
          * See [QontoClient.Attachments.addAttachment].
          */
         fun addAttachment(transactionInternalId: String, type: AttachmentType, input: AttachmentByteInput)
+
+        /**
+         * See [QontoClient.Attachments.removeAttachment].
+         */
+        fun removeAttachment(transactionInternalId: String, attachmentId: String)
+
+        /**
+         * See [QontoClient.Attachments.removeAllAttachments].
+         */
+        fun removeAllAttachments(transactionInternalId: String)
     }
 
 

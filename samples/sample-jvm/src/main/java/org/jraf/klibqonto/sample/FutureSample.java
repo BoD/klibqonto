@@ -28,6 +28,8 @@ import org.jraf.klibqonto.client.*;
 import org.jraf.klibqonto.client.future.FutureQontoClient;
 import org.jraf.klibqonto.client.future.FutureQontoClientUtils;
 import org.jraf.klibqonto.model.attachments.Attachment;
+import org.jraf.klibqonto.model.attachments.AttachmentType;
+import org.jraf.klibqonto.model.attachments.file.FileAttachmentByteInput;
 import org.jraf.klibqonto.model.dates.DateRange;
 import org.jraf.klibqonto.model.labels.Label;
 import org.jraf.klibqonto.model.memberships.Membership;
@@ -48,6 +50,12 @@ class FutureSample {
     // that you will find in the Qonto web application under Settings, in the "Integrations (API)" section.
     private static final String LOGIN = "xxx";
     private static final String SECRET_KEY = "yyy";
+
+    // Replace this with a transaction internal id that exists
+    private static final String TRANSACTION_INTERNAL_ID = "00000000-0000-0000-0000-000000000000";
+
+    // Replace this to a path to a pdf file that exists
+    private static final String PATH_TO_A_PDF_FILE = "/tmp/file.pdf";
 
     private FutureQontoClient client;
 
@@ -100,6 +108,27 @@ class FutureSample {
             Attachment attachment = getAttachment(transactionList);
             System.out.println(attachment);
 
+            // Get all the attachments of a specific transaction
+            System.out.println("\n\nAttachments of transaction:");
+            List<Attachment> attachmentList = client.getAttachments().getAttachmentList(TRANSACTION_INTERNAL_ID).get();
+            System.out.println(attachmentList);
+
+            // Remove the last attachment
+            String attachmentId = attachmentList.get(attachmentList.size() - 1).getId();
+            client.getAttachments().removeAttachment(TRANSACTION_INTERNAL_ID, attachmentId);
+            System.out.println("Attachment " + attachmentId + " removed");
+
+            // Add an attachment
+            client.getAttachments().addAttachment(
+                    TRANSACTION_INTERNAL_ID,
+                    AttachmentType.PDF,
+                    new FileAttachmentByteInput(PATH_TO_A_PDF_FILE)
+            ).get();
+            System.out.println("Attachment added");
+
+            // Remove all attachments
+//            client.getAttachments().removeAllAttachments(TRANSACTION_INTERNAL_ID).get();
+//            System.out.println("All attachments removed");
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {

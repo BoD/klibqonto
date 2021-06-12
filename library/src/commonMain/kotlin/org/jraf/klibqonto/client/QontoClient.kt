@@ -251,6 +251,25 @@ interface QontoClient {
          * See also [the API documentation](https://api-doc.qonto.com/docs/business-api/reference/openapi_v2.yml/paths/~1v2~1transactions~1%7Btransaction_id%7D~1attachments/post)
          */
         suspend fun addAttachment(transactionInternalId: String, type: AttachmentType, input: AttachmentByteInput)
+
+        /**
+         * Remove an attachment from a transaction
+         *
+         * @param transactionInternalId The internal id of the Transaction - e.g. `4c306508-dac9-410b-9937-e87b02462e42`
+         * @param attachmentId The id of the attachment to remove - e.g. `4c306508-dac9-410b-9937-e87b02462e42`
+         *
+         * See also [the API documentation](https://api-doc.qonto.com/docs/business-api/reference/openapi_v2.yml/paths/~1v2~1transactions~1%7Btransaction_id%7D~1attachments~1%7Bid%7D/delete)
+         */
+        suspend fun removeAttachment(transactionInternalId: String, attachmentId: String)
+
+        /**
+         * Remove all attachments from a transaction.
+         *
+         * @param transactionInternalId The internal id of the Transaction - e.g. `4c306508-dac9-410b-9937-e87b02462e42`
+         *
+         * See also [the API documentation](https://api-doc.qonto.com/docs/business-api/reference/openapi_v2.yml/paths/~1v2~1transactions~1%7Btransaction_id%7D~1attachments/delete)
+         */
+        suspend fun removeAllAttachments(transactionInternalId: String)
     }
 
 
