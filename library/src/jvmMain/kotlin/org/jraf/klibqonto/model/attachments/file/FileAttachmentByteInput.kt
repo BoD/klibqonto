@@ -7,7 +7,7 @@
  *                              /___/
  * repository.
  *
- * Copyright (C) 2019-present Benoit 'BoD' Lubek (BoD@JRAF.org)
+ * Copyright (C) 2021-present Benoit 'BoD' Lubek (BoD@JRAF.org)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,19 +22,19 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.model.attachments
+package org.jraf.klibqonto.model.attachments.file
 
-interface AttachmentByteInput {
-    /**
-     * Reads bytes from the input stream into an array of bytes.
-     * An attempt is made to read as many as [byteArray].size bytes, but a smaller number may be read.
-     *
-     * The number of bytes actually read is returned as an integer.
-     */
-    fun read(byteArray: ByteArray): Int
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import java.io.File
 
-    /**
-     * Called when the whole attachment has been fully read.
-     */
-    fun close()
+actual class FileAttachmentByteInput actual constructor(filePath: String) : AttachmentByteInput {
+    private val inputStream by lazy { File(filePath).inputStream() }
+
+    override fun read(byteArray: ByteArray, length: Int): Int {
+        return inputStream.read(byteArray, 0, length)
+    }
+
+    override fun close() {
+        inputStream.close()
+    }
 }

@@ -208,9 +208,9 @@ internal class QontoService(
                     val buffer = ByteArray(1024)
                     var read: Int
                     do {
-                        read = input.read(buffer, 0, buffer.size)
+                        read = input.read(buffer)
                         if (read > 0) writeFully(buffer, 0, read)
-                    } while (read > 0)
+                    } while (read == buffer.size)
                     input.close()
                 }
             }

@@ -33,8 +33,8 @@ import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
 import org.jraf.klibqonto.client.OAuthAuthentication
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
-import org.jraf.klibqonto.model.attachments.AttachmentByteInput
 import org.jraf.klibqonto.model.attachments.AttachmentType
+import org.jraf.klibqonto.model.attachments.file.FileAttachmentByteInput
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.oauth.OAuthCredentials
@@ -42,7 +42,6 @@ import org.jraf.klibqonto.model.organizations.Organization
 import org.jraf.klibqonto.model.pagination.Page
 import org.jraf.klibqonto.model.pagination.Pagination
 import org.jraf.klibqonto.model.transactions.Transaction
-import java.io.File
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
@@ -183,20 +182,10 @@ class Sample {
             println(attachmentList)
 
             // Add an attachment
-            val file = File(PATH_TO_A_PDF_FILE)
-            val inputStream = file.inputStream()
             client.attachments.addAttachment(
                 transactionInternalId = TRANSACTION_INTERNAL_ID,
                 type = AttachmentType.PDF,
-                input = object : AttachmentByteInput {
-                    override fun read(byteArray: ByteArray, offset: Int, length: Int): Int {
-                        return inputStream.read(byteArray, offset, length)
-                    }
-
-                    override fun close() {
-                        inputStream.close()
-                    }
-                }
+                input = FileAttachmentByteInput(PATH_TO_A_PDF_FILE)
             )
         }
 
