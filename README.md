@@ -15,13 +15,6 @@ Several flavors of the client are available to match your needs:
 
 ## Usage
 
-### Minimum requirements
-
-- Java: 1.8? **TODO**
-- Kotlin: 1.3? **TODO**
-- Android: 21
-- Swift: ? **TODO**
-
 ### 1/ Add the dependencies to your project
 
 #### Gradle based projects
@@ -53,9 +46,9 @@ The easiest way to see how to use it is to look at the samples:
 
 - [Coroutines (Kotlin)](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/Sample.kt)
 - [Blocking (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/BlockingSample.java)
+- [Future (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/FutureSample.java)
 - [Callback (Kotlin)](samples/sample-jvm/src/main/kotlin/org/jraf/klibqonto/sample/CallbackSample.kt)
 - Callback (Swift) **TODO**
-- [Future (Java)](samples/sample-jvm/src/main/java/org/jraf/klibqonto/sample/FutureSample.java)
 
 #### Authentication by login and secret key
 
