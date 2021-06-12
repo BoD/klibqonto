@@ -27,10 +27,10 @@ package org.jraf.klibqonto.internal.client.callback
 import kotlinx.coroutines.launch
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.callback.CallbackQontoClient
-import org.jraf.klibqonto.client.callback.Result
-import org.jraf.klibqonto.client.callback.suspendRunCatching
 import org.jraf.klibqonto.internal.client.klibQontoScope
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -155,6 +155,28 @@ internal class CallbackQontoClientImpl(
         qontoClient.attachments.getAttachmentList(transactionInternalId)
     }
 
+    override fun addAttachment(
+        transactionInternalId: String,
+        type: AttachmentType,
+        input: AttachmentByteInput,
+        onResult: (Result<Unit>) -> Unit,
+    ) = launchAndCallback(onResult) {
+        qontoClient.attachments.addAttachment(transactionInternalId, type, input)
+    }
+
+    override fun removeAttachment(
+        transactionInternalId: String,
+        attachmentId: String,
+        onResult: (Result<Unit>) -> Unit,
+    ) = launchAndCallback(onResult) {
+        qontoClient.attachments.removeAttachment(transactionInternalId, attachmentId)
+    }
+
+    override fun removeAllAttachments(transactionInternalId: String, onResult: (Result<Unit>) -> Unit) =
+        launchAndCallback(onResult) {
+            qontoClient.attachments.removeAllAttachments(transactionInternalId)
+        }
+
     override fun close() = qontoClient.close()
 
     private fun <T : Any> launchAndCallback(
@@ -162,7 +184,7 @@ internal class CallbackQontoClientImpl(
         block: suspend () -> T,
     ) {
         klibQontoScope.launch {
-            onResult(suspendRunCatching(block))
+            onResult(runCatching { block() })
         }
     }
 }

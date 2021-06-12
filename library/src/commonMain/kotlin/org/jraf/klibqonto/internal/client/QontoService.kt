@@ -25,15 +25,21 @@
 package org.jraf.klibqonto.internal.client
 
 import io.ktor.client.HttpClient
+import io.ktor.client.request.delete
 import io.ktor.client.request.forms.FormDataContent
+import io.ktor.client.request.forms.append
+import io.ktor.client.request.forms.formData
+import io.ktor.client.request.forms.submitFormWithBinaryData
 import io.ktor.client.request.get
 import io.ktor.client.request.header
 import io.ktor.client.request.parameter
 import io.ktor.client.request.post
+import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.Parameters
 import io.ktor.util.InternalAPI
 import io.ktor.util.encodeBase64
+import io.ktor.utils.io.core.writeFully
 import org.jraf.klibqonto.client.BaseUri
 import org.jraf.klibqonto.client.ClientConfiguration
 import org.jraf.klibqonto.internal.api.model.attachments.ApiAttachmentEnvelope
@@ -44,6 +50,8 @@ import org.jraf.klibqonto.internal.api.model.oauth.ApiOAuthTokens
 import org.jraf.klibqonto.internal.api.model.organizations.ApiOrganizationEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionEnvelope
 import org.jraf.klibqonto.internal.api.model.transactions.ApiTransactionListEnvelope
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 
 internal class QontoService(
     clientConfiguration: ClientConfiguration,
@@ -181,4 +189,40 @@ internal class QontoService(
         return httpClient.get(apiBaseUri + "transactions/$transactionInternalId/attachments")
     }
 
+    suspend fun addAttachment(transactionInternalId: String, type: AttachmentType, input: AttachmentByteInput) {
+        httpClient.submitFormWithBinaryData<Unit>(
+            url = apiBaseUri + "transactions/$transactionInternalId/attachments",
+            formData = formData {
+                append(
+                    key = "file",
+                    filename = "file." + when (type) {
+                        AttachmentType.PNG -> "png"
+                        AttachmentType.JPEG -> "jpg"
+                        AttachmentType.PDF -> "pdf"
+                    },
+                    contentType = when (type) {
+                        AttachmentType.PNG -> ContentType.Image.PNG
+                        AttachmentType.JPEG -> ContentType.Image.JPEG
+                        AttachmentType.PDF -> ContentType.Application.Pdf
+                    }
+                ) {
+                    val buffer = ByteArray(1024)
+                    var read: Int
+                    do {
+                        read = input.read(buffer)
+                        if (read > 0) writeFully(buffer, 0, read)
+                    } while (read == buffer.size)
+                    input.close()
+                }
+            }
+        )
+    }
+
+    suspend fun removeAttachment(transactionInternalId: String, attachmentId: String) {
+        httpClient.delete<Unit>(apiBaseUri + "transactions/$transactionInternalId/attachments/$attachmentId")
+    }
+
+    suspend fun removeAllAttachments(transactionInternalId: String) {
+        httpClient.delete<Unit>(apiBaseUri + "transactions/$transactionInternalId/attachments")
+    }
 }

@@ -33,6 +33,8 @@ import org.jraf.klibqonto.client.LoginSecretKeyAuthentication
 import org.jraf.klibqonto.client.OAuthAuthentication
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentType
+import org.jraf.klibqonto.model.attachments.file.FileAttachmentByteInput
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.memberships.Membership
 import org.jraf.klibqonto.model.oauth.OAuthCredentials
@@ -59,6 +61,9 @@ private const val USE_OAUTH = false
 
 // Replace this with a transaction internal id that exists
 private const val TRANSACTION_INTERNAL_ID = "00000000-0000-0000-0000-000000000000"
+
+// Replace this to a path to a pdf file that exists
+private const val PATH_TO_A_PDF_FILE = "/tmp/file.pdf"
 
 class Sample {
     private val oAuthCredentials = OAuthCredentials(
@@ -121,6 +126,7 @@ class Sample {
                     oAuthCredentials = oAuthCredentials,
                     code = codeAndUniqueState.code
                 )
+                // You can save these, and re-use them later.
                 println(tokens)
 
                 // 4/ Use obtained tokens for subsequent API calls
@@ -174,6 +180,26 @@ class Sample {
             println("\n\nAttachments of transaction:")
             val attachmentList = client.attachments.getAttachmentList(TRANSACTION_INTERNAL_ID)
             println(attachmentList)
+
+            // Remove the last attachment
+            val attachmentId = attachmentList.last().id
+            client.attachments.removeAttachment(
+                transactionInternalId = TRANSACTION_INTERNAL_ID,
+                attachmentId = attachmentId
+            )
+            println("Attachment $attachmentId removed")
+
+            // Add an attachment
+            client.attachments.addAttachment(
+                transactionInternalId = TRANSACTION_INTERNAL_ID,
+                type = AttachmentType.PDF,
+                input = FileAttachmentByteInput(PATH_TO_A_PDF_FILE)
+            )
+            println("Attachment added")
+
+            // Remove all attachments
+            // client.attachments.removeAllAttachments(TRANSACTION_INTERNAL_ID)
+            // println("All attachments removed")
         }
 
         // Close
@@ -192,8 +218,8 @@ class Sample {
             bankAccountSlug = bankAccountSlug,
             status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
             updatedDateRange = DateRange(
-                date("2018-01-01"),
-                date("2019-12-31")
+                date("2020-01-01"),
+                date("2021-12-31")
             ),
             sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
             pagination = Pagination(itemsPerPage = 10)
@@ -206,8 +232,8 @@ class Sample {
                 bankAccountSlug = bankAccountSlug,
                 status = setOf(Transaction.Status.COMPLETED, Transaction.Status.DECLINED),
                 updatedDateRange = DateRange(
-                    date("2018-01-01"),
-                    date("2019-12-31")
+                    date("2020-01-01"),
+                    date("2021-12-31")
                 ),
                 sortField = QontoClient.Transactions.SortField.UPDATED_DATE,
                 pagination = nextPagination

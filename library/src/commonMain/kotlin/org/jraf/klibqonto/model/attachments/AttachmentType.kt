@@ -22,11 +22,10 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.model.oauth
+package org.jraf.klibqonto.model.attachments
 
-enum class OAuthScope {
-    OFFLINE_ACCESS,
-    ORGANIZATION_READ,
-    OPENID,
-    ATTACHMENT_WRITE,
+enum class AttachmentType {
+    PNG,
+    JPEG,
+    PDF,
 }

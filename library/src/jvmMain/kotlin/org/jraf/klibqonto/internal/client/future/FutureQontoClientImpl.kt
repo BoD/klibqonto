@@ -29,6 +29,8 @@ import kotlinx.coroutines.future.future
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.future.FutureQontoClient
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -128,6 +130,25 @@ internal class FutureQontoClientImpl(
 
     override fun getAttachmentList(transactionInternalId: String) = GlobalScope.future {
         qontoClient.attachments.getAttachmentList(transactionInternalId)
+    }
+
+    override fun addAttachment(
+        transactionInternalId: String,
+        type: AttachmentType,
+        input: AttachmentByteInput,
+    ) = GlobalScope.future {
+        qontoClient.attachments.addAttachment(transactionInternalId, type, input)
+        null
+    }
+
+    override fun removeAttachment(transactionInternalId: String, attachmentId: String) = GlobalScope.future {
+        qontoClient.attachments.removeAttachment(transactionInternalId, attachmentId)
+        null
+    }
+
+    override fun removeAllAttachments(transactionInternalId: String) = GlobalScope.future {
+        qontoClient.attachments.removeAllAttachments(transactionInternalId)
+        null
     }
 
     override fun close() = qontoClient.close()

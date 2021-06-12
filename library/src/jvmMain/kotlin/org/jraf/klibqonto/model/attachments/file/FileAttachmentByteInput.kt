@@ -22,11 +22,19 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.model.oauth
+package org.jraf.klibqonto.model.attachments.file
 
-enum class OAuthScope {
-    OFFLINE_ACCESS,
-    ORGANIZATION_READ,
-    OPENID,
-    ATTACHMENT_WRITE,
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import java.io.File
+
+actual class FileAttachmentByteInput actual constructor(filePath: String) : AttachmentByteInput {
+    private val inputStream by lazy { File(filePath).inputStream() }
+
+    override fun read(byteArray: ByteArray): Int {
+        return inputStream.read(byteArray, 0, byteArray.size)
+    }
+
+    override fun close() {
+        inputStream.close()
+    }
 }

@@ -22,11 +22,8 @@
  * limitations under the License.
  */
 
-package org.jraf.klibqonto.model.oauth
+package org.jraf.klibqonto.model.attachments.file
 
-enum class OAuthScope {
-    OFFLINE_ACCESS,
-    ORGANIZATION_READ,
-    OPENID,
-    ATTACHMENT_WRITE,
-}
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+
+expect class FileAttachmentByteInput(filePath: String) : AttachmentByteInput

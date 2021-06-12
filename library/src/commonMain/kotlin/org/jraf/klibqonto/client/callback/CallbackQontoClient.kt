@@ -29,6 +29,8 @@ package org.jraf.klibqonto.client.callback
 import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.internal.client.callback.CallbackQontoClientImpl
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -62,11 +64,7 @@ interface CallbackQontoClient {
          */
         fun getLoginUri(
             oAuthCredentials: OAuthCredentials,
-            scopes: List<OAuthScope> = listOf(
-                OAuthScope.OFFLINE_ACCESS,
-                OAuthScope.ORGANIZATION_READ,
-                OAuthScope.OPENID,
-            ),
+            scopes: List<OAuthScope> = OAuthScope.values().toList(),
             uniqueState: String,
         ): String
 
@@ -172,6 +170,26 @@ interface CallbackQontoClient {
             transactionInternalId: String,
             onResult: (Result<List<Attachment>>) -> Unit,
         )
+
+        /**
+         * See [QontoClient.Attachments.addAttachment].
+         */
+        fun addAttachment(
+            transactionInternalId: String,
+            type: AttachmentType,
+            input: AttachmentByteInput,
+            onResult: (Result<Unit>) -> Unit,
+        )
+
+        /**
+         * See [QontoClient.Attachments.removeAttachment].
+         */
+        fun removeAttachment(transactionInternalId: String, attachmentId: String, onResult: (Result<Unit>) -> Unit)
+
+        /**
+         * See [QontoClient.Attachments.removeAllAttachments].
+         */
+        fun removeAllAttachments(transactionInternalId: String, onResult: (Result<Unit>) -> Unit)
     }
 
 

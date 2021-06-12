@@ -28,6 +28,8 @@ import org.jraf.klibqonto.client.QontoClient
 import org.jraf.klibqonto.client.blocking.BlockingQontoClient
 import org.jraf.klibqonto.internal.client.runBlocking
 import org.jraf.klibqonto.model.attachments.Attachment
+import org.jraf.klibqonto.model.attachments.AttachmentByteInput
+import org.jraf.klibqonto.model.attachments.AttachmentType
 import org.jraf.klibqonto.model.dates.DateRange
 import org.jraf.klibqonto.model.labels.Label
 import org.jraf.klibqonto.model.memberships.Membership
@@ -129,6 +131,19 @@ internal class BlockingQontoClientImpl(
 
     override fun getAttachmentList(transactionInternalId: String): List<Attachment> = runBlocking {
         qontoClient.attachments.getAttachmentList(transactionInternalId)
+    }
+
+    override fun addAttachment(transactionInternalId: String, type: AttachmentType, input: AttachmentByteInput) =
+        runBlocking {
+            qontoClient.attachments.addAttachment(transactionInternalId, type, input)
+        }
+
+    override fun removeAttachment(transactionInternalId: String, attachmentId: String) = runBlocking {
+        qontoClient.attachments.removeAttachment(transactionInternalId, attachmentId)
+    }
+
+    override fun removeAllAttachments(transactionInternalId: String) = runBlocking {
+        qontoClient.attachments.removeAllAttachments(transactionInternalId)
     }
 
     override fun close() = qontoClient.close()
